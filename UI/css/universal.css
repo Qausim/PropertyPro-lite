@@ -34,6 +34,17 @@ body {
     display: none;
 }
 
+footer {
+    margin-bottom: 20px;
+}
+
+footer p {
+    text-transform: capitalize;
+    text-align: center;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+}
+
 @media screen and (min-width: 768px) {
     .logo.big {
         display: block;

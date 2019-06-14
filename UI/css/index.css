@@ -4,6 +4,9 @@ body {
     color: #fff;
     overflow: auto;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .top-bar {
@@ -30,7 +33,7 @@ body {
     color: #fff;
 }
 
-main .promotional {
+main .msg-wrapper {
     display: flex;
     padding: var(--content-padding-wide) var(--content-padding-medium);
     flex-wrap: wrap;
@@ -39,13 +42,13 @@ main .promotional {
     text-align: center;
 }
 
-main .promotional div {
+main .msg-wrapper div {
     flex: 0 1 100%;
     margin-bottom: 20px;
 }
 
 main h2 {
-    font-size: 3em;
+    font-size: 4em;
     font-family: var(--headers-font-family);
     font-weight: 700;
 }
@@ -56,18 +59,18 @@ main p {
     line-height: 1.4em;
 }
 
-main .promotional .vector object {
+main .msg-wrapper .vector object {
     width: 100%;
     max-width: 700px;
 }
 
 @media screen and (min-width: 768px) {
-    main .promotional {
+    main .msg-wrapper {
         text-align: left;
         padding: var(--content-padding-wide) var(--content-padding-wide);
     }
 
-    main .promotional div {
+    main .msg-wrapper div {
         flex: 0 1 45%;
     }
 }
