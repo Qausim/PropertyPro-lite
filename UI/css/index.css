@@ -1,0 +1,73 @@
+body {
+    background: linear-gradient(to right bottom, var(--primary-color), var(--primary-color-light));
+    background-size: contain;
+    color: #fff;
+    overflow: auto;
+    min-height: 100vh;
+}
+
+.top-bar {
+    background: transparent;
+}
+
+.top-bar nav ul {
+    display: inline-block;
+    list-style-type: none;
+    text-transform: capitalize;
+}
+
+.top-bar nav ul li {
+    display: inline-block;
+}
+
+.top-bar nav ul li:last-child {
+    margin-left: 20px;
+}
+
+.top-bar nav ul li a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #fff;
+}
+
+main .promotional {
+    display: flex;
+    padding: var(--content-padding-wide) var(--content-padding-medium);
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+main .promotional div {
+    flex: 0 1 100%;
+    margin-bottom: 20px;
+}
+
+main h2 {
+    font-size: 3em;
+    font-family: var(--headers-font-family);
+    font-weight: 700;
+}
+
+main p {
+    font-size: 1.2em;
+    margin-top: 20px;
+    line-height: 1.4em;
+}
+
+main .promotional .vector object {
+    width: 100%;
+    max-width: 700px;
+}
+
+@media screen and (min-width: 768px) {
+    main .promotional {
+        text-align: left;
+        padding: var(--content-padding-wide) var(--content-padding-wide);
+    }
+
+    main .promotional div {
+        flex: 0 1 45%;
+    }
+}

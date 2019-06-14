@@ -1,0 +1,49 @@
+/* This CSS file contains styles relevant to all pages. */
+:root {
+    --primary-color: rgba(16, 102, 255, 1);
+    --primary-color-light: rgba(16, 102, 241, 0.6);
+    --content-padding-wide: 64px;
+    --content-padding-medium: 32px;
+    --content-padding-small: 16px;
+    --headers-font-family: 'Merriweather', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+}
+
+.top-bar {
+    background: linear-gradient(to right, var(--primary-color), var(--primary-color-light));
+    background-size: contain;
+    padding: var(--content-padding-medium) var(--content-padding-medium);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo object {
+    height: 50px;
+}
+
+.logo.big {
+    display: none;
+}
+
+@media screen and (min-width: 768px) {
+    .logo.big {
+        display: block;
+    }
+
+    .logo.small {
+        display: none;
+    }
+
+    .top-bar {
+        padding: var(--content-padding-medium) var(--content-padding-wide);
+    }
+}
