@@ -1,0 +1,152 @@
+body {
+    background: linear-gradient(to right bottom, var(--primary-color), var(--primary-color-light));
+    background-size: contain;
+    overflow: auto;
+    min-height: 100vh;
+    color: #fff;
+}
+
+.top-bar {
+    background: transparent;
+}
+
+.msg-wrapper {
+    text-align: center;
+    margin: 0 auto;
+    font-size: 1.4em;
+}
+
+form {
+    position: relative;
+    background: #fff;
+    margin: 0 auto;
+    margin-top: 100px;
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    align-items: center;
+    padding-left: var(--content-padding-medium);
+    padding-right: var(--content-padding-medium);
+    justify-content: center;
+    padding-top: 120px;
+    padding-bottom: 120px;
+    border-radius: 5px;
+    max-width: 650px;
+    color: #000;
+    box-sizing: border-box;
+}
+
+form .error-msg {
+    color: #dd2c00;
+    position: absolute;
+    top: 60px;
+    left: var(--content-padding-medium);
+    max-width: 80%;
+}
+
+form formgroup {
+    width: 100%;
+}
+
+form formgroup + formgroup {
+    margin-top: 30px;
+}
+
+form label, form input {
+    display: block;
+}
+
+form label {
+    text-transform: capitalize;
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+form input {
+    margin-top: 5px;
+    border: #bebebecc 1px solid;
+    box-shadow: 0 0 0 2px #8e8e8e22;
+    outline: none;
+    font-size: 1em;
+}
+
+form input[required]:focus {
+    border: #5DADE2 1px solid;
+}
+
+form input[type="checkbox"]:checked {
+    box-shadow: 0 0 5px 2px #5DADE2;
+}
+
+form input[required], form input[type='submit'] {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+formgroup#as_agent {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    
+}
+
+formgroup#as_agent > * {
+    display: inline-block;
+}
+
+formgroup#as_agent input {
+    margin-right: 16px;
+    width: 24px;
+    height: 24px;
+}
+
+formgroup#as_agent label {
+    font-size: 1em;
+}
+
+form input[type='submit'] {
+    background: var(--primary-color);
+    color: #fff;
+    text-transform: capitalize;
+}
+
+form input[type='submit']:hover,
+form input[type='checkbox']:hover {
+    cursor: pointer;
+}
+
+.no-display {
+    display: none;
+}
+
+form + .msg-wrapper {
+    font-size: 1em;
+    margin-top: 60px;
+}
+
+form + .msg-wrapper a {
+    color: #fff;
+    text-transform: capitalize;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+footer {
+    margin-top: 100px;
+}
+
+@media screen and (min-width: 768px) {
+    form {
+        padding-left: var(--content-padding-wide);
+        padding-right: var(--content-padding-wide);
+    }
+
+    form .error-msg {
+        left: var(--content-padding-wide);
+    }
+}
