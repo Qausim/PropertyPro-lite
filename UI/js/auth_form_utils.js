@@ -1,11 +1,10 @@
 const emailField = document.querySelector('input[name="email"]');
 const passwordField = document.querySelector('input[name="password"]');
-const submitButton = document.querySelector('#signup input[type="submit"]');
-const errorMessage = document.querySelector('#signup .error-msg');
+const submitButton = document.querySelector('input[type="submit"]');
+const errorMessage = document.querySelector('.error-msg');
 const noDisplayClassName = 'no-display';
 
 const focusOnInput = element => {
-    console.log(element);
     setTimeout(() => {
         element.focus();
     }, 1000);
@@ -42,6 +41,22 @@ const isValidEmail = email => {
  */
 const isValidPassword = password => {
     return password.length > 5;
+};
+
+const handleInvalidEmailOrPassword = (email, password) => {
+    if (!isValidEmail(email)) {
+        showError('Invalid email address');
+        focusOnInput(emailField);
+        return true;
+    }
+
+    if (!isValidPassword(password)) {
+        showError('Invalid password');
+        focusOnInput(passwordField);
+        return true;
+    }
+
+    return false;
 };
 
 /**

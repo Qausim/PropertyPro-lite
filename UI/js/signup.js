@@ -14,7 +14,7 @@ const toggleAddressAndPhoneFieldsDisplay = () => {
         .forEach(el => el.classList.toggle(noDisplayClassName));
 };
 
-const validatePhone = phone => !/$+?[^\d]/.test(phone.replace(' ', ''));
+const isValidPhone = phone => /^\+?[\d]+$/.test(phone.replace(' ', ''));
 
 /**
  * Handles user clicks on the submit button
@@ -33,24 +33,16 @@ const registerUser = event => {
     fieldEntries.email = emailField.value;
     fieldEntries.password = passwordField.value;
     
-    if (!isValidEmail(fieldEntries.email)) {
-        showError('Invalid email address');
-        focusOnInput(emailField);
-        return;
-    }
-
-    if (!isValidPassword(fieldEntries.password)) {
-        showError('Invalid password');
-        focusOnInput(passwordField);
-        return;
+    if (handleInvalidEmailOrPassword(fieldEntries.email,
+        fieldEntries.password)) {
+            return;
     }
 
     fieldEntries.isAgent = asAgentCheckbox.checked;
     if (fieldEntries.isAgent) {
         fieldEntries.address = addressField.value;
         fieldEntries.phone = phoneField.value;
-
-        if (!validatePhone(fieldEntries.phone)) {
+        if (!isValidPhone(fieldEntries.phone)) {
             showError('Invalid phone number!');
             focusOnInput(phoneField);
             return;

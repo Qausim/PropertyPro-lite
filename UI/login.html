@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PropertyPro-lite | Log in</title>
+
+    <link rel="stylesheet" href="./css/universal.css">
+    <link rel="stylesheet" href="./css/login.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="big logo">
+            <object data="./images/propertypro-lite-logo.svg" type="image/svg+xml"></object>
+        </div>
+        <div class="small logo">
+            <object data="./images/home-icon.svg" type="image/svg+xml"></object>
+        </div>
+        <nav class="no-display">
+            <ul>
+                <li><a href="/login.html">log in</a></li>
+                <li><a href="/signup.html">sign up</a></li>
+            </ul>
+        </nav>
+    </div>
+        
+    <main>
+        <div class="msg-wrapper">
+            <h2>
+                Log in and continue your journey
+            </h2>
+        </div>
+
+        <form action="" id="login">
+            <p class="error-msg no-display toggle">
+                First name is required
+            </p>
+            <formgroup id="email">
+                <label for="email">email</label>
+                <input type="email" name="email" required autocomplete="email">
+            </formgroup>
+
+            <formgroup id="password">
+                <label for="last_name">password</label>
+                <input type="password" name="password" required
+                    autocomplete="new-password">
+            </formgroup>
+
+            <formgroup class="submit">
+                <input type="submit" value="Log in">
+            </formgroup>
+        </form>
+
+        <div class="msg-wrapper">
+            <p>
+                Don't have an account yet? <a href="/signup.html">sign up</a>
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        <p>
+            &copy; 2019 PropertyPro-lite. all rights reserved.
+        </p>
+    </footer>
+        
+    <script src="./js/auth_form_utils.js"></script>
+    <script src="./js/login.js"></script>
+</body>
+</html>
