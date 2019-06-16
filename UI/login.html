@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>PropertyPro-lite | Sign Up</title>
+    <title>PropertyPro-lite | Log in</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/universal.css">
     <link rel="stylesheet" href="./css/auth_form_styles.css">
-    <link rel="stylesheet" href="./css/signup.css">
 </head>
 <body>
     <div class="top-bar">
@@ -27,28 +26,18 @@
             </ul>
         </nav>
     </div>
-
+        
     <main>
         <div class="msg-wrapper">
             <h2>
-                Sign up and start your journey
+                Log in and continue your journey
             </h2>
         </div>
 
-        <form action="" id="signup" class="auth-form">
+        <form action="" id="login" class="auth-form">
             <p class="error-msg no-display toggle-display">
                 First name is required
             </p>
-            <formgroup id="first_name">
-                <label for="first_name">first name</label>
-                <input type="text" name="first_name" required>
-            </formgroup>
-
-            <formgroup id="last_name">
-                <label for="last_name">last name</label>
-                <input type="text" name="last_name" required>
-            </formgroup>
-
             <formgroup id="email">
                 <label for="email">email</label>
                 <input type="email" name="email" required autocomplete="email">
@@ -60,29 +49,14 @@
                     autocomplete="new-password">
             </formgroup>
 
-            <formgroup id="as_agent">
-                <input type="checkbox" name="as_agent">
-                <label for="as_agent">sign up as an agent</label>
-            </formgroup>
-
-            <formgroup id="address" class="no-display toggle-display">
-                <label for="address">address</label>
-                <input type="text" name="address" required>
-            </formgroup>
-
-            <formgroup id="phone" class="no-display toggle-display">
-                <label for="phone">phone</label>
-                <input type="tel" name="phone" required>
-            </formgroup>
-
             <formgroup class="submit">
-                <input type="submit" value="Sign up">
+                <input type="submit" value="Log in">
             </formgroup>
         </form>
 
         <div class="msg-wrapper">
             <p>
-                Already have an account? <a href="/login.html">log in</a>
+                Don't have an account yet? <a href="/signup.html">sign up</a>
             </p>
         </div>
     </main>
@@ -92,8 +66,8 @@
             &copy; 2019 PropertyPro-lite. all rights reserved.
         </p>
     </footer>
-
+        
     <script src="./js/auth_form_utils.js"></script>
-    <script src="./js/signup.js"></script>
+    <script src="./js/login.js"></script>
 </body>
 </html>

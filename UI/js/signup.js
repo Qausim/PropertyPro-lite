@@ -1,3 +1,7 @@
+/**
+ * Script for signup form/page specific behaviours
+ */
+
 const firstNameField = document.querySelector('input[name="first_name"]');
 const lastNameField = document.querySelector('input[name="last_name"]');
 const addressField = document.querySelector('input[name="address"]');
@@ -10,14 +14,14 @@ const asAgentCheckbox = document.querySelector('formgroup#as_agent input');
  * agents.
  */
 const toggleAddressAndPhoneFieldsDisplay = () => {
-    Array.from(document.querySelectorAll('formgroup.toggle'))
+    Array.from(document.querySelectorAll('formgroup.toggle-display'))
         .forEach(el => el.classList.toggle(noDisplayClassName));
 };
 
-const validatePhone = phone => !/$+?[^\d]/.test(phone.replace(' ', ''));
+const isValidPhone = phone => /^\+?[\d]+$/.test(phone.replace(' ', ''));
 
 /**
- * Handles user clicks on the submit button
+ * Handles user clicks on the signup button
  * Validates entries 
  * @param {Event} event 
  */
@@ -33,24 +37,16 @@ const registerUser = event => {
     fieldEntries.email = emailField.value;
     fieldEntries.password = passwordField.value;
     
-    if (!isValidEmail(fieldEntries.email)) {
-        showError('Invalid email address');
-        focusOnInput(emailField);
-        return;
-    }
-
-    if (!isValidPassword(fieldEntries.password)) {
-        showError('Invalid password');
-        focusOnInput(passwordField);
-        return;
+    if (handleInvalidEmailOrPasswordErrors(fieldEntries.email,
+        fieldEntries.password)) {
+            return;
     }
 
     fieldEntries.isAgent = asAgentCheckbox.checked;
     if (fieldEntries.isAgent) {
         fieldEntries.address = addressField.value;
         fieldEntries.phone = phoneField.value;
-
-        if (!validatePhone(fieldEntries.phone)) {
+        if (!isValidPhone(fieldEntries.phone)) {
             showError('Invalid phone number!');
             focusOnInput(phoneField);
             return;

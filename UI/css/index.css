@@ -49,7 +49,6 @@ main .msg-wrapper div {
 
 main h2 {
     font-size: 4em;
-    font-family: var(--headers-font-family);
     font-weight: 700;
 }
 
