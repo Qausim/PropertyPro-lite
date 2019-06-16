@@ -1,9 +1,17 @@
+/**
+ * Script for behaviours both of login and signup forms/pages
+ */
+
 const emailField = document.querySelector('input[name="email"]');
 const passwordField = document.querySelector('input[name="password"]');
 const submitButton = document.querySelector('input[type="submit"]');
 const errorMessage = document.querySelector('.error-msg');
 const noDisplayClassName = 'no-display';
 
+/**
+ * Focuses cursor on an input element
+ * @param {HTMLElement} element 
+ */
 const focusOnInput = element => {
     setTimeout(() => {
         element.focus();
@@ -26,12 +34,13 @@ const showError = msg => {
 };
 
 /**
- * Validates email input
+ * Validates format of email input
  * @param {string} email
  * @returns {boolean}
  */
 const isValidEmail = email => {
-    return /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/.test(email);
+    return /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/
+        .test(email);
 }
 
 /**
@@ -43,7 +52,14 @@ const isValidPassword = password => {
     return password.length > 5;
 };
 
-const handleInvalidEmailOrPassword = (email, password) => {
+/**
+ * Displays the appropriate error message for email and password inputs with
+ * in the wrong formats
+ * @param {string} email 
+ * @param {string} password
+ * @returns {boolean} indicating if there was an error or not
+ */
+const handleInvalidEmailOrPasswordErrors = (email, password) => {
     if (!isValidEmail(email)) {
         showError('Invalid email address');
         focusOnInput(emailField);
@@ -61,7 +77,7 @@ const handleInvalidEmailOrPassword = (email, password) => {
 
 /**
  * @returns {Array} of the name of an empty or short required field
- *  and its type (empty or short)
+ *  and its type ('empty' or 'short')
  */
 const getEmptyOrShortRequiredField = () => {
     const requiredFields = Array.from(document.

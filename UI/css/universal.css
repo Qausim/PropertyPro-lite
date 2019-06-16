@@ -6,6 +6,7 @@
     --content-padding-medium: 32px;
     --content-padding-small: 16px;
     --headers-font-family: 'Merriweather', serif;
+    --body-font-family: "Open Sans", sans-serif;
 }
 
 * {
@@ -13,8 +14,12 @@
     padding: 0;
 }
 
+h1, h2, h3 {
+    font-family: var(--headers-font-family);
+}
+
 body {
-    font-family: "Open Sans", sans-serif;
+    font-family: var(--body-font-family);
 }
 
 .top-bar {
