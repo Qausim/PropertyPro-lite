@@ -13,6 +13,7 @@ body {
 .msg-wrapper {
     text-align: center;
     margin: 0 auto;
+    padding: 0 var(--content-padding-medium);
     font-size: 1.4em;
 }
 
