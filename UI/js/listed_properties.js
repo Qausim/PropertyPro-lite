@@ -101,8 +101,8 @@ const renderProperty = property => {
         </div>
         <div class="text-wrapper">
             <h3>${property.price}</h3>
-            <h4>${property.title}</h4>
-            <p>
+            <h4 class="text--ellipsised">${property.title}</h4>
+            <p class="text--ellipsised">
                 ${property.description}
             </p>
         </div>

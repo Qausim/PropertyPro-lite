@@ -1,19 +1,6 @@
-.text--capitalize {
-    text-transform: capitalize;
-}
-
-body {
-    max-width: 1700px;
-    margin: 0 auto;
-}
-
 aside {
     position: fixed;
     background-color: #262542;
-    height: 100vh;
-    overflow: auto;
-    flex-basis: 0px;
-    color: #fff;
     display: block;
     width: 0px;
     transition: width 0.2s ease;
@@ -27,14 +14,10 @@ aside {
     padding: 20px;
 }
 
-.user-options li, .user-options p {
-    text-align: left;
-}
-
 footer {
     position: absolute;
     bottom: 0px;
-    padding: 20px;    
+    padding: 20px;   
 }
 
 .user-options p {
@@ -50,7 +33,6 @@ footer {
 }
 
 .user-options a {
-    color: #fff;
     text-decoration: none;
     font-size: 1.2em;
     font-weight: 500;
@@ -117,7 +99,6 @@ footer {
 }
 
 .contents {
-    color: #000;
     padding: var(--content-padding-small);
     width: 90%;
 }
@@ -147,7 +128,6 @@ input {
 input[type='submit'] {
     text-transform: capitalize;
     background: var(--primary-color);
-    color: #fff;
     width: 30%;
     max-width: 150px;
     margin-left: 10px;
@@ -165,7 +145,6 @@ input:focus {
 
 .properties-wrapper .properties {
     align-self: center;
-    /* border: 1px solid var(--primary-color-light); */
     box-shadow: 0 0 0 2px #8e8e8e88;
     margin: 20px;
     display: flex;
@@ -191,10 +170,7 @@ input:focus {
 
 .properties .text-wrapper h4 {
     margin-top: 10px;
-    white-space: nowrap;
     max-width: 400px;
-    text-overflow: ellipsis;
-    overflow: hidden;
 }
 
 .properties .text-wrapper p {
@@ -235,7 +211,7 @@ input:focus {
         display: none;
     }
 
-    .content-wrapper {
+    .contents-wrapper {
         position: relative;
         left: 250px;
         width: calc(100% - 378px);
@@ -287,10 +263,7 @@ input:focus {
 
     .properties .text-wrapper p {
         margin-top: 60px;
-        white-space: nowrap;
         max-width: 400px;
-        text-overflow: ellipsis;
-        overflow: hidden;
         display: block;
     }
 

@@ -13,25 +13,33 @@
 </head>
 <body>
 
-    <aside class="user-options">
+    <aside class="user-options window-height text--white">
         <nav>
             <ol>
-                <li class="active" id="view_all"><a href="#view_all" class="text--capitalize">view all ads</a></li>
-                <li id="view_yours"><a href="#view_yours" class="text--capitalize">view your ads</a></li>
-                <li id="change_password"><a href="#change_password" class="text--capitalize">change password</a></li>
-                <li id="log_out"><a href="#log_out" class="text--capitalize">log out</a></li>
+                <li class="active text--aligned-left item__view-all">
+                    <a href="#view_all" class="text--capitalized text--white">view all ads</a>
+                </li>
+                <li class="text--aligned-left item__view-yours">
+                    <a href="#view_yours" class="text--capitalized text--white">view your ads</a>
+                </li>
+                <li class="text--aligned-left item__change-password">
+                    <a href="#change_password" class="text--capitalized text--white">change password</a>
+                </li>
+                <li class="text--aligned-left item__log-out">
+                    <a href="#log_out" class="text--capitalized text--white">log out</a>
+                </li>
             </ol>
         </nav>
     
         <footer>
-            <p>
+            <p class="text--white text--aligned-left">
                 &copy; 2019 PropertyPro-lite. all rights reserved.
             </p>
         </footer>
     </aside>
 
-    <div class="content-wrapper">    
-        <div class="top-bar">
+    <div class="contents-wrapper">    
+        <div class="top-bar gradient-background">
             <div class="hamburger-wrapper">
                 <input type="checkbox" class="toggler">
                 <div class="hamburger">
@@ -46,91 +54,15 @@
             </div>
         </div>
 
-        <main class="contents">
+        <main class="contents text--black">
             <div class="search-wrapper">
                 <form action="" id="search-form">
                     <input type="text" name="search" placeholder="Search properties">
-                    <input type="submit" value="search">
+                    <input type="submit" value="search" class="text--white">
                 </form>
             </div>
             <div class="properties-wrapper">
-                <!-- <div class="properties">
-                    <div class="img-wrapper">
-                        <img src="./images/propertya1.jpg" alt="">
-                    </div>
-                    <div class="text-wrapper">
-                        <h3>$100000</h3>
-                        <h4>5 bedroom flat</h4>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam dolore quibusdam deleniti, similique accusamus pariatur nobis. Eum rerum molestiae error?
-                        </p>
-                    </div>
-                </div>
-
-                <div class="properties">
-                    <div class="img-wrapper">
-                        <img src="./images/propertyb1.jpeg" alt="">
-                    </div>
-                    <div class="text-wrapper">
-                        <h3>$100000</h3>
-                        <h4>5 bedroom flat</h4>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam dolore quibusdam deleniti, similique accusamus pariatur nobis. Eum rerum molestiae error?
-                        </p>
-                    </div>
-                </div>
-
-                <div class="properties">
-                    <div class="img-wrapper">
-                        <img src="./images/propertyc1.jpg" alt="">
-                    </div>
-                    <div class="text-wrapper">
-                        <h3>$100000</h3>
-                        <h4>5 bedroom flat</h4>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam dolore quibusdam deleniti, similique accusamus pariatur nobis. Eum rerum molestiae error?
-                        </p>
-                    </div>
-                </div>
-
-                <div class="properties">
-                    <div class="img-wrapper">
-                        <img src="./images/propertya1.jpg" alt="">
-                    </div>
-                    <div class="text-wrapper">
-                        <h3>$100000</h3>
-                        <h4>5 bedroom flat</h4>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam dolore quibusdam deleniti, similique accusamus pariatur nobis. Eum rerum molestiae error?
-                        </p>
-                    </div>
-                </div>
-    
-                <div class="properties">
-                    <div class="img-wrapper">
-                        <img src="./images/propertyb1.jpeg" alt="">
-                    </div>
-                    <div class="text-wrapper">
-                        <h3>$100000</h3>
-                        <h4>5 bedroom flat</h4>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam dolore quibusdam deleniti, similique accusamus pariatur nobis. Eum rerum molestiae error?
-                        </p>
-                    </div>
-                </div>
-    
-                <div class="properties">
-                    <div class="img-wrapper">
-                        <img src="./images/propertyc1.jpg" alt="">
-                    </div>
-                    <div class="text-wrapper">
-                        <h3>$100000</h3>
-                        <h4>5 bedroom flat</h4>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam dolore quibusdam deleniti, similique accusamus pariatur nobis. Eum rerum molestiae error?
-                        </p>
-                    </div>
-                </div> -->
+                <!-- Properties will be rendered here -->
             </div>
         </main>
     </div>
