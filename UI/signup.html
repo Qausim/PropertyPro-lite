@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="./css/auth_form_styles.css">
     <link rel="stylesheet" href="./css/signup.css">
 </head>
-<body>
+<body class="gradient-background window-height text--white">
     <div class="top-bar">
         <div class="big logo">
             <object data="./images/propertypro-lite-logo.svg" type="image/svg+xml"></object>
@@ -29,13 +29,13 @@
     </div>
 
     <main>
-        <div class="msg-wrapper">
+        <div class="msg-wrapper text--aligned-center">
             <h2>
                 Sign up and start your journey
             </h2>
         </div>
 
-        <form action="" id="signup" class="auth-form">
+        <form action="" id="signup" class="auth-form text--black text--capitalized">
             <p class="error-msg no-display toggle-display">
                 First name is required
             </p>
@@ -61,7 +61,7 @@
             </formgroup>
 
             <formgroup id="as_agent">
-                <input type="checkbox" name="as_agent">
+                <input type="checkbox" name="as_agent" class="hover-pointer-cursor">
                 <label for="as_agent">sign up as an agent</label>
             </formgroup>
 
@@ -76,19 +76,19 @@
             </formgroup>
 
             <formgroup class="submit">
-                <input type="submit" value="Sign up">
+                <input type="submit" value="sign up" class="text--white text--capitalized">
             </formgroup>
         </form>
 
         <div class="msg-wrapper">
-            <p>
-                Already have an account? <a href="/login.html">log in</a>
+            <p class="text--aligned-center">
+                Already have an account? <a href="/login.html" class="text--white text--capitalized">log in</a>
             </p>
         </div>
     </main>
 
     <footer>
-        <p>
+        <p class="text--aligned-center">
             &copy; 2019 PropertyPro-lite. all rights reserved.
         </p>
     </footer>

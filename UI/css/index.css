@@ -1,16 +1,7 @@
 body {
-    background: linear-gradient(to right bottom, var(--primary-color), var(--primary-color-light));
-    background-size: contain;
-    color: #fff;
-    overflow: auto;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-}
-
-.top-bar {
-    background: transparent;
 }
 
 .top-bar nav ul {
@@ -30,7 +21,6 @@ body {
 .top-bar nav ul li a {
     text-decoration: none;
     font-weight: 600;
-    color: #fff;
 }
 
 main .msg-wrapper {

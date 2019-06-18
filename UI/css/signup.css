@@ -22,7 +22,3 @@ formgroup#as_agent input {
 formgroup#as_agent label {
     font-size: 1em;
 }
-
-.auth-form input[type='checkbox']:hover {
-    cursor: pointer;
-}
