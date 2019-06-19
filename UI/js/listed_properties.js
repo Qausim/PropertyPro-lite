@@ -131,6 +131,7 @@ const initPropertiesWrapper = () => {
     contentBox.insertAdjacentHTML('afterbegin', markup);
     searchField = document.querySelector('#search-form input[type="text"]');
     searchButton = document.querySelector('#search-form input[type="submit"]');
+    searchButton.addEventListener('click', handleSearch);
     searchField.addEventListener('focus', () => searchFieldHasFocus = true);
     searchField.addEventListener('blur', () => searchFieldHasFocus = false);
     propertiesWrapper = document.querySelector('.properties-wrapper');
