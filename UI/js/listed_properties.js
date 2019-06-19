@@ -196,17 +196,21 @@ const clearProperties = () => {
 
 /**
  * Filters a properties (using @member title, @member description, and @member type
- * @memberof Property) by value
+ * @memberof Property) by @param value
  * Calls @function clearProperties, and @function renderProperty
+ * 
  * @param {string} value
  */
-const filterProperties = value => {
+const searchProperties = value => {
     const results = properties.filter(property => {
         return property.type.toLowerCase().includes(value) ||
         property.title.toLowerCase().includes(value) ||
         property.description.toLowerCase().includes(value);
     });
 
+    searchField.value = value;
+    searchField.focus();
+    searchField.blur();
     // Clear the existing contents of propertiesWrapper
     clearProperties()
     // Render results or error message (by passing no argument into "renderProperty")
@@ -221,7 +225,7 @@ const filterProperties = value => {
 /**
  * Handle window @event hashchange
  * Calls @function clearContentBox, @function initPropertiesWrapper,
- * @function filterProperties, and @function renderProperty
+ * @function searchProperties, and @function renderProperty
  */
 const handleHashChange = () => {
     // Obtain the hash, hashTerm and searchTerm (if hashTerm is "search")
@@ -232,7 +236,7 @@ const handleHashChange = () => {
         case 'search':
             clearContentBox();
             initPropertiesWrapper();
-            filterProperties(searchTerm);
+            searchProperties(decodeURIComponent(searchTerm));
             break;
         case 'view_all':
         case '':
@@ -254,7 +258,7 @@ const handleHashChange = () => {
 const handleSearch = event => {
     event.preventDefault();
     // obtain search term and change the window hash value using the term
-    const searchTerm = searchField.value.trim().toLowerCase();
+    const searchTerm = encodeURIComponent(searchField.value.trim().toLowerCase());
     window.location.hash = `search=${searchTerm}`;
 };
 
