@@ -17,6 +17,7 @@
 body {
     max-width: 1700px;
     margin: 0 auto;
+    font-family: var(--body-font-family);
 }
 
 .gradient-background {
@@ -43,10 +44,6 @@ body {
 
 h1, h2, h3 {
     font-family: var(--headers-font-family);
-}
-
-body {
-    font-family: var(--body-font-family);
 }
 
 .top-bar {

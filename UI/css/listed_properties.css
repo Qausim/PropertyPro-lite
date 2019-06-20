@@ -4,14 +4,12 @@ aside {
     display: block;
     width: 0px;
     transition: width 0.2s ease;
+    z-index: 2;
 }
 
 .user-options li:first-child {
-    margin-top: 120px;
-}
-
-.user-options li {
-    padding: 20px;
+    margin-top: 117px;
+    border-top: 2px solid #B0CFE344;
 }
 
 footer {
@@ -32,12 +30,18 @@ footer {
     background: #B0CFE333;
 }
 
-.user-options a {
+a {
     text-decoration: none;
+    display: block;
+}
+
+.user-options a {
     font-size: 1.2em;
     font-weight: 500;
-    display: block;
     line-height: 1.4em;
+    padding: 20px;
+    height: 100%;
+    border-bottom: 2px solid #B0CFE344;
 }
 
 .hamburger-wrapper {
@@ -101,10 +105,19 @@ footer {
 .contents {
     padding: var(--content-padding-small);
     width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
 }
 
 
 /* refactor */
+
+.search-wrapper {
+    width: 80%;
+}
+
 form {
     width: 100%;
     display: flex;
@@ -123,6 +136,7 @@ input {
     padding: 0 5px;
     box-sizing: border-box;
     width: 60%;
+    justify-self: center;
 }
 
 input[type='submit'] {
@@ -142,18 +156,27 @@ input:focus {
     display: flex;
     flex-direction: column;
     width: 100%;
+    align-items: center;
+}
+
+.properties-wrapper a {
+    margin: 20px;
 }
 
 .properties-wrapper .properties {
     align-self: center;
     box-shadow: 0 0 0 2px #8e8e8e88;
-    margin: 20px;
     display: flex;
     flex-direction: column;
     height: 300px;
     width: 300px;
     min-width: 300px;
     box-sizing: border-box;
+    transition: transform 0.5s ease;
+}
+
+.properties-wrapper .properties:hover {
+    transform: scale(1.04);
 }
 
 .properties .img-wrapper {
@@ -183,6 +206,114 @@ input:focus {
     width: 100%;
     display: block;
     margin: 0 auto;
+}
+
+
+/* ================
+    property detail
+   ================
+*/
+
+.prev-img, .next-img {
+    height: 50px;
+    width: 40px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.prev-img div, .next-img div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.details-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.property-details-wrapper {
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 0 0 2px #8e8e8e88;
+    padding: 20px;
+    margin-bottom: 40px;
+}
+
+.property-details-wrapper .status {
+    font-weight: 600;
+}
+
+.property-location-wrapper {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.agent-details-wrapper {
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 0 0 2px #8e8e8e88;
+    padding: 20px;
+}
+
+.agent-details-wrapper .agent-name {
+    margin-bottom: 20px;
+}
+
+.agent-details-wrapper > div {
+    line-height: 1.4em;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.agent-details-wrapper .icon, .property-details-wrapper .icon {
+    margin-right: 10px;
+}
+
+.property-details-wrapper h2 + p {
+    margin-top: 20px;
+    font-size: 1em;
+}
+
+.property-details-wrapper .img-wrapper {
+    padding: 40px;
+    width: 80%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.property-details-wrapper .price {
+    margin-top: 20px;
+}
+
+.property-details-wrapper .description {
+    margin-top: 20px;
+    line-height: 1.4em;
+    font-size: 1em;
+}
+
+.property-details-wrapper .img-wrapper img {
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.agent-details-wrapper .header,
+.property-details-wrapper .title {
+    border-bottom: #000 solid 1px;
+    padding-bottom: 10px;
+    margin-bottom: 40px;
 }
 
 @media screen and (min-width: 768px) {
@@ -224,6 +355,7 @@ input:focus {
 
     .contents {
         padding: var(--content-padding-wide);
+        align-items: flex-start;
     }
 
     form {
@@ -233,8 +365,14 @@ input:focus {
     .contents .properties-wrapper {
         display: flex;
         flex-direction: column;
+        align-items: flex-start;
         width: 100%;
         box-sizing: border-box;
+    }
+
+    .properties-wrapper a {
+        margin: 20px 0px;
+        width: 90%;
     }
 
     .properties-wrapper .properties {
@@ -242,7 +380,6 @@ input:focus {
         height: 200px;
         width: 100%;
         min-width: 600px;
-        margin: 20px 0px;
     }
 
     .properties .img-wrapper {
@@ -263,7 +400,7 @@ input:focus {
     }
 
     .properties .text-wrapper p {
-        margin-top: 60px;
+        margin-top: 40px;
         max-width: 400px;
         display: block;
     }
