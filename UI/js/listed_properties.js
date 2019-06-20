@@ -1,10 +1,15 @@
 const hamburgerToggler = document.querySelector('.toggler');
 const sidebar = document.querySelector('aside');
 const contentBox = document.querySelector('.contents');
+let searchFieldHasFocus = false;
+let currentPropertyImageIndex = 0;
 let searchField;
 let searchButton;
 let propertiesWrapper;
-let searchFieldHasFocus = false;
+let nextImageButton;
+let previousImageButton;
+let propertyImageList;
+let propertyImage;
 
 // User model
 class User {
@@ -61,7 +66,7 @@ const users = [
 ];
 
 // The "currentUser" object simulates a logged user
-const currentUser = users[1];
+const currentUser = users[0];
 
 
 // A list of properties simulating existing posted properties
@@ -108,6 +113,39 @@ const properties = [
         "./images/propertyb3.jpg"])
 ];
 
+/**
+ * Sets highlight on the current user nav item selected
+ */
+const setActiveUserOption = () => {
+    const userOptions = ['view-all', 'view-yours', 'change-password'];
+    const urlHash = window.location.hash.substring(1).replace('_', '-');
+    
+    const removeActiveOption = () => {
+        const activeOption = document.querySelector('nav .active');
+        if (activeOption) {
+            activeOption.classList.remove('active');
+        }
+    };
+
+    if (urlHash === '') {
+        removeActiveOption();
+        document.querySelector('.item__view-all').classList.add('active');
+        return;
+    }
+
+    if (!userOptions.includes(urlHash)) {
+        removeActiveOption();
+        return;
+    }
+
+    if (urlHash) {
+        removeActiveOption();
+        document.querySelector(`nav .item__${urlHash}`)
+            .classList.add('active');
+        return;
+    }
+};
+
 
 /**
  * The @var contentBox is by default empty, this function inserts a "search-wrapper"
@@ -143,27 +181,132 @@ const initPropertiesWrapper = () => {
  * error message
  * @param {Property} property 
  */
-const renderProperty = property => {
+const renderPropertyInList = property => {
     const markup = property ?
     `
-    <div class="properties" data-propertyId="${property.propertyId}">
-        <div class="img-wrapper">
-            <img src="${property.images.length ? property.images[0] : null}" alt="Property image">
+    <a href="#detail=${property.propertyId}" class="text--black">
+        <div class="properties" data-propertyId="${property.propertyId}">
+            <div class="img-wrapper">
+                <img src="${property.images.length ? property.images[0] : null}" alt="Property image">
+            </div>
+            <div class="text-wrapper">
+                <h3>${property.title}</h3>
+                <h4 class="text--ellipsised">${property.price}</h4>
+                <p class="text--ellipsised">
+                    ${property.description}
+                </p>
+            </div>
         </div>
-        <div class="text-wrapper">
-            <h3>${property.price}</h3>
-            <h4 class="text--ellipsised">${property.title}</h4>
-            <p class="text--ellipsised">
-                ${property.description}
-            </p>
-        </div>
-    </div>
+    </a>
     `
     :
     '<h2 class="text--aligned-center">No property to display :(</h2>';
 
     propertiesWrapper.insertAdjacentHTML('afterbegin', markup);
 };
+
+
+/**
+ * Handles clicks on @var nextImageButton in the property detail view
+ * to show the next image.
+ */
+const displayNextPropertyImage = () => {
+    if (currentPropertyImageIndex < propertyImageList.length - 1) {
+        currentPropertyImageIndex++;
+        propertyImage.src = propertyImageList[currentPropertyImageIndex];
+    }
+};
+
+
+/**
+ * Handles clicks on @var previousImageButton in the property detail view
+ * to show the next image.
+ */
+const displayPreviousPropertyImage = () => {
+    if (currentPropertyImageIndex > 0) {
+        currentPropertyImageIndex--;
+        propertyImage.src = propertyImageList[currentPropertyImageIndex];
+    }
+};
+
+
+/**
+ * Renders the details of a specific property on the screen. Obtains the
+ * property to be displayed from the list of properties using the property
+ * id.
+ * Initializes @var nextImageButton,@var previousImageButton, @var propertyImage,
+ * and @var propertyImageList
+ * 
+ * @param {number} propertyId 
+ */
+const renderPropertyDetails = propertyId => {
+    const property = properties.find(el => el.propertyId === propertyId);
+    propertyImageList = property.images;
+    const agent = users.find(el => el.userId === property.agentId);
+    const markup = `
+        <div class="details-wrapper">
+            <div class="property-details-wrapper">
+                <h2 class="title">${property.title}</h2>
+                <p>Status: <span class="status text--capitalized">${property.sold ? "sold" : "available"}</span></p>
+                <div class="img-wrapper">
+                    <div class="prev-img">
+                        <div></div>
+                        <object data="./images/arrow_back.svg" type="image/svg+xml"></object>
+                    </div>
+                    <img src="${propertyImageList[currentPropertyImageIndex]}" alt="${property.title}">
+                    <div class="next-img">
+                        <div></div>
+                        <object data="./images/arrow_forward.svg" type="image/svg+xml"></object>
+                    </div>
+                </div>
+                <h3 class="price">${property.price}</h3>
+                <p class="description">
+                    ${property.description}
+                </p>
+                <div class="property-location-wrapper">
+                    <span class="icon">
+                        <object data="./images/location-icon.svg" type="image/svg+xml"></object>
+                    </span>
+                    <p class="property-location">${property.location}</p>
+                </div>
+            </div>
+            <div class="agent-details-wrapper">
+                <h2 class="header">Agent details</h2>
+                <h4 class="agent-name">${agent.firstName + ' ' + agent.lastName}</h4>
+                <div class="agent-address-wrapper">
+                    <span class="icon">
+                        <object data="./images/location-icon.svg" type="image/svg+xml"></object>
+                    </span>
+                    <p class="agent-addresss">${agent.address}</p>
+                </div>
+                <div class="phone">
+                    <span class="icon">
+                        <object data="./images/phone-icon.svg" type="image/svg+xml"></object>
+                    </span>
+                    <a href="tel:${agent.phone}">${agent.phone}</a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    contentBox.insertAdjacentHTML('afterbegin', markup);
+
+    propertyImage = document.querySelector('.property-details-wrapper .img-wrapper img');
+    nextImageButton = document.querySelector('.next-img div');
+    previousImageButton = document.querySelector('.prev-img div');
+    nextImageButton.addEventListener('click', displayNextPropertyImage);
+    previousImageButton.addEventListener('click', displayPreviousPropertyImage);
+};
+
+/**
+ * Collapses sidebar when window side is tablet or mobile sizes and
+ * sidebar is open
+ */
+const autoCollapseSidebar = () => {
+    if (window.innerWidth < 1025 && hamburgerToggler.checked) {
+        hamburgerToggler.click();
+    }
+}
 
 
 /**
@@ -198,7 +341,7 @@ const clearProperties = () => {
 /**
  * Filters a properties (using @member title, @member description, and @member type
  * @memberof Property) by @param value
- * Calls @function clearProperties, and @function renderProperty
+ * Calls @function clearProperties, and @function renderPropertyInList
  * 
  * @param {string} value
  */
@@ -214,11 +357,11 @@ const searchProperties = value => {
     searchField.blur();
     // Clear the existing contents of propertiesWrapper
     clearProperties()
-    // Render results or error message (by passing no argument into "renderProperty")
+    // Render results or error message (by passing no argument into "renderPropertyInList")
     if (results.length === 0) {
-        renderProperty();
+        renderPropertyInList();
     } else {
-        results.forEach(el => renderProperty(el));
+        results.forEach(el => renderPropertyInList(el));
     }
 };
 
@@ -226,24 +369,44 @@ const searchProperties = value => {
 /**
  * Handle window @event hashchange
  * Calls @function clearContentBox, @function initPropertiesWrapper,
- * @function searchProperties, and @function renderProperty
+ * @function searchProperties, @function renderPropertyDetails,
+ * and @function renderPropertyInList
  */
 const handleHashChange = () => {
     // Obtain the hash, hashTerm and searchTerm (if hashTerm is "search")
     const hash = window.location.hash.substring(1);
-    const [hashTerm, searchTerm] = hash.split('=');
+    const [hashTerm, hashValue] = hash.split('=');
 
     switch (hashTerm) {
         case 'search':
             clearContentBox();
             initPropertiesWrapper();
-            searchProperties(decodeURIComponent(searchTerm));
+            searchProperties(decodeURIComponent(hashValue));
             break;
         case 'view_all':
+            autoCollapseSidebar();
         case '':
+            setActiveUserOption();
             clearContentBox();
             initPropertiesWrapper();
-            properties.forEach(property => renderProperty(property));
+            properties.forEach(property => renderPropertyInList(property));
+            break;
+        case 'view_yours':
+            setActiveUserOption();
+            clearContentBox();
+            initPropertiesWrapper();
+            properties.filter(el => el.agentId === currentUser.userId)
+                .forEach(el => renderPropertyInList(el));
+            autoCollapseSidebar();
+            break;
+        case 'change_password':
+            setActiveUserOption();
+            autoCollapseSidebar();
+            break;
+        case 'detail':
+            setActiveUserOption();
+            clearContentBox();
+            renderPropertyDetails(parseInt(hashValue));
             break;
         default:
             clearContentBox();
@@ -290,13 +453,11 @@ const displaySidebarOnDesktopView = () => {
     }
 };
 
-// The first time the page loads display the list of properties
-initPropertiesWrapper();
-properties.forEach(property => renderProperty(property));
 
+// Check URL has and update page each time it loads
+handleHashChange();
 
 hamburgerToggler.addEventListener('click', toggleSidebarDisplay);
-searchButton.addEventListener('click', handleSearch);
 window.addEventListener('resize', displaySidebarOnDesktopView);
 window.addEventListener('hashchange', handleHashChange);
 window.addEventListener('keypress', handleSearchOnEnterKeypress);
