@@ -1,6 +1,10 @@
 const hamburgerToggler = document.querySelector('.toggler');
 const sidebar = document.querySelector('aside');
 const contentBox = document.querySelector('.contents');
+const deletePropertyModal = document.querySelector('.modal');
+const deleteModalCancelButton = document.querySelector('.modal button.cancel-delete');
+const deleteModalConfirmButton = document.querySelector('.modal button.confirm-delete');
+const deleteModalPropertyTitle = document.querySelector('.modal .modal-body .property-title');
 let searchFieldHasFocus = false;
 let currentPropertyImageIndex = 0;
 let searchField;
@@ -11,6 +15,7 @@ let previousImageButton;
 let propertyImageList;
 let propertyImage;
 let propertyStatusToggler;
+let deletePropertyButton;
 
 // User model
 class User {
@@ -159,7 +164,7 @@ const initPropertiesWrapper = () => {
     const markup =
         `<div class="search-wrapper">
             <form action="" id="search-form">
-                <input type="text" name="search" placeholder="Search properties">
+                <input type="text" name="search" placeholder="Search all properties">
                 <input type="submit" value="search" class="text--white">
             </form>
         </div>
@@ -208,6 +213,44 @@ const renderPropertyInList = property => {
 
 
 /**
+ * Retrieve the currently viewed property in detail view
+ * @returns {Property} object
+ */
+const getCurrentProperty = () => {
+    return properties.find(el => 
+        el.propertyId === parseInt(window.location.hash.split('=')[1]));
+};
+
+
+/**
+ * Closes delete property modal
+ */
+const closeDeletePropertyModal = () => deletePropertyModal.classList.add('no-display');
+
+
+/**
+ * Handles property delete confirmation and deletes the currently view property.
+ * Calls @function closeDeletePropertyModal
+ * @emits hashchange
+ */
+const deleteProperty = () => {
+    properties.splice(properties.findIndex(
+        el => el.propertyId === getCurrentProperty().propertyId), 1);
+    closeDeletePropertyModal();
+    window.location.hash = 'view_yours';
+};
+
+
+/**
+ * Displays modal to confirm or cancel property item deletion
+ */
+const showDeletePropertyModal = () => {
+    deleteModalPropertyTitle.textContent = getCurrentProperty().title;
+    deletePropertyModal.classList.remove('no-display');
+};
+
+
+/**
  * Handles clicks on @var nextImageButton in the property detail view
  * to show the next image.
  */
@@ -230,17 +273,18 @@ const displayPreviousPropertyImage = () => {
     }
 };
 
+
 /**
  * Handles @var propertyStatusToggler's click event and toggles @member sold
  * @memberof Property
  */
 const togglePropertyStatus = () => {
-    const propertyId = parseInt(window.location.hash.substring(1).split('=')[1]);
-    const property = properties.find(el => el.propertyId === propertyId);
+    const property = getCurrentProperty();
     property.sold = propertyStatusToggler.checked;
     clearContentBox();
-    renderPropertyDetails(propertyId);
+    renderPropertyDetails(getCurrentProperty());
 };
+
 
 /**
  * Renders the details of a specific property on the screen. Obtains the
@@ -251,8 +295,7 @@ const togglePropertyStatus = () => {
  * 
  * @param {number} propertyId 
  */
-const renderPropertyDetails = propertyId => {
-    const property = properties.find(el => el.propertyId === propertyId);
+const renderPropertyDetails = property => {
     const propertyStatus = property.sold;
     propertyImageList = property.images;
     const agent = users.find(el => el.userId === property.agentId);
@@ -310,6 +353,13 @@ const renderPropertyDetails = propertyId => {
                     <a href="tel:${agent.phone}">${agent.phone}</a>
                 </div>
             </div>
+
+            <div class="${userOwnsAd ? '' : 'no-display '}buttons">
+                <button type='button'
+                class="text--capitalized text--white delete-btn">
+                    delete
+                </button>
+            </div>
         </div>
     `;
 
@@ -323,9 +373,12 @@ const renderPropertyDetails = propertyId => {
     
     if (userOwnsAd) {
         propertyStatusToggler = document.querySelector('div.toggle-status input');
-        propertyStatusToggler.addEventListener('click', togglePropertyStatus)
+        propertyStatusToggler.addEventListener('click', togglePropertyStatus);
+        deletePropertyButton = document.querySelector('.delete-btn');
+        deletePropertyButton.addEventListener('click', showDeletePropertyModal);
     }
 };
+
 
 /**
  * Collapses sidebar when window side is tablet or mobile sizes and
@@ -346,7 +399,7 @@ const toggleSidebarDisplay = () => {
     const hamburgerWrapper = document.querySelector('.hamburger-wrapper');
     let width = hamburgerToggler.checked ? '250px' : '0px';
     sidebar.style.width = width;
-    hamburgerWrapper.style.left = width;
+    // hamburgerWrapper.style.left = width;
 };
 
 
@@ -396,10 +449,40 @@ const searchProperties = value => {
 
 
 /**
+ * Renders all property ads on the screen
+ * Calls @function clearContentBox, @function initPropertiesWrapper,
+ * and @function renderPropertyInList
+ */
+const renderAllPropertyAds = () => {
+    clearContentBox();
+    initPropertiesWrapper();
+
+    properties.length ? properties.forEach(property => renderPropertyInList(property))
+    :
+    renderPropertyInList();
+};
+
+
+/**
+ * Renders property ads posted by the current user on the screen
+ * Calls @function clearContentBox, @function initPropertiesWrapper,
+ * and @function renderPropertyInList
+ */
+const renderUserPropertyAds = () => {
+    clearContentBox();
+    initPropertiesWrapper();
+    const userAds = properties.filter(el => el.agentId === currentUser.userId)
+    userAds.length ? userAds.forEach(property => renderPropertyInList(property))
+    :
+    renderPropertyInList();
+};
+
+
+/**
  * Handle window @event hashchange
  * Calls @function clearContentBox, @function initPropertiesWrapper,
  * @function searchProperties, @function renderPropertyDetails,
- * and @function renderPropertyInList
+ * @function renderAllPropertyAds, and @function renderUserPropertyAds
  */
 const handleHashChange = () => {
     // Obtain the hash, hashTerm and searchTerm (if hashTerm is "search")
@@ -416,16 +499,11 @@ const handleHashChange = () => {
             autoCollapseSidebar();
         case '':
             setActiveUserOption();
-            clearContentBox();
-            initPropertiesWrapper();
-            properties.forEach(property => renderPropertyInList(property));
+            renderAllPropertyAds();
             break;
         case 'view_yours':
             setActiveUserOption();
-            clearContentBox();
-            initPropertiesWrapper();
-            properties.filter(el => el.agentId === currentUser.userId)
-                .forEach(el => renderPropertyInList(el));
+            renderUserPropertyAds();
             autoCollapseSidebar();
             break;
         case 'change_password':
@@ -435,7 +513,7 @@ const handleHashChange = () => {
         case 'detail':
             setActiveUserOption();
             clearContentBox();
-            renderPropertyDetails(parseInt(hashValue));
+            renderPropertyDetails(getCurrentProperty());
             break;
         default:
             clearContentBox();
@@ -483,10 +561,12 @@ const displaySidebarOnDesktopView = () => {
 };
 
 
-// Check URL has and update page each time it loads
+// Check URL update page
 handleHashChange();
 
 hamburgerToggler.addEventListener('click', toggleSidebarDisplay);
+deleteModalCancelButton.addEventListener('click', closeDeletePropertyModal);
+deleteModalConfirmButton.addEventListener('click', deleteProperty);
 window.addEventListener('resize', displaySidebarOnDesktopView);
 window.addEventListener('hashchange', handleHashChange);
 window.addEventListener('keypress', handleSearchOnEnterKeypress);
