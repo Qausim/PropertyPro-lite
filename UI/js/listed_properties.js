@@ -10,6 +10,7 @@ let nextImageButton;
 let previousImageButton;
 let propertyImageList;
 let propertyImage;
+let propertyStatusToggler;
 
 // User model
 class User {
@@ -229,6 +230,17 @@ const displayPreviousPropertyImage = () => {
     }
 };
 
+/**
+ * Handles @var propertyStatusToggler's click event and toggles @member sold
+ * @memberof Property
+ */
+const togglePropertyStatus = () => {
+    const propertyId = parseInt(window.location.hash.substring(1).split('=')[1]);
+    const property = properties.find(el => el.propertyId === propertyId);
+    property.sold = propertyStatusToggler.checked;
+    clearContentBox();
+    renderPropertyDetails(propertyId);
+};
 
 /**
  * Renders the details of a specific property on the screen. Obtains the
@@ -241,13 +253,25 @@ const displayPreviousPropertyImage = () => {
  */
 const renderPropertyDetails = propertyId => {
     const property = properties.find(el => el.propertyId === propertyId);
+    const propertyStatus = property.sold;
     propertyImageList = property.images;
     const agent = users.find(el => el.userId === property.agentId);
+    const userOwnsAd = agent.userId === currentUser.userId;
     const markup = `
         <div class="details-wrapper">
             <div class="property-details-wrapper">
                 <h2 class="title">${property.title}</h2>
-                <p>Status: <span class="status text--capitalized">${property.sold ? "sold" : "available"}</span></p>
+                <div class="status-wrapper">
+                    <p>Status: <span class="status text--capitalized">
+                        ${propertyStatus ? "sold" : "available"}
+                    </span></p>
+
+                    <div class="${userOwnsAd ? '' : "no-display "}${propertyStatus ? "sold " : "available "}toggle-status">
+                        <input type="checkbox" name="property-status-toggler"
+                            class="property-status-toggler" ${property.sold ? "checked" : null}>
+                        <label for="property-status-toggler" class="text--capitalized">Mark as sold</label>
+                    </div>
+                </div>
                 <div class="img-wrapper">
                     <div class="prev-img">
                         <div></div>
@@ -296,6 +320,11 @@ const renderPropertyDetails = propertyId => {
     previousImageButton = document.querySelector('.prev-img div');
     nextImageButton.addEventListener('click', displayNextPropertyImage);
     previousImageButton.addEventListener('click', displayPreviousPropertyImage);
+    
+    if (userOwnsAd) {
+        propertyStatusToggler = document.querySelector('div.toggle-status input');
+        propertyStatusToggler.addEventListener('click', togglePropertyStatus)
+    }
 };
 
 /**
