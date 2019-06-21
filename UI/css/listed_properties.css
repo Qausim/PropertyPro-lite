@@ -433,6 +433,133 @@ div.no-display {
 }
 
 
+
+/* 
+  ================================
+
+    Post form
+
+  ================================
+*/
+.form-wrapper {
+    width: 100%;
+}
+
+
+form.property-form {
+    position: relative;
+    background: #fff;
+    margin: 0 auto;
+    padding-top: 100px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    padding-left: var(--content-padding-medium);
+    padding-right: var(--content-padding-medium);
+    margin-bottom: 100px;
+    max-width: 650px;
+    box-sizing: border-box;
+}
+
+
+.property-form formgroup {
+    display: block;
+    width: 100%;
+}
+
+.property-form formgroup + formgroup {
+    margin-top: 30px;
+}
+
+.property-form input, .property-form label,
+.property-form textarea {
+    display: block;
+}
+
+.property-form label {
+    font-size: 1.2em;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.property-form input, .property-form textarea {
+    margin-top: 5px;
+    border: #bebebecc 1px solid;
+    box-shadow: 0 0 0 2px #8e8e8e22;
+    outline: none;
+    font-size: 1em;
+    max-width: unset;
+    margin-left: unset;
+}
+
+label::after {
+    font-style: italic;
+    font-size: 0.6em;
+}
+
+label[for="title"]::after {
+    content: '  (20 - 50 characters) *';
+}
+
+label[for="location"]::after {
+    content: '  (10 - 50 characters) *';
+}
+
+label[for="type"]::after {
+    content: '  (5 - 50 characters) *';
+}
+
+label[for="description"]::after {
+    content: '  (50 - 500 characters) *';
+}
+
+.property-form input[type='file'] {
+    height: initial;
+    width: initial;
+    padding: 0;
+}
+
+.property-form input:required:focus, .property-form textarea:focus {
+    border: #5DADE2 1px solid;
+}
+
+.property-form input:required, input[type="submit"], .property-form textarea {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+.property-form textarea {
+    height: 150px;
+    padding: 5px;
+    font-family: "Open sans", sans-serif;
+    resize: none;
+}
+
+.property-form input[type='submit'] {
+    background: var(--primary-color);
+    width: 100%;
+}
+
+.property-form input[type='submit']:hover {
+    cursor: pointer;
+}
+
+.property-form .error-msg {
+    color: #dd2c00;
+    position: absolute;
+    top: 60px;
+    left: var(--content-padding-medium);
+    max-width: 80%;
+}
+
+ .property-form .no-display {
+     display: none;
+}
+
+
 @media screen and (min-width: 768px) {
     .contents {
         padding: var(--content-padding-medium);

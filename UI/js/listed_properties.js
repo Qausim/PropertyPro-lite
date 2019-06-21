@@ -123,9 +123,9 @@ const properties = [
  * Sets highlight on the current user nav item selected
  */
 const setActiveUserOption = () => {
-    const userOptions = ['view-all', 'view-yours', 'change-password'];
+    const userOptions = ['view-all', 'view-yours', 'post'];
     const urlHash = window.location.hash.substring(1).replace('_', '-');
-    
+    console.log(urlHash)
     const removeActiveOption = () => {
         const activeOption = document.querySelector('nav .active');
         if (activeOption) {
@@ -506,8 +506,9 @@ const handleHashChange = () => {
             renderUserPropertyAds();
             autoCollapseSidebar();
             break;
-        case 'change_password':
+        case 'post':
             setActiveUserOption();
+            renderPropertyPostForm();
             autoCollapseSidebar();
             break;
         case 'detail':
@@ -518,6 +519,56 @@ const handleHashChange = () => {
         default:
             clearContentBox();
     }
+};
+
+
+const renderPropertyPostForm = () => {
+    const markup = 
+    `
+    <div class="form-wrapper">
+                <div class="msg-wrapper text--aligned-center">
+                    <h2>
+                        Post a property ad
+                    </h2>
+                </div>
+            <form action="" class="property-form">
+                <p class="error-msg no-display toggle-display">
+                    First name is required
+                </p>
+                <formgroup class="title-group">
+                    <label for="title" class="min20-max100">Title</label>
+                    <input type="text" name="title" required minlength="20" maxlength="100">
+                </formgroup>
+                <formgroup class="price-group">
+                    <label for="price">price (₦)</label>
+                    <input type="number" name="price" required>
+                </formgroup>
+                <formgroup class="type-group">
+                    <label for="type">type</label>
+                    <input type="text" name="type" required minlength="5" maxlength="50">
+                </formgroup>
+                <formgroup class="image-group">
+                    <label for="image">choose image</label>
+                    <input type="file" accept=".png,.jpg,.jpeg" name="image" multiple>
+                </formgroup>
+                <formgroup class="location-group">
+                    <label for="location">location</label>
+                    <input type="text" name="location" required minlength="10" maxlength="50">
+                </formgroup>
+                <formgroup class="description-group">
+                    <label for="description">description</label>
+                    <textarea type="text" name="description" required minlength="50" maxlength="500"></textarea>
+                </formgroup>
+                
+                <formgroup class="submit">
+                    <input type="submit" class="text--white" id="post-property-btn" value="Save">
+                </formgroup>
+             </form>
+         </div>
+    `;
+
+    clearContentBox();
+    contentBox.insertAdjacentHTML('afterbegin', markup);
 };
 
 
