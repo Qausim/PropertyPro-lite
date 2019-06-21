@@ -240,6 +240,12 @@ input:focus {
     align-items: center;
 }
 
+.details-wrapper .buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 60%;
+}
+
 .property-details-wrapper {
     width: 80%;
     max-width: 800px;
@@ -349,8 +355,7 @@ div.no-display {
     display: none;
 }
 
-.delete-btn {
-    background: #cf3226;
+.delete-btn, .edit-btn {
     width: 100px;
     height: 40px;
     font-weight: 600;
@@ -359,6 +364,14 @@ div.no-display {
     border-radius: 5px;
     border: 1px solid transparent;
     outline: none;
+}
+
+.edit-btn {
+    background: var(--primary-color);
+}
+
+.delete-btn {
+    background: #cf3226;
 }
 
 

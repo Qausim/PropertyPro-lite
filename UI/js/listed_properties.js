@@ -16,6 +16,7 @@ let propertyImageList;
 let propertyImage;
 let propertyStatusToggler;
 let deletePropertyButton;
+let editPropertyButton;
 
 // User model
 class User {
@@ -125,7 +126,6 @@ const properties = [
 const setActiveUserOption = () => {
     const userOptions = ['view-all', 'view-yours', 'post'];
     const urlHash = window.location.hash.substring(1).replace('_', '-');
-    console.log(urlHash)
     const removeActiveOption = () => {
         const activeOption = document.querySelector('nav .active');
         if (activeOption) {
@@ -222,6 +222,9 @@ const getCurrentProperty = () => {
 };
 
 
+const getCurrentPropertyId = () => parseInt(window.location.hash.split('=')[1]);
+
+
 /**
  * Closes delete property modal
  */
@@ -240,6 +243,11 @@ const deleteProperty = () => {
     window.location.hash = 'view_yours';
 };
 
+
+const editProperty = () => {
+    const propertyId = getCurrentPropertyId();
+    window.location.hash = `edit=${propertyId}`;
+}
 
 /**
  * Displays modal to confirm or cancel property item deletion
@@ -356,7 +364,11 @@ const renderPropertyDetails = property => {
 
             <div class="${userOwnsAd ? '' : 'no-display '}buttons">
                 <button type='button'
-                class="text--capitalized text--white delete-btn">
+                    class="text--capitalized text--white edit-btn">
+                    edit
+                </button>
+                <button type='button'
+                    class="text--capitalized text--white delete-btn">
                     delete
                 </button>
             </div>
@@ -376,6 +388,8 @@ const renderPropertyDetails = property => {
         propertyStatusToggler.addEventListener('click', togglePropertyStatus);
         deletePropertyButton = document.querySelector('.delete-btn');
         deletePropertyButton.addEventListener('click', showDeletePropertyModal);
+        editPropertyButton = document.querySelector('.edit-btn');
+        editPropertyButton.addEventListener('click', editProperty);
     }
 };
 
@@ -516,19 +530,33 @@ const handleHashChange = () => {
             clearContentBox();
             renderPropertyDetails(getCurrentProperty());
             break;
+        case 'edit':
+            setActiveUserOption();
+            clearContentBox();
+            renderPropertyPostForm(getCurrentProperty());
+            break;
         default:
             clearContentBox();
     }
 };
 
 
-const renderPropertyPostForm = () => {
+const renderPropertyPostForm = property => {
+    let title, description, price, type, propertyLocation;
+    if (property) {
+        title = property.title.trim();
+        description = property.description.trim();
+        price = property.price;
+        type = property.type.trim();
+        propertyLocation = property.location.trim();
+    }
+    console.log(description);
     const markup = 
     `
     <div class="form-wrapper">
                 <div class="msg-wrapper text--aligned-center">
                     <h2>
-                        Post a property ad
+                        ${property ? "Update property ad" : "Post a property ad"}
                     </h2>
                 </div>
             <form action="" class="property-form">
@@ -537,15 +565,18 @@ const renderPropertyPostForm = () => {
                 </p>
                 <formgroup class="title-group">
                     <label for="title" class="min20-max100">Title</label>
-                    <input type="text" name="title" required minlength="20" maxlength="100">
+                    <input type="text" name="title" required minlength="20" maxlength="100"
+                        value="${property ? title : ''}">
                 </formgroup>
                 <formgroup class="price-group">
                     <label for="price">price (₦)</label>
-                    <input type="number" name="price" required>
+                    <input type="number" name="price" required
+                        value=${property ? price.match(/\d+/g) : ''}>
                 </formgroup>
                 <formgroup class="type-group">
                     <label for="type">type</label>
-                    <input type="text" name="type" required minlength="5" maxlength="50">
+                    <input type="text" name="type" required minlength="5" maxlength="50"
+                        value="${property ? type : ''}">
                 </formgroup>
                 <formgroup class="image-group">
                     <label for="image">choose image</label>
@@ -553,11 +584,14 @@ const renderPropertyPostForm = () => {
                 </formgroup>
                 <formgroup class="location-group">
                     <label for="location">location</label>
-                    <input type="text" name="location" required minlength="10" maxlength="50">
+                    <input type="text" name="location" required minlength="10" maxlength="50"
+                        value="${property ? propertyLocation : ''}">
                 </formgroup>
                 <formgroup class="description-group">
                     <label for="description">description</label>
-                    <textarea type="text" name="description" required minlength="50" maxlength="500"></textarea>
+                    <textarea type="text" name="description"
+                        required minlength="50" maxlength="500">${property ?
+                            description.trim() : ''}</textarea>
                 </formgroup>
                 
                 <formgroup class="submit">
