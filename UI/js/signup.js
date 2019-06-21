@@ -52,6 +52,8 @@ const registerUser = event => {
             return;
         }
     }
+
+    window.location.href = './listed_properties.html';
 };
 
 submitButton.addEventListener('click', registerUser)

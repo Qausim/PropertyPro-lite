@@ -18,6 +18,8 @@ const logUserIn = event => {
     if (handleInvalidEmailOrPasswordErrors(email, password)) {
         return;
     }
+    
+    window.location.href = './listed_properties.html';
 }
 
 submitButton.addEventListener('click', logUserIn);
