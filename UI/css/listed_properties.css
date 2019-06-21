@@ -351,6 +351,10 @@ div.toggle-status.available {
     margin-right: 10px;
 }
 
+.details-wrapper  div.no-display.buttons {
+    display: none;
+}
+
 div.no-display {
     display: none;
 }
