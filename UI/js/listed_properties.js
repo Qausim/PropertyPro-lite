@@ -309,7 +309,7 @@ const renderPropertyDetails = property => {
     const agent = users.find(el => el.userId === property.agentId);
     const userOwnsAd = agent.userId === currentUser.userId;
     const markup = `
-        <div class="details-wrapper">
+        <div class="details">
             <div class="property-details-wrapper">
                 <h2 class="title">${property.title}</h2>
                 <div class="status-wrapper">
@@ -325,12 +325,12 @@ const renderPropertyDetails = property => {
                 </div>
                 <div class="img-wrapper">
                     <div class="prev-img">
-                        <div></div>
+                        <div class="button"></div>
                         <object data="./images/arrow_back.svg" type="image/svg+xml"></object>
                     </div>
                     <img src="${propertyImageList[currentPropertyImageIndex]}" alt="${property.title}">
                     <div class="next-img">
-                        <div></div>
+                        <div class="button"></div>
                         <object data="./images/arrow_forward.svg" type="image/svg+xml"></object>
                     </div>
                 </div>
