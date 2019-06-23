@@ -19,7 +19,7 @@ const logUserIn = event => {
         return;
     }
     
-    window.location.href = './listed_properties.html';
+    window.location.href = './app.html';
 }
 
 submitButton.addEventListener('click', logUserIn);

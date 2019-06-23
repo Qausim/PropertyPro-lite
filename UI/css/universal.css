@@ -1,12 +1,19 @@
 /* This CSS file contains styles relevant to all pages. */
 :root {
     --primary-color: rgba(16, 102, 255, 1);
-    --primary-color-light: rgba(16, 102, 241, 0.6);
+    --primary-color--light: rgba(16, 102, 241, 0.6);
     --content-padding-wide: 64px;
     --content-padding-medium: 32px;
     --content-padding-small: 16px;
     --headers-font-family: 'Merriweather', serif;
     --body-font-family: "Open Sans", sans-serif;
+    --warning-msg-color: #dd2c00;
+    --warning-color: #cf3226;
+    --neutral-color: #85929E;
+    --bg-sidebar: #262542;
+    --bg-active-menu: #B0CFE333;
+    --bg-modal: rgba(0, 0, 0, 0.5);
+    --bd-property__text: 2px solid var(--primary-color--light);
 }
 
 * {
@@ -20,8 +27,12 @@ body {
     font-family: var(--body-font-family);
 }
 
-.gradient-background {
-    background: linear-gradient(to right bottom, var(--primary-color), var(--primary-color-light)) no-repeat;
+p {
+    line-height: 1.4em;
+}
+
+.bg-gradient {
+    background: linear-gradient(to right bottom, var(--primary-color), var(--primary-color--light)) no-repeat;
     background-size: contain;
 }
 
@@ -70,8 +81,99 @@ footer p {
     letter-spacing: 0.08em;
 }
 
-.hover-pointer-cursor {
+button, input[type="submit"] {
+    background: var(--primary-color);
+}
+
+a:hover, button:hover, .button:hover,
+input[type='checkbox']:hover, input[type='submit'] {
     cursor: pointer;
+}
+
+/* ==========================
+
+            FORMS
+    
+========================== */
+form {
+    display: flex;
+}
+
+.data-form {
+    position: relative;
+    background: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    width: 80%;
+    flex-direction: column;
+    align-items: center;
+    padding-left: var(--content-padding-medium);
+    padding-right: var(--content-padding-medium);
+    justify-content: center;
+    border-radius: 5px;
+    max-width: 650px;
+    box-sizing: border-box;
+}
+
+form .no-display {
+    display: none;
+}
+
+form input, label, formgroup, textarea {
+    display: block;
+}
+
+form input, form textarea {
+    margin-top: 5px;
+    border: #bebebecc 1px solid;
+    box-shadow: 0 0 0 2px #8e8e8e22;
+    outline: none;
+    font-size: 1em;
+    width: 100%;
+    border-radius: 5px;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+form input, button {
+    height: 40px;
+}
+
+label {
+    font-size: 1.2em;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+formgroup {
+    width: 100%;
+}
+
+formgroup + formgroup {
+    margin-top: 30px;
+}
+
+form .error-msg {
+    color: var(--warning-msg-color);
+    position: absolute;
+    top: 60px;
+    left: var(--content-padding-medium);
+    max-width: 80%;
+}
+
+.error-msg {
+    text-transform: none;
+}
+
+input[required]:focus {
+    border: #5DADE2 1px solid;
+}
+
+.top-bar {
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .top-bar nav ul {
@@ -111,10 +213,6 @@ footer p {
     overflow: hidden;
 }
 
-.error-msg {
-    text-transform: none;
-}
-
 @media screen and (min-width: 768px) {
     .logo.big {
         display: block;
@@ -126,5 +224,14 @@ footer p {
 
     .top-bar {
         padding: var(--content-padding-medium) var(--content-padding-wide);
+    }
+
+    form.data-form {
+        padding-left: var(--content-padding-wide);
+        padding-right: var(--content-padding-wide);
+    }
+
+    form .error-msg {
+        left: var(--content-padding-wide);
     }
 }
