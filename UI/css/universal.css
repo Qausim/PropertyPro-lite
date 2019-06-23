@@ -7,9 +7,9 @@
     --content-padding-small: 16px;
     --headers-font-family: 'Merriweather', serif;
     --body-font-family: "Open Sans", sans-serif;
-    --warning-msg--color: #dd2c00;
-    --warning--color: #cf3226;
-    --neutral--color: #85929E;
+    --warning-msg-color: #dd2c00;
+    --warning-color: #cf3226;
+    --neutral-color: #85929E;
     --bg-sidebar: #262542;
     --bg-active-menu: #B0CFE333;
     --bg-modal: rgba(0, 0, 0, 0.5);
@@ -25,6 +25,10 @@ body {
     max-width: 1700px;
     margin: 0 auto;
     font-family: var(--body-font-family);
+}
+
+p {
+    line-height: 1.4em;
 }
 
 .bg-gradient {
@@ -95,7 +99,7 @@ form {
     display: flex;
 }
 
-form:not(#search-form) {
+.data-form {
     position: relative;
     background: #fff;
     margin-left: auto;
@@ -152,7 +156,7 @@ formgroup + formgroup {
 }
 
 form .error-msg {
-    color: var(--warning-msg--color);
+    color: var(--warning-msg-color);
     position: absolute;
     top: 60px;
     left: var(--content-padding-medium);
@@ -222,7 +226,7 @@ input[required]:focus {
         padding: var(--content-padding-medium) var(--content-padding-wide);
     }
 
-    form:not(#search-form) {
+    form.data-form {
         padding-left: var(--content-padding-wide);
         padding-right: var(--content-padding-wide);
     }

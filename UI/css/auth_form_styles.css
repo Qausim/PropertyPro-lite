@@ -8,10 +8,6 @@ form.auth-form {
     margin-top: 100px;
 }
 
-.no-display { /* refactor */
-    display: none;
-}
-
 .auth-form + .msg-wrapper {
     font-size: 1em;
     margin-top: 60px;

@@ -315,7 +315,6 @@ a {
 
     .property-details .description {
         margin-top: 20px;
-        line-height: 1.4em;
         font-size: 1em;
     }
     
@@ -356,6 +355,7 @@ a {
         display: flex;
         justify-content: space-around;
         width: 100%;
+        margin-top: 30px;
     }
     
     .delete-btn, .edit-btn {
@@ -368,7 +368,7 @@ a {
     }
     
     .delete-btn {
-        background: var(--warning--color);
+        background: var(--warning-color);
     }
 
     .buttons.no-display, .modal.no-display,
@@ -437,7 +437,7 @@ a {
 }
 
 .modal button.confirm-delete {
-    background: var(--warning--color);
+    background: var(--warning-color);
 }
 
 
@@ -452,8 +452,9 @@ a {
     width: 100%;
 }
 
-.contents .form-wrapper .property-form {
-    padding: 0px;
+.data-form.property-form {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 label::after {
@@ -510,6 +511,11 @@ label[for="description"]::after {
 
     .details .buttons {
         width: 60%;
+    }
+
+    .data-form.property-form {
+        padding-left: var(--content-padding-wide);
+        padding-right: var(--content-padding-wide);
     }
 }
 

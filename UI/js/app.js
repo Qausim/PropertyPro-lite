@@ -120,12 +120,14 @@ const properties = [
         "./images/propertyb3.jpg"])
 ];
 
+
 /**
  * Sets highlight on the current user nav item selected
  */
 const setActiveUserOption = () => {
     const userOptions = ['view-all', 'view-yours', 'post'];
     const urlHash = window.location.hash.substring(1).replace('_', '-');
+
     const removeActiveOption = () => {
         const activeOption = document.querySelector('nav .active');
         if (activeOption) {
@@ -133,31 +135,78 @@ const setActiveUserOption = () => {
         }
     };
 
+    // Empty URL hash implies all property view
     if (urlHash === '') {
         removeActiveOption();
         document.querySelector('.item__view-all').classList.add('active');
         return;
     }
 
+    // Set nothing if URL hash is not existent on the nav
     if (!userOptions.includes(urlHash)) {
         removeActiveOption();
         return;
     }
-
+    
+    // Set active
     if (urlHash) {
         removeActiveOption();
         document.querySelector(`nav .item__${urlHash}`)
             .classList.add('active');
         return;
     }
+};    
+
+
+/**
+ * Toggles the sidebar on click on the hamburger in mobile and tablet modes
+ * by setting @var sidebar's width and @var hamburgerWrapper's left position
+ */
+const toggleSidebarDisplay = () => {
+    const hamburgerWrapper = document.querySelector('.hamburger-wrapper');
+    let width = hamburgerToggler.checked ? '250px' : '0px';
+    sidebar.style.width = width;
+    // hamburgerWrapper.style.left = width;
+};
+
+
+/**
+ * Collapses sidebar when window size is below desktop size.
+ * @emits click event for @var hamburgerToggler
+ */ 
+const autoCollapseSidebar = () => {
+    if (window.innerWidth < 1025 && hamburgerToggler.checked) {
+        hamburgerToggler.click();
+    }    
+};
+
+
+/**
+ * Displays @var sidebar on desktop screen sizes
+ */
+const displaySidebarOnDesktopView = () => {
+    if (window.innerWidth >= 1025) {
+        sidebar.style.width = '250px';
+    } else {
+        sidebar.style.width = '0px';
+    }
+};
+
+
+/**
+ * Clears the contents of the main page: @var contentBox
+ */
+const clearContentBox = () => {
+    contentBox.textContent = "";
 };
 
 
 /**
  * The @var contentBox is by default empty, this function inserts a "search-wrapper"
- * div and a "properties-wrapper" div into it.
- * It initializes the @var searchField, @var searchButton, and @var propertiesWrapper
- * and sets @event focus and @event blur listeners on @var searchField that toggles
+ * div and a "properties-wrapper" div (@var propertiesWrapper) into it.
+ * 
+ * It initializes @var searchField, @var searchButton, and @var propertiesWrapper
+ * and sets @event focus and @event blur listeners on @var searchField that toggle
  * @var searchFieldHasFocus value
  */
 const initPropertiesWrapper = () => {
@@ -165,7 +214,7 @@ const initPropertiesWrapper = () => {
         `<div class="search-wrapper">
             <form action="" id="search-form">
                 <input type="text" name="search" placeholder="Search all properties">
-                <input type="submit" value="search" class="text--white">
+                <input type="submit" value="search" class="text--white text--capitalized">
             </form>
         </div>
         <div class="properties-wrapper">
@@ -183,8 +232,17 @@ const initPropertiesWrapper = () => {
 
 
 /**
- * Renders a property object inside @var propertiesWrapper if it exists else it sets an
- * error message
+ * Clears the contents of @var propertiesWrapper
+ */
+const clearProperties = () => {
+    propertiesWrapper.textContent = '';
+};
+
+
+/**
+ * Renders a property object in a lilst inside @var propertiesWrapper if the 
+ * property exists else it sets an error message on the screen.
+ * 
  * @param {Property} property 
  */
 const renderPropertyInList = property => {
@@ -193,7 +251,7 @@ const renderPropertyInList = property => {
     <a href="#detail=${property.propertyId}" class="text--black">
         <div class="properties" data-propertyId="${property.propertyId}">
             <div class="img-wrapper">
-                <img src="${property.images.length ? property.images[0] : null}" alt="Property image">
+                <img src="${property.images.length ? property.images[0] : null}" alt="${property.title}">
             </div>
             <div class="text-wrapper">
                 <h3>${property.title}</h3>
@@ -209,262 +267,6 @@ const renderPropertyInList = property => {
     '<h2 class="text--aligned-center">No property to display :(</h2>';
 
     propertiesWrapper.insertAdjacentHTML('afterbegin', markup);
-};
-
-
-/**
- * Retrieve the currently viewed property in detail view
- * @returns {Property} object
- */
-const getCurrentProperty = () => {
-    return properties.find(el => 
-        el.propertyId === parseInt(window.location.hash.split('=')[1]));
-};
-
-
-const getCurrentPropertyId = () => parseInt(window.location.hash.split('=')[1]);
-
-
-/**
- * Closes delete property modal
- */
-const closeDeletePropertyModal = () => deletePropertyModal.classList.add('no-display');
-
-
-/**
- * Handles property delete confirmation and deletes the currently view property.
- * Calls @function closeDeletePropertyModal
- * @emits hashchange
- */
-const deleteProperty = () => {
-    properties.splice(properties.findIndex(
-        el => el.propertyId === getCurrentProperty().propertyId), 1);
-    closeDeletePropertyModal();
-    window.location.hash = 'view_yours';
-};
-
-
-const editProperty = () => {
-    const propertyId = getCurrentPropertyId();
-    window.location.hash = `edit=${propertyId}`;
-}
-
-/**
- * Displays modal to confirm or cancel property item deletion
- */
-const showDeletePropertyModal = () => {
-    deleteModalPropertyTitle.textContent = getCurrentProperty().title;
-    deletePropertyModal.classList.remove('no-display');
-};
-
-
-/**
- * Handles clicks on @var nextImageButton in the property detail view
- * to show the next image.
- */
-const displayNextPropertyImage = () => {
-    if (currentPropertyImageIndex < propertyImageList.length - 1) {
-        currentPropertyImageIndex++;
-        propertyImage.src = propertyImageList[currentPropertyImageIndex];
-    }
-};
-
-
-/**
- * Handles clicks on @var previousImageButton in the property detail view
- * to show the next image.
- */
-const displayPreviousPropertyImage = () => {
-    if (currentPropertyImageIndex > 0) {
-        currentPropertyImageIndex--;
-        propertyImage.src = propertyImageList[currentPropertyImageIndex];
-    }
-};
-
-
-/**
- * Handles @var propertyStatusToggler's click event and toggles @member sold
- * @memberof Property
- */
-const togglePropertyStatus = () => {
-    const property = getCurrentProperty();
-    property.sold = propertyStatusToggler.checked;
-    clearContentBox();
-    renderPropertyDetails(getCurrentProperty());
-};
-
-
-/**
- * Renders the details of a specific property on the screen. Obtains the
- * property to be displayed from the list of properties using the property
- * id.
- * Initializes @var nextImageButton,@var previousImageButton, @var propertyImage,
- * and @var propertyImageList
- * 
- * @param {number} propertyId 
- */
-const renderPropertyDetails = property => {
-    if (!property) {
-        contentBox.insertAdjacentHTML('afterbegin',
-        '<h3 class="text--aligned-center">:/ This requested property ad does not exist</h3>');
-        return;
-    }
-    
-    const propertyStatus = property.sold;
-    propertyImageList = property.images;
-    const agent = users.find(el => el.userId === property.agentId);
-    const userOwnsAd = agent.userId === currentUser.userId;
-    const markup = `
-        <div class="details-wrapper">
-            <div class="property-details">
-                <h2 class="title">${property.title}</h2>
-                <div class="status-wrapper">
-                    <p>Status: <span class="status text--capitalized">
-                        ${propertyStatus ? "sold" : "available"}
-                    </span></p>
-
-                    <div class="${userOwnsAd ? '' : "no-display "}${propertyStatus ? "sold " : "available "}status-toggler-wrapper">
-                        <input type="checkbox" name="status-toggler"
-                            class="status-toggler" ${property.sold ? "checked" : null}>
-                        <label for="status-toggler" class="text--capitalized">Mark as sold</label>
-                    </div>
-                </div>
-                <div class="img-wrapper">
-                    <div class="prev-img">
-                        <div class="button"></div>
-                        <object data="./images/arrow_back.svg" type="image/svg+xml"></object>
-                    </div>
-                    <img src="${propertyImageList[currentPropertyImageIndex]}" alt="${property.title}">
-                    <div class="next-img">
-                        <div class="button"></div>
-                        <object data="./images/arrow_forward.svg" type="image/svg+xml"></object>
-                    </div>
-                </div>
-                <h3 class="price">${property.price}</h3>
-                <p class="description">
-                    ${property.description}
-                </p>
-                <div class="property-location-wrapper">
-                    <span class="icon">
-                        <object data="./images/location-icon.svg" type="image/svg+xml"></object>
-                    </span>
-                    <p class="property-location">${property.location}</p>
-                </div>
-            </div>
-            <div class="agent-details">
-                <h2 class="header">Agent details</h2>
-                <h4 class="agent-name">${agent.firstName + ' ' + agent.lastName}</h4>
-                <div class="agent-address-wrapper">
-                    <span class="icon">
-                        <object data="./images/location-icon.svg" type="image/svg+xml"></object>
-                    </span>
-                    <p class="agent-addresss">${agent.address}</p>
-                </div>
-                <div class="phone">
-                    <span class="icon">
-                        <object data="./images/phone-icon.svg" type="image/svg+xml"></object>
-                    </span>
-                    <a href="tel:${agent.phone}">${agent.phone}</a>
-                </div>
-            </div>
-
-            <div class="${userOwnsAd ? '' : 'no-display '}buttons">
-                <button type='button'
-                    class="text--capitalized text--white edit-btn">
-                    edit
-                </button>
-                <button type='button'
-                    class="text--capitalized text--white delete-btn">
-                    delete
-                </button>
-            </div>
-        </div>
-    `;
-
-    contentBox.insertAdjacentHTML('afterbegin', markup);
-
-    propertyImage = document.querySelector('.property-details .img-wrapper img');
-    nextImageButton = document.querySelector('.next-img div');
-    previousImageButton = document.querySelector('.prev-img div');
-    nextImageButton.addEventListener('click', displayNextPropertyImage);
-    previousImageButton.addEventListener('click', displayPreviousPropertyImage);
-    
-    if (userOwnsAd) {
-        propertyStatusToggler = document.querySelector('div.status-toggler-wrapper input');
-        propertyStatusToggler.addEventListener('click', togglePropertyStatus);
-        deletePropertyButton = document.querySelector('.delete-btn');
-        deletePropertyButton.addEventListener('click', showDeletePropertyModal);
-        editPropertyButton = document.querySelector('.edit-btn');
-        editPropertyButton.addEventListener('click', editProperty);
-    }
-};
-
-
-/**
- * Collapses sidebar when window side is tablet or mobile sizes and
- * sidebar is open
- */
-const autoCollapseSidebar = () => {
-    if (window.innerWidth < 1025 && hamburgerToggler.checked) {
-        hamburgerToggler.click();
-    }
-}
-
-
-/**
- * Toggles the sidebar on click on the hamburger in mobile and tablet modes
- * by setting @var sidebar's width and @var hamburgerWrapper's left positioning
- */
-const toggleSidebarDisplay = () => {
-    const hamburgerWrapper = document.querySelector('.hamburger-wrapper');
-    let width = hamburgerToggler.checked ? '250px' : '0px';
-    sidebar.style.width = width;
-    // hamburgerWrapper.style.left = width;
-};
-
-
-/**
- * Clears the contents of @var contentBox
- */
-const clearContentBox = () => {
-    contentBox.textContent = "";
-};
-
-
-/**
- * Clears the contents of @var propertiesWrapper
- */
-const clearProperties = () => {
-    propertiesWrapper.textContent = '';
-};
-
-
-
-/**
- * Filters a properties (using @member title, @member description, and @member type
- * @memberof Property) by @param value
- * Calls @function clearProperties, and @function renderPropertyInList
- * 
- * @param {string} value
- */
-const searchProperties = value => {
-    const results = properties.filter(property => {
-        return property.type.toLowerCase().includes(value) ||
-        property.title.toLowerCase().includes(value) ||
-        property.description.toLowerCase().includes(value);
-    });
-
-    searchField.value = value;
-    searchField.focus();
-    searchField.blur();
-    // Clear the existing contents of propertiesWrapper
-    clearProperties()
-    // Render results or error message (by passing no argument into "renderPropertyInList")
-    if (results.length === 0) {
-        renderPropertyInList();
-    } else {
-        results.forEach(el => renderPropertyInList(el));
-    }
 };
 
 
@@ -499,7 +301,352 @@ const renderUserPropertyAds = () => {
 
 
 /**
+ * Handles user search actions by changing the window hash value.
+ * @emits hashchange
+ * @param {DOMEvent} event 
+ */
+const handleSearch = event => {
+    event.preventDefault();
+    // obtain search term and change the window hash value using the term
+    const searchTerm = encodeURIComponent(searchField.value.trim().toLowerCase());
+    window.location.hash = `search=${searchTerm}`;
+};
+
+
+/**
+ * Handles enter keypress event to search a specific property type
+ * Calls @function handleSearch if @var searchFieldHasFocus is true
+ * @param {DOMEvent} event 
+ */
+const handleSearchOnEnterKeypress = event => {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        if (searchFieldHasFocus) {
+            handleSearch(event);
+        }
+    }
+};
+
+
+/**
+ * Filters properties (using @member title, @member description, and @member type
+ * @memberof Property) by @param value
+ * 
+ * Calls @function clearProperties, and @function renderPropertyInList
+ * @param {string} value
+ */
+const searchProperties = value => {
+    const results = properties.filter(property => {
+        return property.type.toLowerCase().includes(value) ||
+        property.title.toLowerCase().includes(value) ||
+        property.description.toLowerCase().includes(value);
+    });
+
+    searchField.value = value;
+    searchField.focus();
+    searchField.blur();
+    // Clear the existing contents of propertiesWrapper
+    clearProperties()
+    // Render results or error message (by passing no argument into "renderPropertyInList")
+    if (results.length === 0) {
+        renderPropertyInList();
+    } else {
+        results.forEach(el => renderPropertyInList(el));
+    }
+};
+
+
+/**
+ * Retrieves the id of the property active in view
+ */
+const getCurrentPropertyId = () => parseInt(window.location.hash.split('=')[1]);
+
+
+/**
+ * Retrieves the property object active in view.
+ * 
+ * @returns {Property} object
+ */
+const getCurrentProperty = () => {
+    return properties.find(el => 
+        el.propertyId === getCurrentPropertyId());
+};
+
+
+/**
+ * Retrieves the markup to display details of a specific property ad.
+ * 
+ * @param {Property} property 
+ * @param {Agent} agent 
+ * @param {boolean} userOwnsAd 
+ */
+const getPropertyDetailMarkup = (property, agent, userOwnsAd) => {    
+    const propertyStatus = property.sold;
+    return `
+    <div class="details-wrapper">
+        <div class="property-details">
+            <h2 class="title">${property.title}</h2>
+            <div class="status-wrapper">
+                <p>Status: <span class="status text--capitalized">
+                    ${propertyStatus ? "sold" : "available"}
+                </span></p>
+
+             <div class="${userOwnsAd ? '' : "no-display "}
+                ${propertyStatus ? "sold " : "available "}status-toggler-wrapper">
+
+                 <input type="checkbox" name="status-toggler"
+                    class="status-toggler" ${propertyStatus ? "checked" : null}>
+
+                 <label for="status-toggler" class="text--capitalized">Mark as sold</label>
+
+             </div>
+            </div>
+            <div class="img-wrapper">
+                <div class="prev-img">
+                    <div class="button"></div>
+                    <object data="./images/arrow_back.svg" type="image/svg+xml"></object>
+                </div>
+                <img src="${propertyImageList[currentPropertyImageIndex]}" alt="${property.title}">
+                <div class="next-img">
+                    <div class="button"></div>
+                    <object data="./images/arrow_forward.svg" type="image/svg+xml"></object>
+                </div>
+            </div>
+            <h3 class="price">${property.price}</h3>
+            <p class="description">
+                ${property.description}
+            </p>
+            <div class="property-location-wrapper">
+                <span class="icon">
+                    <object data="./images/location-icon.svg" type="image/svg+xml"></object>
+                </span>
+                <p class="property-location">${property.location}</p>
+            </div>
+        </div>
+        <div class="agent-details">
+            <h2 class="header">Agent details</h2>
+            <h4 class="agent-name">${agent.firstName + ' ' + agent.lastName}</h4>
+            <div class="agent-address-wrapper">
+                <span class="icon">
+                    <object data="./images/location-icon.svg" type="image/svg+xml"></object>
+                </span>
+                <p class="agent-addresss">${agent.address}</p>
+            </div>
+            <div class="phone">
+                <span class="icon">
+                    <object data="./images/phone-icon.svg" type="image/svg+xml"></object>
+                </span>
+                <a href="tel:${agent.phone}">${agent.phone}</a>
+            </div>
+        </div>
+
+     <div class="${userOwnsAd ? '' : 'no-display '}buttons">
+            <button type='button'
+                class="text--capitalized text--white edit-btn">edit</button>
+            <button type='button'
+                class="text--capitalized text--white delete-btn">delete</button>
+        </div>
+    </div>`;
+};
+
+/**
+ * Renders the details of a specific property on the screen.
+ * 
+ * Calls @function getPropertyDetailMarkup
+ * Initializes @var nextImageButton,@var previousImageButton, @var propertyImage,
+ * and @var propertyImageList
+ * 
+ * @param {Property} property 
+ */
+const renderPropertyDetails = property => {
+    // Show error message if property does not exist
+    if (!property) {
+        contentBox.insertAdjacentHTML('afterbegin',
+        '<h3 class="text--aligned-center">:/ The requested property ad does not exist</h3>');
+        return;
+    }
+
+    propertyImageList = property.images;
+    const agent = users.find(el => el.userId === property.agentId);
+    const userOwnsAd = agent.userId === currentUser.userId;
+    
+    const markup = getPropertyDetailMarkup(property, agent, userOwnsAd);
+
+    contentBox.insertAdjacentHTML('afterbegin', markup);
+
+    propertyImage = document.querySelector('.property-details .img-wrapper img');
+    nextImageButton = document.querySelector('.next-img div');
+    previousImageButton = document.querySelector('.prev-img div');
+    nextImageButton.addEventListener('click', displayNextPropertyImage);
+    previousImageButton.addEventListener('click', displayPreviousPropertyImage);
+    
+    if (userOwnsAd) {
+        propertyStatusToggler = document.querySelector('div.status-toggler-wrapper input');
+        propertyStatusToggler.addEventListener('click', togglePropertyStatus);
+        deletePropertyButton = document.querySelector('.delete-btn');
+        deletePropertyButton.addEventListener('click', showDeletePropertyModal);
+        editPropertyButton = document.querySelector('.edit-btn');
+        editPropertyButton.addEventListener('click', editProperty);
+    }
+};
+
+
+/**
+ * Handles @var propertyStatusToggler's click event and toggles @member sold
+ * @memberof Property
+ */
+const togglePropertyStatus = () => {
+    const property = getCurrentProperty();
+    property.sold = propertyStatusToggler.checked;
+    clearContentBox();
+    renderPropertyDetails(getCurrentProperty());
+};
+
+
+/**
+ * Handles clicks on @var nextImageButton in the property detail view
+ * to show the next image.
+ */
+const displayNextPropertyImage = () => {
+    if (currentPropertyImageIndex < propertyImageList.length - 1) {
+        currentPropertyImageIndex++;
+        propertyImage.src = propertyImageList[currentPropertyImageIndex];
+    }
+};
+
+
+/**
+ * Handles clicks on @var previousImageButton in the property detail view
+ * to show the next image.
+ */
+const displayPreviousPropertyImage = () => {
+    if (currentPropertyImageIndex > 0) {
+        currentPropertyImageIndex--;
+        propertyImage.src = propertyImageList[currentPropertyImageIndex];
+    }
+};
+
+
+/**
+ * Handles user's choice to edit a specific property ad item
+ * @emits hashchange
+ */
+const editProperty = () => {
+    const propertyId = getCurrentPropertyId();
+    window.location.hash = `edit=${propertyId}`;
+}
+
+
+/**
+ * Displays modal to confirm or cancel property item deletion
+ */
+const showDeletePropertyModal = () => {
+    deleteModalPropertyTitle.textContent = getCurrentProperty().title;
+    deletePropertyModal.classList.remove('no-display');
+};
+
+
+/**
+ * Closes @var deletePropertyModal
+ */
+const closeDeletePropertyModal = () => deletePropertyModal.classList.add('no-display');
+
+
+/**
+ * Handles property delete confirmation and deletes the property currently in view.
+ * 
+ * Calls @function closeDeletePropertyModal
+ * @emits hashchange
+ */
+const deleteProperty = () => {
+    properties.splice(properties.findIndex(
+        el => el.propertyId === getCurrentProperty().propertyId), 1);
+    closeDeletePropertyModal();
+    window.location.hash = 'view_yours';
+};
+
+
+/**
+* Retrieves the property form markup either blank or prepopulated.
+* @param {Property} property 
+*/
+const getPropertyFormMarkup = property => {
+    let title, description, price, type, propertyLocation;
+    if (property) {
+        title = property.title.trim();
+        description = property.description.trim();
+        price = property.price;
+        type = property.type.trim();
+        propertyLocation = property.location.trim();
+    }
+    
+    return `
+    <div class="form-wrapper">
+                <div class="msg-wrapper text--aligned-center">
+                    <h2>
+                        ${property ? "Update property ad" : "Post a property ad"}
+                    </h2>
+                </div>
+            <form action="" class="property-form data-form">
+                <p class="error-msg no-display toggle-display">
+                    Field is required!
+                </p>
+                <formgroup class="title-group">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" required minlength="20" maxlength="100"
+                        value="${property ? title : ''}">
+                </formgroup>
+                <formgroup class="price-group">
+                    <label for="price">price (₦)</label>
+                    <input type="number" name="price" required
+                        value=${property ? price.match(/\d+/g) : ''}>
+                </formgroup>
+                <formgroup class="type-group">
+                    <label for="type">type</label>
+                    <input type="text" name="type" required minlength="5" maxlength="50"
+                        value="${property ? type : ''}">
+                </formgroup>
+                <formgroup class="image-group">
+                    <label for="image">choose image</label>
+                    <input type="file" accept=".png,.jpg,.jpeg" name="image" multiple>
+                </formgroup>
+                <formgroup class="location-group">
+                    <label for="location">location</label>
+                    <input type="text" name="location" required minlength="10" maxlength="50"
+                        value="${property ? propertyLocation : ''}">
+                </formgroup>
+                <formgroup class="description-group">
+                    <label for="description">description</label>
+                    <textarea type="text" name="description"
+                        required minlength="50" maxlength="500">${property ?
+                            description : ''}</textarea>
+                </formgroup>
+                
+                <formgroup class="submit">
+                    <input type="submit" class="text--white" id="post-property-btn" value="Save">
+                </formgroup>
+             </form>
+         </div>
+    `;
+};
+
+/**
+ * Renders the property detail form on the screen. It either renders
+ * prepopulated form fields (for update) or blank form (for a new ad).
+ * 
+ * Calls @function getPropertyFormMarkup, and @function clearContentBox
+ * @param {Property} property 
+ */
+const renderPropertyPostForm = property => {
+    const markup = getPropertyFormMarkup(property);
+    clearContentBox();
+    contentBox.insertAdjacentHTML('afterbegin', markup);
+};
+
+
+/**
  * Handle window @event hashchange
+ * 
  * Calls @function clearContentBox, @function initPropertiesWrapper,
  * @function searchProperties, @function renderPropertyDetails,
  * @function renderAllPropertyAds, and @function renderUserPropertyAds
@@ -543,112 +690,6 @@ const handleHashChange = () => {
             break;
         default:
             clearContentBox();
-    }
-};
-
-
-const renderPropertyPostForm = property => {
-    let title, description, price, type, propertyLocation, images;
-    if (property) {
-        title = property.title.trim();
-        description = property.description.trim();
-        price = property.price;
-        type = property.type.trim();
-        propertyLocation = property.location.trim();
-        images = property.images;
-    }
-    console.log(description);
-    const markup = 
-    `
-    <div class="form-wrapper">
-                <div class="msg-wrapper text--aligned-center">
-                    <h2>
-                        ${property ? "Update property ad" : "Post a property ad"}
-                    </h2>
-                </div>
-            <form action="" class="property-form">
-                <p class="error-msg no-display toggle-display">
-                    Field is required!
-                </p>
-                <formgroup class="title-group">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" required minlength="20" maxlength="100"
-                        value="${property ? title : ''}">
-                </formgroup>
-                <formgroup class="price-group">
-                    <label for="price">price (₦)</label>
-                    <input type="number" name="price" required
-                        value=${property ? price.match(/\d+/g) : ''}>
-                </formgroup>
-                <formgroup class="type-group">
-                    <label for="type">type</label>
-                    <input type="text" name="type" required minlength="5" maxlength="50"
-                        value="${property ? type : ''}">
-                </formgroup>
-                <formgroup class="image-group">
-                    <label for="image">choose image</label>
-                    <input type="file" accept=".png,.jpg,.jpeg" name="image" multiple>
-                </formgroup>
-                <formgroup class="location-group">
-                    <label for="location">location</label>
-                    <input type="text" name="location" required minlength="10" maxlength="50"
-                        value="${property ? propertyLocation : ''}">
-                </formgroup>
-                <formgroup class="description-group">
-                    <label for="description">description</label>
-                    <textarea type="text" name="description"
-                        required minlength="50" maxlength="500">${property ?
-                            description : ''}</textarea>
-                </formgroup>
-                
-                <formgroup class="submit">
-                    <input type="submit" class="text--white" id="post-property-btn" value="Save">
-                </formgroup>
-             </form>
-         </div>
-    `;
-
-    clearContentBox();
-    contentBox.insertAdjacentHTML('afterbegin', markup);
-};
-
-
-/**
- * Handles user search actions by changing the window hash value
- * @emits hashchange
- * @param {DOMEvent} event 
- */
-const handleSearch = event => {
-    event.preventDefault();
-    // obtain search term and change the window hash value using the term
-    const searchTerm = encodeURIComponent(searchField.value.trim().toLowerCase());
-    window.location.hash = `search=${searchTerm}`;
-};
-
-
-/**
- * Handles enter keypress event to search a specific property type
- * Calls @function handleSearch if @var searchFieldHasFocus is true
- * @param {DOMEvent} event 
- */
-const handleSearchOnEnterKeypress = event => {
-    if (event.keyCode === 13) {
-        event.preventDefault();
-        if (searchFieldHasFocus) {
-            handleSearch(event);
-        }
-    }
-};
-
-
-/**
- * Displays @var sidebar on desktop screen sizes
- */
-const displaySidebarOnDesktopView = () => {
-    if (window.innerWidth >= 1025) {
-        sidebar.style.width = '250px';
-    } else {
-        sidebar.style.width = '0px';
     }
 };
 
