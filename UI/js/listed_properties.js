@@ -304,23 +304,29 @@ const togglePropertyStatus = () => {
  * @param {number} propertyId 
  */
 const renderPropertyDetails = property => {
+    if (!property) {
+        contentBox.insertAdjacentHTML('afterbegin',
+        '<h3 class="text--aligned-center">:/ This requested property ad does not exist</h3>');
+        return;
+    }
+    
     const propertyStatus = property.sold;
     propertyImageList = property.images;
     const agent = users.find(el => el.userId === property.agentId);
     const userOwnsAd = agent.userId === currentUser.userId;
     const markup = `
-        <div class="details">
-            <div class="property-details-wrapper">
+        <div class="details-wrapper">
+            <div class="property-details">
                 <h2 class="title">${property.title}</h2>
                 <div class="status-wrapper">
                     <p>Status: <span class="status text--capitalized">
                         ${propertyStatus ? "sold" : "available"}
                     </span></p>
 
-                    <div class="${userOwnsAd ? '' : "no-display "}${propertyStatus ? "sold " : "available "}toggle-status">
-                        <input type="checkbox" name="property-status-toggler"
-                            class="property-status-toggler" ${property.sold ? "checked" : null}>
-                        <label for="property-status-toggler" class="text--capitalized">Mark as sold</label>
+                    <div class="${userOwnsAd ? '' : "no-display "}${propertyStatus ? "sold " : "available "}status-toggler-wrapper">
+                        <input type="checkbox" name="status-toggler"
+                            class="status-toggler" ${property.sold ? "checked" : null}>
+                        <label for="status-toggler" class="text--capitalized">Mark as sold</label>
                     </div>
                 </div>
                 <div class="img-wrapper">
@@ -345,7 +351,7 @@ const renderPropertyDetails = property => {
                     <p class="property-location">${property.location}</p>
                 </div>
             </div>
-            <div class="agent-details-wrapper">
+            <div class="agent-details">
                 <h2 class="header">Agent details</h2>
                 <h4 class="agent-name">${agent.firstName + ' ' + agent.lastName}</h4>
                 <div class="agent-address-wrapper">
@@ -377,14 +383,14 @@ const renderPropertyDetails = property => {
 
     contentBox.insertAdjacentHTML('afterbegin', markup);
 
-    propertyImage = document.querySelector('.property-details-wrapper .img-wrapper img');
+    propertyImage = document.querySelector('.property-details .img-wrapper img');
     nextImageButton = document.querySelector('.next-img div');
     previousImageButton = document.querySelector('.prev-img div');
     nextImageButton.addEventListener('click', displayNextPropertyImage);
     previousImageButton.addEventListener('click', displayPreviousPropertyImage);
     
     if (userOwnsAd) {
-        propertyStatusToggler = document.querySelector('div.toggle-status input');
+        propertyStatusToggler = document.querySelector('div.status-toggler-wrapper input');
         propertyStatusToggler.addEventListener('click', togglePropertyStatus);
         deletePropertyButton = document.querySelector('.delete-btn');
         deletePropertyButton.addEventListener('click', showDeletePropertyModal);
@@ -542,13 +548,14 @@ const handleHashChange = () => {
 
 
 const renderPropertyPostForm = property => {
-    let title, description, price, type, propertyLocation;
+    let title, description, price, type, propertyLocation, images;
     if (property) {
         title = property.title.trim();
         description = property.description.trim();
         price = property.price;
         type = property.type.trim();
         propertyLocation = property.location.trim();
+        images = property.images;
     }
     console.log(description);
     const markup = 
@@ -561,10 +568,10 @@ const renderPropertyPostForm = property => {
                 </div>
             <form action="" class="property-form">
                 <p class="error-msg no-display toggle-display">
-                    First name is required
+                    Field is required!
                 </p>
                 <formgroup class="title-group">
-                    <label for="title" class="min20-max100">Title</label>
+                    <label for="title">Title</label>
                     <input type="text" name="title" required minlength="20" maxlength="100"
                         value="${property ? title : ''}">
                 </formgroup>
@@ -591,7 +598,7 @@ const renderPropertyPostForm = property => {
                     <label for="description">description</label>
                     <textarea type="text" name="description"
                         required minlength="50" maxlength="500">${property ?
-                            description.trim() : ''}</textarea>
+                            description : ''}</textarea>
                 </formgroup>
                 
                 <formgroup class="submit">

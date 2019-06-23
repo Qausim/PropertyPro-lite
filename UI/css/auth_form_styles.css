@@ -4,9 +4,8 @@
     font-size: 1.4em;
 }
 
-.auth-form {
-    padding-top: 120px;
-    padding-bottom: 120px;
+form.auth-form {
+    margin-top: 100px;
 }
 
 .no-display { /* refactor */
@@ -30,17 +29,8 @@ footer {
 }
 
 @media screen and (min-width: 768px) {
-    .auth-form {
-        padding-left: var(--content-padding-wide);
-        padding-right: var(--content-padding-wide);
-    }
-
     .msg-wrapper {
         margin-right: var(--content-padding-medium);
         margin-left: var(--content-padding-medium);   
-    }
-
-    .auth-form .error-msg {
-        left: var(--content-padding-wide);
     }
 }

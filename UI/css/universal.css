@@ -1,13 +1,19 @@
 /* This CSS file contains styles relevant to all pages. */
 :root {
     --primary-color: rgba(16, 102, 255, 1);
-    --primary-color-light: rgba(16, 102, 241, 0.6);
+    --primary-color--light: rgba(16, 102, 241, 0.6);
     --content-padding-wide: 64px;
     --content-padding-medium: 32px;
     --content-padding-small: 16px;
     --headers-font-family: 'Merriweather', serif;
     --body-font-family: "Open Sans", sans-serif;
-    --warning-color: #cf3226;
+    --warning-msg--color: #dd2c00;
+    --warning--color: #cf3226;
+    --neutral--color: #85929E;
+    --bg-sidebar: #262542;
+    --bg-active-menu: #B0CFE333;
+    --bg-modal: rgba(0, 0, 0, 0.5);
+    --bd-property__text: 2px solid var(--primary-color--light);
 }
 
 * {
@@ -21,8 +27,8 @@ body {
     font-family: var(--body-font-family);
 }
 
-.gradient-background {
-    background: linear-gradient(to right bottom, var(--primary-color), var(--primary-color-light)) no-repeat;
+.bg-gradient {
+    background: linear-gradient(to right bottom, var(--primary-color), var(--primary-color--light)) no-repeat;
     background-size: contain;
 }
 
@@ -71,18 +77,20 @@ footer p {
     letter-spacing: 0.08em;
 }
 
+button, input[type="submit"] {
+    background: var(--primary-color);
+}
+
 a:hover, button:hover, .button:hover,
 input[type='checkbox']:hover, input[type='submit'] {
     cursor: pointer;
 }
 
-
 /* ==========================
 
-    FORMS
+            FORMS
     
-   ==========================
-    */
+========================== */
 form {
     display: flex;
 }
@@ -90,8 +98,10 @@ form {
 form:not(#search-form) {
     position: relative;
     background: #fff;
-    margin: 0 auto;
-    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 100px;
+    padding-bottom: 100px;
     width: 80%;
     flex-direction: column;
     align-items: center;
@@ -117,15 +127,14 @@ form input, form textarea {
     box-shadow: 0 0 0 2px #8e8e8e22;
     outline: none;
     font-size: 1em;
-    height: 40px;
     width: 100%;
     border-radius: 5px;
     padding: 0 5px;
     box-sizing: border-box;
 }
 
-input[type='submit'] {
-    background: var(--primary-color);
+form input, button {
+    height: 40px;
 }
 
 label {
@@ -143,11 +152,15 @@ formgroup + formgroup {
 }
 
 form .error-msg {
-    color: #dd2c00;
+    color: var(--warning-msg--color);
     position: absolute;
     top: 60px;
     left: var(--content-padding-medium);
     max-width: 80%;
+}
+
+.error-msg {
+    text-transform: none;
 }
 
 input[required]:focus {
@@ -196,10 +209,6 @@ input[required]:focus {
     overflow: hidden;
 }
 
-.error-msg {
-    text-transform: none;
-}
-
 @media screen and (min-width: 768px) {
     .logo.big {
         display: block;
@@ -211,5 +220,14 @@ input[required]:focus {
 
     .top-bar {
         padding: var(--content-padding-medium) var(--content-padding-wide);
+    }
+
+    form:not(#search-form) {
+        padding-left: var(--content-padding-wide);
+        padding-right: var(--content-padding-wide);
+    }
+
+    form .error-msg {
+        left: var(--content-padding-wide);
     }
 }
