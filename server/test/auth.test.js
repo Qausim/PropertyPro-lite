@@ -28,6 +28,8 @@ describe('POST /auth/signup', () => {
 
       expect(res.status).to.equal(201);
       expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
       expect(res.body).to.have.property('data');
       expect(res.body.data).to.have.property('id');
       expect(res.body.data).to.have.property('email');
@@ -67,8 +69,11 @@ describe('POST /auth/signup', () => {
         .send(data);
 
       expect(res.status).to.equal(400);
-      expect(res).to.have.property('error');
-      expect(res.error).to.equal('Invalid email');
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid email');
     });
 
 
@@ -89,8 +94,11 @@ describe('POST /auth/signup', () => {
         .send(data);
 
       expect(res.status).to.equal(400);
-      expect(res).to.have.property('error');
-      expect(res.error).to.equal('Invalid password');
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid password');
     });
 
 
@@ -111,16 +119,19 @@ describe('POST /auth/signup', () => {
         .send(data);
 
       expect(res.status).to.equal(400);
-      expect(res).to.have.property('error');
-      expect(res.error).to.equal('First name is required');
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('First name is required');
     });
 
 
     it('should fail to create a new user due to empty last name', async () => {
       const data = {
         email: 'qauzeem@example.com',
-        firstName: '',
-        lastName: 'Yusuff',
+        firstName: 'Olawumi',
+        lastName: '',
         phoneNumber: '08000000000',
         address: 'Iyana Ipaja, Lagos',
         password: '123456',
@@ -133,14 +144,17 @@ describe('POST /auth/signup', () => {
         .send(data);
 
       expect(res.status).to.equal(400);
-      expect(res).to.have.property('error');
-      expect(res.error).to.equal('First name is required');
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Last name is required');
     });
 
     it('should fail to create a new user due to empty phone number for agents', async () => {
       const data = {
         email: 'qauzeem@example.com',
-        firstName: '',
+        firstName: 'Olawumi',
         lastName: 'Yusuff',
         phoneNumber: '',
         address: 'Iyana Ipaja, Lagos',
@@ -154,8 +168,11 @@ describe('POST /auth/signup', () => {
         .send(data);
 
       expect(res.status).to.equal(400);
-      expect(res).to.have.property('error');
-      expect(res.error).to.equal('Phone number is required for agents');
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Phone number is required for agents');
     });
 
     it('should fail to create a new user due to empty address for agents', async () => {
@@ -175,8 +192,11 @@ describe('POST /auth/signup', () => {
         .send(data);
 
       expect(res.status).to.equal(400);
-      expect(res).to.have.property('error');
-      expect(res.error).to.equal('Address is required for agents');
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Address is required for agents');
     });
   });
 });
