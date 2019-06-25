@@ -7,7 +7,7 @@
     "lint": "eslint ./server --fix",
     "start": "node server/build/server.js",
     "build": "npm run clean && babel server -d server/build",
-    "test": "NODE_ENV=test || SET \"NODE_ENV=test\" && nyc mocha --timeout 30000 ./server/test/*.test.js --recursive --require @babel/register --exit || true",
+    "test": "NODE_ENV=test || SET \"NODE_ENV=test\" && nyc mocha -r @babel/polyfill -r @babel/core -r @babel/register ./server/test/*.test.js --timeout 10000 --exit",
     "server": "babel-node server/server",
     "coverage": "nyc --reporter=lcov --reporter=text-lcov npm test && nyc report --reporter=text-lcov | coveralls",
     "dev": "nodemon --exec babel-node server/server.js",
