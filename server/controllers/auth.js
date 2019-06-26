@@ -12,7 +12,7 @@ dotenv.config();
  * @param {string} email
  */
 const isValidEmail = (email) => {
-  /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/
+  return /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/
     .test(email);
 };
 
