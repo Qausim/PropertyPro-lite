@@ -1,0 +1,59 @@
+{
+  "name": "propertypro-lite",
+  "version": "1.0.0",
+  "description": "PropertyPro-lite is a property listing site where people can create and/or search properties for sale or rent",
+  "main": "server.js",
+  "scripts": {
+    "lint": "eslint ./server --fix",
+    "start": "node server/build/server.js",
+    "build": "npm run clean && babel server -d server/build",
+    "test": "NODE_ENV=test || SET \"NODE_ENV=test\" && nyc mocha -r @babel/polyfill -r @babel/core -r @babel/register ./server/test/*.test.js --timeout 10000 --exit",
+    "server": "babel-node server/server",
+    "coverage": "nyc --reporter=lcov --reporter=text-lcov npm test && nyc report --reporter=text-lcov | coveralls",
+    "dev": "nodemon --exec babel-node server/server.js",
+    "clean": "rimraf ./server/build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Qausim/PropertyPro-lite.git"
+  },
+  "keywords": [
+    "propertypro-lite",
+    "property",
+    "house"
+  ],
+  "author": "Olawumi Yusuff",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Qausim/PropertyPro-lite/issues"
+  },
+  "homepage": "https://github.com/Qausim/PropertyPro-lite#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/register": "^7.4.4",
+    "babel-preset-airbnb": "^4.0.0",
+    "babel-preset-env": "^1.7.0",
+    "coveralls": "^3.0.4",
+    "eslint": "^6.0.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.3",
+    "jscover": "^1.0.0",
+    "mocha": "^6.1.4",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nodemon": "^1.19.1",
+    "nyc": "^14.1.1"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.4.3",
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "rimraf": "^2.6.3"
+  }
+}
