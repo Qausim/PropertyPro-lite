@@ -377,7 +377,7 @@ describe('POST /api/v1/auth/login', () => {
         password: 'abcdefg',
       };
 
-      const res = chai.request(app)
+      const res = await chai.request(app)
         .post(loginUrl)
         .send(data);
 
