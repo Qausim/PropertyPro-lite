@@ -3,14 +3,34 @@ import chaiHttp from 'chai-http';
 
 import '../server';
 import app from '../app';
-import User from '../models/user';
 import users from '../db/users';
 
+const signupUrl = '/api/v1/auth/signup';
 
-before(() => {
-  users.push(new User(1, 'qauzeem@propertyprolite.com',
-    'Olawumi', 'Yusuff', '123456', '08000000000', 'Iyana Ipaja, Lagos',
-    true, false));
+let admin = {
+  email: 'qauzeem@propertyprolite.com',
+  firstName: 'Olawumi',
+  lastName: 'Yusuff',
+  password: '123456',
+  phoneNumber: '08000000000',
+  address: 'Iyana Ipaja, Lagos',
+  isAdmin: true,
+  isAgent: false,
+};
+
+before((done) => {
+  chai.request(app)
+    .post(signupUrl)
+    .send(admin)
+    .then((res) => {
+      if (res.status === 201) {
+        admin = res.body.data;
+        done();
+      } else {
+        throw new Error('Could not insert admin');
+      }
+    })
+    .catch(error => done(error));
 });
 
 beforeEach(() => {
@@ -19,6 +39,7 @@ beforeEach(() => {
 
 const { expect } = chai;
 chai.use(chaiHttp);
+
 
 describe('POST /api/v1/auth/signup', () => {
   describe('success', () => {
@@ -35,7 +56,7 @@ describe('POST /api/v1/auth/signup', () => {
       };
 
       const res = await chai.request(app)
-        .post('/api/v1/auth/signup')
+        .post(signupUrl)
         .send(data);
 
       expect(res.status).to.equal(201);
@@ -73,7 +94,7 @@ describe('POST /api/v1/auth/signup', () => {
       };
 
       const res = await chai.request(app)
-        .post('/api/v1/auth/signup')
+        .post(signupUrl)
         .send(data);
 
       expect(res.status).to.equal(201);
@@ -98,7 +119,7 @@ describe('POST /api/v1/auth/signup', () => {
 
 
   describe('failure', () => {
-    it('should fail to create a new user due to duplicate email', async () => {
+    it('should fail to create a new user with duplicate email', async () => {
       const data = {
         email: 'qauzeem@propertyprolite.com',
         firstName: 'Akin',
@@ -111,7 +132,7 @@ describe('POST /api/v1/auth/signup', () => {
       };
 
       const res = await chai.request(app)
-        .post('/api/v1/auth/signup')
+        .post(signupUrl)
         .send(data);
 
       expect(res.status).to.equal(400);
@@ -123,7 +144,7 @@ describe('POST /api/v1/auth/signup', () => {
     });
 
 
-    it('should fail to create a new user due to invalid email', async () => {
+    it('should fail to create a new user with invalid email', async () => {
       const data = {
         email: 'akin.i@example',
         firstName: 'Akin',
@@ -136,7 +157,7 @@ describe('POST /api/v1/auth/signup', () => {
       };
 
       const res = await chai.request(app)
-        .post('/api/v1/auth/signup')
+        .post(signupUrl)
         .send(data);
 
       expect(res.status).to.equal(400);
@@ -148,7 +169,7 @@ describe('POST /api/v1/auth/signup', () => {
     });
 
 
-    it('should fail to create a new user due to invalid password', async () => {
+    it('should fail to create a new user due with invalid password', async () => {
       const data = {
         email: 'akin.i@example.com',
         firstName: 'Akin',
@@ -161,7 +182,7 @@ describe('POST /api/v1/auth/signup', () => {
       };
 
       const res = await chai.request(app)
-        .post('/api/v1/auth/signup')
+        .post(signupUrl)
         .send(data);
 
       expect(res.status).to.equal(400);
@@ -173,7 +194,7 @@ describe('POST /api/v1/auth/signup', () => {
     });
 
 
-    it('should fail to create a new user due to empty first name', async () => {
+    it('should fail to create a new user with empty first name', async () => {
       const data = {
         email: 'akin.i@example.com',
         firstName: '',
@@ -186,7 +207,7 @@ describe('POST /api/v1/auth/signup', () => {
       };
 
       const res = await chai.request(app)
-        .post('/api/v1/auth/signup')
+        .post(signupUrl)
         .send(data);
 
       expect(res.status).to.equal(400);
@@ -198,7 +219,7 @@ describe('POST /api/v1/auth/signup', () => {
     });
 
 
-    it('should fail to create a new user due to empty last name', async () => {
+    it('should fail to create a new user with empty last name', async () => {
       const data = {
         email: 'akin.i@example.com',
         firstName: 'Akin',
@@ -211,7 +232,7 @@ describe('POST /api/v1/auth/signup', () => {
       };
 
       const res = await chai.request(app)
-        .post('/api/v1/auth/signup')
+        .post(signupUrl)
         .send(data);
 
       expect(res.status).to.equal(400);
@@ -223,7 +244,7 @@ describe('POST /api/v1/auth/signup', () => {
     });
 
 
-    it('should fail to create a new agent due to empty phone number', async () => {
+    it('should fail to create a new agent with empty phone number', async () => {
       const data = {
         email: 'akin.i@example.com',
         firstName: 'Akin',
@@ -236,7 +257,7 @@ describe('POST /api/v1/auth/signup', () => {
       };
 
       const res = await chai.request(app)
-        .post('/api/v1/auth/signup')
+        .post(signupUrl)
         .send(data);
 
       expect(res.status).to.equal(400);
@@ -248,7 +269,7 @@ describe('POST /api/v1/auth/signup', () => {
     });
 
 
-    it('should fail to create a new agent due to empty address', async () => {
+    it('should fail to create a new agent with empty address', async () => {
       const data = {
         email: 'akin.i@example.com',
         firstName: 'Akin',
@@ -261,7 +282,7 @@ describe('POST /api/v1/auth/signup', () => {
       };
 
       const res = await chai.request(app)
-        .post('/api/v1/auth/signup')
+        .post(signupUrl)
         .send(data);
 
       expect(res.status).to.equal(400);
@@ -270,6 +291,102 @@ describe('POST /api/v1/auth/signup', () => {
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.equal('Address is required for agents');
+    });
+  });
+});
+
+
+describe('POST /api/v1/auth/login', () => {
+  const loginUrl = '/api/v1/auth/login';
+
+  describe('success', () => {
+    it('should log in a user successfully', async () => {
+      const { email } = admin;
+      const password = '123456';
+
+      const res = await chai.request(app)
+        .post(loginUrl)
+        .send({ email, password });
+
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.have.property('id');
+      expect(res.body.data).to.have.property('email');
+      expect(res.body.data).to.have.property('firstName');
+      expect(res.body.data).to.have.property('lastName');
+      expect(res.body.data).to.have.property('phoneNumber');
+      expect(res.body.data).to.have.property('address');
+      expect(res.body.data).to.have.property('token');
+      expect(res.body.data).to.have.property('isAdmin');
+      expect(res.body.data).to.have.property('isAgent');
+      expect(res.body.data.id).to.equal(admin.id);
+      expect(res.body.data.email).to.equal(admin.email);
+      expect(res.body.data.firstName).to.equal(admin.firstName);
+      expect(res.body.data.lastName).to.equal(admin.lastName);
+      expect(res.body.data.phoneNumber).to.equal(admin.phoneNumber);
+      expect(res.body.data.address).to.equal(admin.address);
+      expect(res.body.data.isAdmin).to.equal(admin.isAdmin);
+      expect(res.body.data.isAgent).to.equal(admin.isAgent);
+    });
+  });
+
+
+  describe('failure', () => {
+    it('should fail to log in a user with incorrect email', async () => {
+      const data = {
+        email: 'ola@propertyprolite.com',
+        password: '123456',
+      };
+
+      const res = await chai.request(app)
+        .post(loginUrl)
+        .send(data);
+
+      expect(res.status).to.equal(401);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid email or password');
+    });
+
+    it('should fail to log in a user with invalid email format', async () => {
+      const data = {
+        email: 'qauzeem@propertyprolite',
+        password: '123456',
+      };
+
+      const res = await chai.request(app)
+        .post(loginUrl)
+        .send(data);
+
+      expect(res.status).to.equal(401);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid email or password');
+    });
+
+    it('should fail to log in a user with incorrect password', async () => {
+      const data = {
+        email: admin.email,
+        password: 'abcdefg',
+      };
+
+      const res = chai.request(app)
+        .post(loginUrl)
+        .send(data);
+
+      expect(res.status).to.equal(401);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid email or password');
     });
   });
 });
