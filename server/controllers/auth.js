@@ -12,7 +12,7 @@ dotenv.config();
  * @param {string} email
  */
 const isValidEmail = (email) => {
-  return /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/
+  /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/
     .test(email);
 };
 
@@ -75,7 +75,7 @@ const obtainSignUpError = ({
 };
 
 /**
- * Handles POST api/v1/auth/signup requests
+ * Handles POST /api/v1/auth/signup requests
  */
 export const signUp = (request, response) => {
   const errorMessage = obtainSignUpError(request.body);
