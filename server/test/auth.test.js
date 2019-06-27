@@ -296,8 +296,8 @@ describe('POST /api/v1/auth/signup', () => {
 });
 
 
-describe('POST /api/v1/auth/login', () => {
-  const loginUrl = '/api/v1/auth/login';
+describe('POST /api/v1/auth/signin', () => {
+  const signinUrl = '/api/v1/auth/signin';
 
   describe('success', () => {
     it('should log in a user successfully', async () => {
@@ -305,7 +305,7 @@ describe('POST /api/v1/auth/login', () => {
       const password = '123456';
 
       const res = await chai.request(app)
-        .post(loginUrl)
+        .post(signinUrl)
         .send({ email, password });
 
       expect(res.status).to.equal(200);
@@ -342,7 +342,7 @@ describe('POST /api/v1/auth/login', () => {
       };
 
       const res = await chai.request(app)
-        .post(loginUrl)
+        .post(signinUrl)
         .send(data);
 
       expect(res.status).to.equal(401);
@@ -360,7 +360,7 @@ describe('POST /api/v1/auth/login', () => {
       };
 
       const res = await chai.request(app)
-        .post(loginUrl)
+        .post(signinUrl)
         .send(data);
 
       expect(res.status).to.equal(401);
@@ -378,7 +378,7 @@ describe('POST /api/v1/auth/login', () => {
       };
 
       const res = await chai.request(app)
-        .post(loginUrl)
+        .post(signinUrl)
         .send(data);
 
       expect(res.status).to.equal(401);

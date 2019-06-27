@@ -66,15 +66,15 @@ export const signup = (request, response) => {
 
 
 /**
- * Handles login request and returns a user object if successful
+ * Handles singin request and returns a user object if successful
  * else an error message. Error message is kept consistent so
  * behaviour cannot be guessed.
  *
  * @param request
  * @param response
  */
-export const login = (request, response) => {
-  const loginError = {
+export const signin = (request, response) => {
+  const signinError = {
     status: 'error',
     error: 'Invalid email or password',
   };
@@ -82,12 +82,12 @@ export const login = (request, response) => {
   const { email, password } = request.body;
 
   if (!isValidEmail(email) || !isValidPassword(password)) {
-    return response.status(401).json(loginError);
+    return response.status(401).json(signinError);
   }
 
   const user = users.find(el => el.email === email);
   if (!user) {
-    return response.status(401).json(loginError);
+    return response.status(401).json(signinError);
   }
 
   bcrypt.compare(password, user.password, (error, result) => {
@@ -109,6 +109,6 @@ export const login = (request, response) => {
       });
     }
 
-    return response.status(401).json(loginError);
+    return response.status(401).json(signinError);
   });
 };
