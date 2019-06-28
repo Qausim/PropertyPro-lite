@@ -1,7 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 
-import '../server';
 import app from '../app';
 import users from '../db/users';
 
@@ -31,6 +30,11 @@ before((done) => {
       }
     })
     .catch(error => done(error));
+});
+
+after((done) => {
+  users.splice(0);
+  done();
 });
 
 beforeEach(() => {
