@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 
@@ -452,6 +454,54 @@ describe('POST /api/v1/auth/signin', () => {
 describe('POST /api/v1/property', async () => {
   const propertyUrl = '/api/v1/property';
   describe('success', () => {
+    const splittedDir = __dirname.replace(/[\\]/g, '/').split('/');
+    const projectDir = splittedDir.slice(0, splittedDir.length - 2).join('/');
+    const image = `${projectDir}/UI/images/propertya1.jpg`;
+    
+    it('should create a property ad with an image', async () => {
+      const data = {
+        type: '3 bedroom',
+        state: 'Lagos',
+        city: 'Lagos',
+        address: '22 Allen Avenue, Ikeja',
+        price: 1000000.00,
+        image,
+      };
+
+      const res = await chai.request(app)
+        .post(propertyUrl)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${agent.token}`)
+        .field('type', data.type)
+        .field('state', data.state)
+        .field('city', data.city)
+        .field('address', data.address)
+        .field('price', data.price)
+        .attach('propertyImage', data.image);
+
+      expect(res.status).to.equal(201);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.have.property('id');
+      expect(res.body.data).to.have.property('status');
+      expect(res.body.data).to.have.property('type');
+      expect(res.body.data).to.have.property('state');
+      expect(res.body.data).to.have.property('city');
+      expect(res.body.data).to.have.property('address');
+      expect(res.body.data).to.have.property('price');
+      expect(res.body.data).to.have.property('createdOn');
+      expect(res.body.data).to.have.property('updatedOn');
+      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data.status).to.equal('available');
+      expect(res.body.data.type).to.equal(data.type);
+      expect(res.body.data.state).to.equal(data.state);
+      expect(res.body.data.city).to.equal(data.city);
+      expect(res.body.data.price).to.equal(data.price);
+      expect(res.body.data.imageUrl).to.not.equal('');
+    });
+
     it('should create a property ad without an image', async () => {
       const data = {
         type: '3 bedroom',
