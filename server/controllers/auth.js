@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import * as dotenv from 'dotenv';
 
 import User from '../models/user';
 import users from '../db/users';
@@ -8,9 +7,6 @@ import {
   getSignUpError, getToken, isValidEmail,
   isValidPassword,
 } from '../helpers/auth';
-
-
-dotenv.config();
 
 
 /**

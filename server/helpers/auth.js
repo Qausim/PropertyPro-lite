@@ -1,3 +1,5 @@
+// Contains helper functions for authentication routes handlers
+
 import jwt from 'jsonwebtoken';
 
 import users from '../db/users';
