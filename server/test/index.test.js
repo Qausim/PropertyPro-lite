@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 
@@ -43,7 +41,7 @@ let user = {
   isAgent: false,
 };
 
-// Sign up each of our user objects in the before hook
+// Sign up each test user object in the before hook
 before((done) => {
   chai.request(app)
     .post(signupUrl)
@@ -77,7 +75,7 @@ before((done) => {
     .catch(error => done(error));
 });
 
-// Clear user object inserted in each unit test after it
+// Clear user object inserted in each unit test before the next
 beforeEach((done) => {
   users.splice(3);
   done();
@@ -453,11 +451,13 @@ describe('POST /api/v1/auth/signin', () => {
 
 describe('POST /api/v1/property', async () => {
   const propertyUrl = '/api/v1/property';
+
+  // Tests that are meant to pass
   describe('success', () => {
     const splittedDir = __dirname.replace(/[\\]/g, '/').split('/');
     const projectDir = splittedDir.slice(0, splittedDir.length - 2).join('/');
     const image = `${projectDir}/UI/images/propertya1.jpg`;
-    
+
     it('should create a property ad with an image', async () => {
       const data = {
         type: '3 bedroom',
@@ -544,6 +544,7 @@ describe('POST /api/v1/property', async () => {
     });
   });
 
+  // Tests that are meant to fail
   describe('failure', () => {
     it('should fail to create a new property ad for non-agents', async () => {
       const data = {
@@ -563,7 +564,7 @@ describe('POST /api/v1/property', async () => {
         .field('city', data.city)
         .field('address', data.address)
         .field('price', data.price);
-      
+
       expect(res.status).to.equal(403);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('status');
