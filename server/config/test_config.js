@@ -1,3 +1,5 @@
+// General configuration for all test files
+
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 

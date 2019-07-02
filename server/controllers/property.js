@@ -1,3 +1,5 @@
+// /property route controller
+
 import dotenv from 'dotenv';
 
 import Property from '../models/property';
@@ -57,6 +59,12 @@ export const createProperty = (request, response) => {
   });
 };
 
+/**
+ * Handles get requests to fetch all property ads.
+ *
+ * @param {*} request
+ * @param {*} response
+ */
 export const getProperties = (request, response) => {
   const responseData = properties.map((property) => {
     const {
