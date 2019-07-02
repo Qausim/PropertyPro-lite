@@ -18,6 +18,5 @@ module.exports = {
         "linebreak-style": 0,
         "consistent-return": 0,
         "import/prefer-default-export": 0,
-        "no-else-return": 0,
     }
 };
