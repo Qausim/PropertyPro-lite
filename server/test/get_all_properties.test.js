@@ -153,7 +153,7 @@ export default () => {
       expect(res.body.data[0].imageUrl).to.equal(propertyEntries[0].imageUrl);
       expect(res.body.data[0].ownerName).to.equal(`${agent.firstName} ${agent.lastName}`);
       expect(res.body.data[0].ownerEmail).to.equal(agent.email);
-      expect(res.body.data[0].ownerPhoneNumber).to.equal(agent.phoneNumber)
+      expect(res.body.data[0].ownerPhoneNumber).to.equal(agent.phoneNumber);
       expect(res.body.data[1]).to.have.property('id');
       expect(res.body.data[1]).to.have.property('status');
       expect(res.body.data[1]).to.have.property('type');

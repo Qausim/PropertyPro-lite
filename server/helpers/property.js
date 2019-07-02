@@ -11,21 +11,20 @@ export const getPostPropertyError = ({
 }) => {
   if (!isString(type)) {
     return 'Invalid type field';
-  } else if (!state) {
+  } if (!state) {
     return 'State is required';
-  } else if (!isString(state) || hasNumber(state)) {
+  } if (!isString(state) || hasNumber(state)) {
     return 'Invalid state field';
-  } else if (!city) {
+  } if (!city) {
     return 'City is required';
-  } else if (!isString(city) || hasNumber(city)) {
+  } if (!isString(city) || hasNumber(city)) {
     return 'Invalid city field';
-  } else if (!address) {
+  } if (!address) {
     return 'Address is required';
-  } else if (!isString(address) || isNumber(address)) {
+  } if (!isString(address) || isNumber(address)) {
     return 'Invalid address field';
-  } else if (!parseFloat(price) || !isNumber(price)) {
+  } if (!parseFloat(price) || !isNumber(price)) {
     return 'Invalid price field';
-  } else {
-    return false;
   }
+  return false;
 };
