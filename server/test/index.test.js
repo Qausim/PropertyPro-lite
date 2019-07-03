@@ -2,6 +2,7 @@ import signupTests from './signup.test';
 import signinTests from './signin.test';
 import postPropertyTests from './create_property.test';
 import getAllPropertiesTests from './get_all_properties.test';
+import getPropertyByIdTests from './get_property.test';
 
 
 // Tests for signup requests
@@ -15,3 +16,6 @@ describe('POST /api/v1/property', postPropertyTests);
 
 // Tests for get all properties requests
 describe('GET /api/v1/property', getAllPropertiesTests);
+
+// Tests for get property by id requests
+describe('GET /api/v1/property/<:propertyId>', getPropertyByIdTests);
