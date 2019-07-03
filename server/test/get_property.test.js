@@ -72,7 +72,7 @@ export default () => {
             .field('price', propertyEntry.price);
         }
 
-        throw new Error('Could not insert property ad');
+        throw new Error('Could not insert property user');
       })
       .then((res) => {
         if (res.status === 201) {
@@ -183,12 +183,13 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Unauthorized user');
+      expect(res.body.error).to.equal('Unauthorized request');
     });
 
     it('should fail to get a non-existent property ad', async () => {
       const res = await chai.request(app)
         .get(`${propertyUrl}/9`)
+        .set('Authorization', `Bearer ${user.token}`)
         .send();
 
       expect(res.status).to.equal(404);
@@ -197,6 +198,20 @@ export default () => {
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.equal('Not found');
+    });
+
+    it('should fail to get a property ad for an invalid propertyId', async () => {
+      const res = await chai.request(app)
+        .get(`${propertyUrl}/34jk`)
+        .set('Authorization', `Bearer ${user.token}`)
+        .send();
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid property id');
     });
   });
 };
