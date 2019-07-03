@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import http from 'http';
 
 import app from './app';
