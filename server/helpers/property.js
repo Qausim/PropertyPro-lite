@@ -1,7 +1,8 @@
+import users from '../db/users';
 
 const isString = value => typeof value === 'string';
 
-const isNumber = value => typeof value === 'number'
+export const isNumber = value => typeof value === 'number'
   || /^\d+(\.\d+)?$/.test(value);
 
 const hasNumber = value => /\d/.test(value);
@@ -27,4 +28,27 @@ export const getPostPropertyError = ({
     return 'Invalid price field';
   }
   return false;
+};
+
+
+export const getPropertyDetails = (property) => {
+  const {
+    email, firstName, lastName, phoneNumber,
+  } = users.find(user => user.id === property.owner);
+
+  return {
+    id: property.id,
+    status: property.status,
+    type: property.type,
+    state: property.state,
+    city: property.city,
+    address: property.address,
+    price: property.price,
+    createdOn: property.createdOn,
+    updatedOn: property.updatedOn,
+    imageUrl: property.imageUrl,
+    ownerEmail: email,
+    ownerPhoneNumber: phoneNumber,
+    ownerName: `${firstName} ${lastName}`,
+  };
 };

@@ -5,7 +5,10 @@ import dotenv from 'dotenv';
 import Property from '../models/property';
 import properties from '../db/properties';
 import users from '../db/users';
-import { getPostPropertyError } from '../helpers/property';
+import {
+  getPostPropertyError,
+  getPropertyDetails,
+} from '../helpers/property';
 
 dotenv.config();
 
@@ -66,30 +69,29 @@ export const createProperty = (request, response) => {
  * @param {*} response
  */
 export const getProperties = (request, response) => {
-  const responseData = properties.map((property) => {
-    const {
-      email, phoneNumber, firstName, lastName,
-    } = users.find(user => user.id === property.owner);
-
-    return {
-      id: property.id,
-      status: property.status,
-      type: property.type,
-      state: property.state,
-      city: property.city,
-      address: property.address,
-      price: property.price,
-      createdOn: property.createdOn,
-      updatedOn: property.updatedOn,
-      imageUrl: property.imageUrl,
-      ownerEmail: email,
-      ownerPhoneNumber: phoneNumber,
-      ownerName: `${firstName} ${lastName}`,
-    };
-  });
+  const responseData = properties.map(getPropertyDetails);
 
   response.status(200).json({
     status: 'success',
     data: responseData,
+  });
+};
+
+
+export const getPropertyById = (request, response) => {
+  const propertyId = parseFloat(request.params.propertyId);
+
+  const result = properties.find(property => property.id === propertyId);
+  if (result) {
+    const responseData = getPropertyDetails(result);
+    return response.status(200).json({
+      status: 'success',
+      data: responseData,
+    });
+  }
+
+  response.status(404).json({
+    status: 'error',
+    error: 'Not found',
   });
 };
