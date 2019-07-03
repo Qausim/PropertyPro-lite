@@ -78,6 +78,11 @@ export const getProperties = (request, response) => {
 };
 
 
+/**
+ * Fetches a specific property advert by it id obtained from the request URL
+ * @param {*} request
+ * @param {*} response
+ */
 export const getPropertyById = (request, response) => {
   const propertyId = parseFloat(request.params.propertyId);
 

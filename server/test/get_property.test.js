@@ -92,7 +92,7 @@ export default () => {
     done();
   });
 
-
+  // Tests that are meant to pass
   describe('success', () => {
     it('should get a property ad successfully by its id for an agent', async () => {
       const res = await chai.request(app)
@@ -171,7 +171,7 @@ export default () => {
     });
   });
 
-
+  // Tests that are meant to fail
   describe('failure', () => {
     it('should fail to get a property ad for a non authenticated user', async () => {
       const res = await chai.request(app)
