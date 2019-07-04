@@ -63,17 +63,37 @@ export const createProperty = (request, response) => {
 };
 
 /**
- * Handles get requests to fetch all property ads.
+ * Handles get requests to fetch all property ads or by search.
  *
  * @param {*} request
  * @param {*} response
  */
 export const getProperties = (request, response) => {
-  const responseData = properties.map(getPropertyDetails);
+  const queryText = request.query.type;
+  let data;
+
+  if (queryText !== undefined) {
+    const trimmedText = queryText.trim().toLowerCase();
+    if (!trimmedText) {
+      return response.status(400).json({
+        status: 'error',
+        error: 'Empty query text',
+      });
+    }
+
+    data = properties.filter(property => property.type
+      .toLowerCase().includes(trimmedText)).map(getPropertyDetails);
+    return response.status(200).json({
+      status: 'success',
+      data,
+    });
+  }
+
+  data = properties.map(getPropertyDetails);
 
   response.status(200).json({
     status: 'success',
-    data: responseData,
+    data,
   });
 };
 
@@ -88,10 +108,10 @@ export const getPropertyById = (request, response) => {
 
   const result = properties.find(property => property.id === propertyId);
   if (result) {
-    const responseData = getPropertyDetails(result);
+    const data = getPropertyDetails(result);
     return response.status(200).json({
       status: 'success',
-      data: responseData,
+      data,
     });
   }
 
