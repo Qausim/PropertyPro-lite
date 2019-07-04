@@ -100,3 +100,39 @@ export const getPropertyById = (request, response) => {
     error: 'Not found',
   });
 };
+
+
+/**
+ * Marks a property advert as sold or return an error
+ * @param {*} request
+ * @param {*} response
+ */
+export const markPropertyAsSold = (request, response) => {
+  const propertyId = parseFloat(request.params.propertyId);
+  const { userId } = request.userData;
+  const user = users.find(el => el.id === userId);
+  const propertyIndex = properties.findIndex(property => property.id === propertyId);
+  if (propertyIndex >= 0) {
+    const property = properties[propertyIndex];
+    if (property.owner === userId && user.isAgent) {
+      property.status = 'sold';
+      property.updatedOn = new Date();
+      properties[propertyIndex] = property;
+
+      return response.status(200).json({
+        status: 'success',
+        data: property,
+      });
+    }
+
+    return response.status(403).json({
+      status: 'error',
+      error: 'Only an advert owner (agent) can edit it',
+    });
+  }
+
+  response.status(404).json({
+    status: 'error',
+    error: 'Not found',
+  });
+};

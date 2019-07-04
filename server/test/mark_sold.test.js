@@ -173,7 +173,7 @@ export default () => {
       expect(res.body.data.state).to.equal(propertyEntries[0].state);
       expect(res.body.data.city).to.equal(propertyEntries[0].city);
       expect(res.body.data.price).to.equal(propertyEntries[0].price);
-      expect(res.body.data.imageUrl).to.not.equal(propertyEntries[0].imageUrl);
+      expect(res.body.data.imageUrl).to.equal(propertyEntries[0].imageUrl);
       expect(res.body.data.updatedOn).to.not.equal(null);
     });
   });
@@ -206,7 +206,7 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Only an advert owner can edit it');
+        expect(res.body.error).to.equal('Only an advert owner (agent) can edit it');
       });
 
     it('should fail to mark a property as sold for a non agent',
@@ -221,7 +221,7 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Only an advert owner can edit it');
+        expect(res.body.error).to.equal('Only an advert owner (agent) can edit it');
       });
 
     it('should fail to mark a property as sold for a non existing ad',
