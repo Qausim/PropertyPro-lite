@@ -197,8 +197,8 @@ export default () => {
     it('should fail to mark a property as sold for a non owner agent',
       async () => {
         const res = await chai.request(app)
-          .set('Authorization', `Bearer ${agentTwo.token}`)
           .patch(`${propertyUrl}/${propertyEntries[1].id}/sold`)
+          .set('Authorization', `Bearer ${agentTwo.token}`)
           .send();
 
         expect(res.status).to.equal(403);
@@ -212,8 +212,8 @@ export default () => {
     it('should fail to mark a property as sold for a non agent',
       async () => {
         const res = await chai.request(app)
-          .set('Authorization', `Bearer ${user.token}`)
           .patch(`${propertyUrl}/${propertyEntries[1].id}/sold`)
+          .set('Authorization', `Bearer ${user.token}`)
           .send();
 
         expect(res.status).to.equal(403);
@@ -227,8 +227,8 @@ export default () => {
     it('should fail to mark a property as sold for a non existing ad',
       async () => {
         const res = await chai.request(app)
-          .set('Authorization', `Bearer ${agentOne.token}`)
           .patch(`${propertyUrl}/9/sold`)
+          .set('Authorization', `Bearer ${agentOne.token}`)
           .send();
 
         expect(res.status).to.equal(404);
@@ -242,8 +242,8 @@ export default () => {
     it('should fail to mark a property as sold for an invalid property id',
       async () => {
         const res = await chai.request(app)
-          .set('Authorization', `Bearer ${agentOne.token}`)
           .patch(`${propertyUrl}/9jdkd/sold`)
+          .set('Authorization', `Bearer ${agentOne.token}`)
           .send();
 
         expect(res.status).to.equal(400);
