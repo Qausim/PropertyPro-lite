@@ -382,5 +382,19 @@ export default () => {
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.equal('Unauthorized request');
     });
+
+    it('should fail to get any result for empty query field', async () => {
+      const res = await chai.request(app)
+        .get(`${propertyUrl}?type`)
+        .set('Authorization', `Bearer ${user.token}`)
+        .send();
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Empty query text');
+    });
   });
 };
