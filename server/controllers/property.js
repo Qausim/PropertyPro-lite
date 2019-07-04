@@ -8,6 +8,7 @@ import users from '../db/users';
 import {
   getPostPropertyError,
   getPropertyDetails,
+  filterPropertiesByType,
 } from '../helpers/property';
 
 dotenv.config();
@@ -63,17 +64,22 @@ export const createProperty = (request, response) => {
 };
 
 /**
- * Handles get requests to fetch all property ads.
+ * Handles get requests to fetch all property ads or by search.
  *
  * @param {*} request
  * @param {*} response
  */
 export const getProperties = (request, response) => {
-  const responseData = properties.map(getPropertyDetails);
+  const queryText = request.query.type;
 
+  if (queryText !== undefined) {
+    return filterPropertiesByType(response, properties, queryText);
+  }
+
+  const data = properties.map(getPropertyDetails);
   response.status(200).json({
     status: 'success',
-    data: responseData,
+    data,
   });
 };
 
@@ -88,10 +94,10 @@ export const getPropertyById = (request, response) => {
 
   const result = properties.find(property => property.id === propertyId);
   if (result) {
-    const responseData = getPropertyDetails(result);
+    const data = getPropertyDetails(result);
     return response.status(200).json({
       status: 'success',
-      data: responseData,
+      data,
     });
   }
 
