@@ -200,7 +200,7 @@ export default () => {
       expect(res.body.error).to.equal('Not found');
     });
 
-    it('should fail to get a property ad for an invalid propertyId', async () => {
+    it('should fail to get a property ad for an invalid property id', async () => {
       const res = await chai.request(app)
         .get(`${propertyUrl}/34jk`)
         .set('Authorization', `Bearer ${user.token}`)
