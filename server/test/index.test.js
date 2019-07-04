@@ -3,7 +3,8 @@ import signinTests from './signin.test';
 import postPropertyTests from './create_property.test';
 import getAllPropertiesTests from './get_all_properties.test';
 import getPropertyByIdTests from './get_property.test';
-import markProperyAsSoldTests from './mark_sold.test';
+import markPropertyAsSoldTests from './mark_sold.test';
+import queryPropertyTypeTests from './search_property_by_type.test';
 
 
 // Tests for signup requests
@@ -22,4 +23,6 @@ describe('GET /api/v1/property', getAllPropertiesTests);
 describe('GET /api/v1/property/<:propertyId>', getPropertyByIdTests);
 
 // Tests for marking a property ad as sold
-describe('PATCH /api/v1/property/<:propertyId>/sold', markProperyAsSoldTests);
+describe('PATCH /api/v1/property/<:propertyId>/sold', markPropertyAsSoldTests);
+
+describe('GET /api/v1/property?type=queryText', queryPropertyTypeTests);
