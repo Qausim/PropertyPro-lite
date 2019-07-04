@@ -8,6 +8,7 @@ import users from '../db/users';
 import {
   getPostPropertyError,
   getPropertyDetails,
+  filterPropertiesByType,
 } from '../helpers/property';
 
 dotenv.config();
@@ -70,27 +71,12 @@ export const createProperty = (request, response) => {
  */
 export const getProperties = (request, response) => {
   const queryText = request.query.type;
-  let data;
 
   if (queryText !== undefined) {
-    const trimmedText = queryText.trim().toLowerCase();
-    if (!trimmedText) {
-      return response.status(400).json({
-        status: 'error',
-        error: 'Empty query text',
-      });
-    }
-
-    data = properties.filter(property => property.type
-      .toLowerCase().includes(trimmedText)).map(getPropertyDetails);
-    return response.status(200).json({
-      status: 'success',
-      data,
-    });
+    return filterPropertiesByType(response, properties, queryText);
   }
 
-  data = properties.map(getPropertyDetails);
-
+  const data = properties.map(getPropertyDetails);
   response.status(200).json({
     status: 'success',
     data,
