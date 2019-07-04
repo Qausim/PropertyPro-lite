@@ -3,7 +3,7 @@ import users from '../db/users';
 /**
  * Validates that its value argument is of string type
  * @param {*} value
- * 
+ *
  * @returns {boolean}
  */
 const isString = value => typeof value === 'string';
@@ -13,7 +13,7 @@ const isString = value => typeof value === 'string';
  * Validates that its value argument is of type number or a
  * string of numbers
  * @param {*} value
- * 
+ *
  * @returns {boolean}
  */
 export const isNumber = value => typeof value === 'number'
@@ -23,7 +23,7 @@ export const isNumber = value => typeof value === 'number'
 /**
  * Validates that a passed string value contains number in it
  * @param {string} value
- * 
+ *
  * @returns {boolean}
  */
 const hasNumber = value => /\d/.test(value);
