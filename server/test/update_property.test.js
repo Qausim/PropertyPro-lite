@@ -506,5 +506,69 @@ export default () => {
         expect(res.body).to.have.property('error');
         expect(res.body.error).to.equal('Invalid price field');
       });
+
+    it('should fail to update property id', async () => {
+      const res = await chai.request(app)
+        .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+        .set('Content-Type', `Bearer ${agentOne.token}`)
+        .field('id', 1);
+
+      expect(res.status).to.equal(403);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal(
+        'You cannot update forbidden fields: "id", "owner", and dates',
+      );
+    });
+
+    it('should fail to update property owner', async () => {
+      const res = await chai.request(app)
+        .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+        .set('Content-Type', `Bearer ${agentOne.token}`)
+        .field('owner', 2);
+
+      expect(res.status).to.equal(403);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal(
+        'You cannot update forbidden fields: "id", "owner", and dates',
+      );
+    });
+
+    it('should fail to update property creation date', async () => {
+      const res = await chai.request(app)
+        .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+        .set('Content-Type', `Bearer ${agentOne.token}`)
+        .field('createdOn', new Date());
+
+      expect(res.status).to.equal(403);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal(
+        'You cannot update forbidden fields: "id", "owner", and dates',
+      );
+    });
+
+    it('should fail to update property update date', async () => {
+      const res = await chai.request(app)
+        .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+        .set('Content-Type', `Bearer ${agentOne.token}`)
+        .field('updatedOn', null);
+
+      expect(res.status).to.equal(403);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal(
+        'You cannot update forbidden fields: "id", "owner", and dates',
+      );
+    });
   });
 };
