@@ -90,11 +90,11 @@ export const getPropertyDetails = (property) => {
 /**
  * Filters the list of property by a given query text and returns an
  * appropriate response or error message
- * 
+ *
  * @param {*} response
  * @param {Array} properties
  * @param {string} queryText
- * 
+ *
  * @returns {response}
  */
 export const filterPropertiesByType = (response, properties, queryText) => {
