@@ -1,4 +1,4 @@
-// /property route controller
+// /property routes controller
 
 import dotenv from 'dotenv';
 
@@ -6,9 +6,11 @@ import Property from '../models/property';
 import properties from '../db/properties';
 import users from '../db/users';
 import {
-  getPostPropertyError,
+  getCreatePropertyError,
   getPropertyDetails,
   filterPropertiesByType,
+  getUpdatePropertyError,
+  hasForbiddenField,
 } from '../helpers/property';
 
 dotenv.config();
@@ -17,13 +19,15 @@ dotenv.config();
 /**
  * Creates a new property advertisement and returns it or returns an
  * appropriate error message.
- * Calls @function getPostPropertyError
+ * Calls @function getCreatePropertyError
  *
  * @param {*} request
  * @param {*} response
+ *
+ * @returns {responses}
  */
 export const createProperty = (request, response) => {
-  const errorMessage = getPostPropertyError(request.body);
+  const errorMessage = getCreatePropertyError(request.body);
   if (errorMessage) {
     return response.status(400).json({
       status: 'error',
@@ -65,9 +69,12 @@ export const createProperty = (request, response) => {
 
 /**
  * Handles get requests to fetch all property ads or by search.
+ * Calls @function filterPropertiesByType, @function getPropertyDetails
  *
  * @param {*} request
  * @param {*} response
+ *
+ * @returns {response}
  */
 export const getProperties = (request, response) => {
   const queryText = request.query.type;
@@ -86,8 +93,12 @@ export const getProperties = (request, response) => {
 
 /**
  * Fetches a specific property advert by it id obtained from the request URL
+ * Calls @function getPropertyDetails
+ *
  * @param {*} request
  * @param {*} response
+ *
+ * @returns {response}
  */
 export const getPropertyById = (request, response) => {
   const propertyId = parseFloat(request.params.propertyId);
@@ -112,6 +123,8 @@ export const getPropertyById = (request, response) => {
  * Marks a property advert as sold or return an error
  * @param {*} request
  * @param {*} response
+ *
+ * @returns {response}
  */
 export const markPropertyAsSold = (request, response) => {
   const propertyId = parseFloat(request.params.propertyId);
@@ -140,5 +153,64 @@ export const markPropertyAsSold = (request, response) => {
   response.status(404).json({
     status: 'error',
     error: 'Not found',
+  });
+};
+
+
+/**
+ * Updates a property ad with new details save its id and the of its owner's
+ * Calls @function getUpdatePropertyError, @function hasForbiddenField
+ *
+ * @param {*} request
+ * @param {*} response
+ *
+ * @returns {response}
+ */
+export const updateProperty = (request, response) => {
+  const propertyId = parseFloat(request.params.propertyId);
+  const user = users.find(el => el.id === request.userData.userId);
+  const propertyIndex = properties.findIndex(el => el.id === propertyId);
+  const property = properties[propertyIndex];
+
+  if (!property) {
+    return response.status(404).json({
+      status: 'error',
+      error: 'Not found',
+    });
+  }
+
+  if (!user.isAgent || user.id !== property.owner) {
+    return response.status(403).json({
+      status: 'error',
+      error: 'Only an advert owner (agent) can edit it',
+    });
+  }
+
+  const errorMessage = getUpdatePropertyError(request.body);
+  if (errorMessage) {
+    return response.status(400).json({
+      status: 'error',
+      error: errorMessage,
+    });
+  }
+
+  if (hasForbiddenField(request.body)) {
+    return response.status(403).json({
+      status: 'error',
+      error: 'You cannot update fields "id" and "owner"',
+    });
+  }
+
+  Object.entries(request.body).forEach((entry) => {
+    const [key, value] = entry;
+    property[key] = key === 'price' ? parseFloat(value) : value;
+  });
+
+  property.updatedOn = new Date();
+  properties[propertyIndex] = property;
+
+  response.status(200).json({
+    status: 'success',
+    data: property,
   });
 };
