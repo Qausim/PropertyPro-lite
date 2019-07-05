@@ -134,7 +134,7 @@ export default () => {
   });
 
   describe('success', () => {
-    it('should update property ad data successfully', async () => {
+    it('should update property ad price successfully', async () => {
       const res = await chai.request(app)
         .patch(`${propertyUrl}/${propertyEntries[0].id}`)
         .set('Content-Type', 'multipart/form-data')
@@ -157,12 +157,115 @@ export default () => {
       expect(res.body.data).to.have.property('createdOn');
       expect(res.body.data).to.have.property('updatedOn');
       expect(res.body.data).to.have.property('imageUrl');
-      expect(res.body.data.status).to.equal(propertyEntries[0].status);
-      expect(res.body.data.type).to.equal(propertyEntries[0].type);
-      expect(res.body.data.state).to.equal(propertyEntries[0].state);
-      expect(res.body.data.city).to.equal(propertyEntries[0].city);
       expect(res.body.data.price).to.equal(15000000);
-      expect(res.body.data.imageUrl).to.equal(propertyEntries[0].imageUrl);
+      expect(res.body.data.updatedOn).to.not.equal(null);
+    });
+
+    it('should update property ad type successfully', async () => {
+      const res = await chai.request(app)
+        .patch(`${propertyUrl}/${propertyEntries[0].id}`)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${agentOne.token}`)
+        .field('type', '3 bedroom duplex');
+
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.be.an('object');
+      expect(res.body.data).to.have.property('id');
+      expect(res.body.data).to.have.property('status');
+      expect(res.body.data).to.have.property('type');
+      expect(res.body.data).to.have.property('state');
+      expect(res.body.data).to.have.property('city');
+      expect(res.body.data).to.have.property('address');
+      expect(res.body.data).to.have.property('price');
+      expect(res.body.data).to.have.property('createdOn');
+      expect(res.body.data).to.have.property('updatedOn');
+      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data.type).to.equal('3 bedroom duplex');
+      expect(res.body.data.updatedOn).to.not.equal(null);
+    });
+
+    it('should update property ad state successfully', async () => {
+      const res = await chai.request(app)
+        .patch(`${propertyUrl}/${propertyEntries[0].id}`)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${agentOne.token}`)
+        .field('state', 'Oyo');
+
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.be.an('object');
+      expect(res.body.data).to.have.property('id');
+      expect(res.body.data).to.have.property('status');
+      expect(res.body.data).to.have.property('type');
+      expect(res.body.data).to.have.property('state');
+      expect(res.body.data).to.have.property('city');
+      expect(res.body.data).to.have.property('address');
+      expect(res.body.data).to.have.property('price');
+      expect(res.body.data).to.have.property('createdOn');
+      expect(res.body.data).to.have.property('updatedOn');
+      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data.state).to.equal('Oyo');
+      expect(res.body.data.updatedOn).to.not.equal(null);
+    });
+
+    it('should update property ad city successfully', async () => {
+      const res = await chai.request(app)
+        .patch(`${propertyUrl}/${propertyEntries[0].id}`)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${agentOne.token}`)
+        .field('city', 'Ibadan');
+
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.be.an('object');
+      expect(res.body.data).to.have.property('id');
+      expect(res.body.data).to.have.property('status');
+      expect(res.body.data).to.have.property('type');
+      expect(res.body.data).to.have.property('state');
+      expect(res.body.data).to.have.property('city');
+      expect(res.body.data).to.have.property('address');
+      expect(res.body.data).to.have.property('price');
+      expect(res.body.data).to.have.property('createdOn');
+      expect(res.body.data).to.have.property('updatedOn');
+      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data.city).to.equal('Ibadan');
+      expect(res.body.data.updatedOn).to.not.equal(null);
+    });
+
+    it('should update property ad price successfully', async () => {
+      const res = await chai.request(app)
+        .patch(`${propertyUrl}/${propertyEntries[0].id}`)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${agentOne.token}`)
+        .field('address', '13 Samonda Street');
+
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.be.an('object');
+      expect(res.body.data).to.have.property('id');
+      expect(res.body.data).to.have.property('status');
+      expect(res.body.data).to.have.property('type');
+      expect(res.body.data).to.have.property('state');
+      expect(res.body.data).to.have.property('city');
+      expect(res.body.data).to.have.property('address');
+      expect(res.body.data).to.have.property('price');
+      expect(res.body.data).to.have.property('createdOn');
+      expect(res.body.data).to.have.property('updatedOn');
+      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data.address).to.equal('13 Samonda Street');
       expect(res.body.data.updatedOn).to.not.equal(null);
     });
   });
@@ -249,6 +352,21 @@ export default () => {
         expect(res.body.error).to.equal('Invalid property id');
       });
 
+    it('should fail to update property ad with empty type', async () => {
+      const res = await chai.request(app)
+        .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${agentOne.token}`)
+        .field('type', '');
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Type cannot be empty');
+    });
+
     it('should fail to update property ad with empty state', async () => {
       const res = await chai.request(app)
         .patch(`${propertyUrl}/${propertyEntries[1].id}`)
@@ -326,12 +444,28 @@ export default () => {
       expect(res.body.error).to.equal('Address cannot be empty');
     });
 
+    it('should fail to update property ad with all number address field',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('address', '876776577');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('Invalid address field');
+      });
+
     it('should fail to update property ad with empty price', async () => {
       const res = await chai.request(app)
         .patch(`${propertyUrl}/${propertyEntries[1].id}`)
         .set('Content-Type', 'multipart/form-data')
         .set('Authorization', `Bearer ${agentOne.token}`)
-        .field('address', '');
+        .field('price', '');
 
       expect(res.status).to.equal(400);
       expect(res.body).to.be.an('object');
@@ -363,7 +497,7 @@ export default () => {
           .patch(`${propertyUrl}/${propertyEntries[1].id}`)
           .set('Content-Type', 'multipart/form-data')
           .set('Authorization', `Bearer ${agentOne.token}`)
-          .field('address', '3928df');
+          .field('address', 0);
 
         expect(res.status).to.equal(400);
         expect(res.body).to.be.an('object');
