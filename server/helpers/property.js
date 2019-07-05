@@ -122,7 +122,6 @@ export const filterPropertiesByType = (response, properties, queryText) => {
 /**
  * Checks through the body of a property update request for empty
  * required fields, and invalid fields
- *
  * @param {object}
  *
  * @returns {string | boolean}

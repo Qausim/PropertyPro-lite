@@ -6,6 +6,7 @@ import getPropertyByIdTests from './get_property.test';
 import markPropertyAsSoldTests from './mark_sold.test';
 import queryPropertyTypeTests from './search_property_by_type.test';
 import updatePropertyAdTests from './update_property.test';
+import deletePropertyAdTests from './delete_property.test';
 
 
 // Tests for signup requests
@@ -31,3 +32,6 @@ describe('GET /api/v1/property?type=queryText', queryPropertyTypeTests);
 
 // Tests for property update
 describe('PATCH /api/v1/property/<:propertyId>', updatePropertyAdTests);
+
+// Tests for property delete
+describe('DELETE /api/v1/property/<:propertyId>', deletePropertyAdTests);
