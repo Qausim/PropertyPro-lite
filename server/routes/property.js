@@ -21,5 +21,8 @@ router.patch('/:propertyId/sold', checkAuth, validatePropertyId,
 router.patch('/:propertyId', checkAuth, validatePropertyId,
   imageUploader, propertyController.updateProperty);
 
+router.delete('/:propertyId', checkAuth, validatePropertyId,
+  propertyController.deleteProperty);
+
 
 export default router;

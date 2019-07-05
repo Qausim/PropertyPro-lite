@@ -150,7 +150,7 @@ export default () => {
       expect(res.body.data).to.be.an('object');
       expect(res.body.data).to.have.property('message');
       expect(res.body.data.message).to.equal('Successfully deleted property ad');
-      expect(properties.length).to.equal('1');
+      expect(properties.length).to.equal(1);
     });
   });
 
@@ -211,7 +211,7 @@ export default () => {
       expect(res.body.error).to.equal('Not found');
     });
 
-    it('should fail to delete property ad with non-existing id', async () => {
+    it('should fail to delete property ad with an invalid', async () => {
       const res = await chai.request(app)
         .delete(`${propertyUrl}/ieufj67`)
         .set('Authorization', `Bearer ${agentOne.token}`)

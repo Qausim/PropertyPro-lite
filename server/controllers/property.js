@@ -214,3 +214,37 @@ export const updateProperty = (request, response) => {
     data: property,
   });
 };
+
+
+
+export const deleteProperty = (request, response) => {
+  const propertyId = parseFloat(request.params.propertyId);
+  const propertyIndex = properties.findIndex(el => el.id === propertyId);
+
+  if (propertyIndex < 0) {
+    return response.status(404).json({
+      status: 'error',
+      error: 'Not found',
+    });
+  }
+
+  const property = properties[propertyIndex];
+  const { userId } = request.userData;
+  const user = users.find(el => el.id === userId);
+
+  if (!user.isAgent || userId !== property.owner) {
+    return response.status(403).json({
+      status: 'error',
+      error: 'Only an advert owner (agent) can delete it',
+    });
+  }
+
+  properties.splice(propertyIndex, 1);
+
+  response.status(200).json({
+    status: 'success',
+    data: {
+      message: 'Successfully deleted property ad',
+    },
+  });
+};
