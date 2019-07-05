@@ -32,9 +32,13 @@ const hasNumber = value => /\d/.test(value);
 /**
  * Passes the fields in a request body validating each and returning
  * an appropriate error message or false
- * @param {object} param
+ * Calls @function isString, @function isNumber, @function hasNumber
+ *
+ * @param {object}
+ *
+ * @returns {string | boolean}
  */
-export const getPostPropertyError = ({
+export const getCreatePropertyError = ({
   type, state, city, address, price,
 }) => {
   if (!isString(type)) {
@@ -90,11 +94,11 @@ export const getPropertyDetails = (property) => {
 /**
  * Filters the list of property by a given query text and returns an
  * appropriate response or error message
- * 
+ *
  * @param {*} response
  * @param {Array} properties
  * @param {string} queryText
- * 
+ *
  * @returns {response}
  */
 export const filterPropertiesByType = (response, properties, queryText) => {
@@ -112,4 +116,58 @@ export const filterPropertiesByType = (response, properties, queryText) => {
     status: 'success',
     data,
   });
+};
+
+
+/**
+ * Checks through the body of a property update request for empty
+ * required fields, and invalid fields
+ *
+ * @param {object}
+ *
+ * @returns {string | boolean}
+ */
+export const getUpdatePropertyError = ({
+  type, state, city, address, price,
+}) => {
+  if (isString(type) && !type.trim()) {
+    // there's an empty type field
+    return 'Type cannot be empty';
+  } if (isString(state) && !state.trim()) {
+    // there's an empty state field
+    return 'State cannot be empty';
+  } if (state && (!isString(state) || hasNumber(state))) {
+    // there's an invalid state field
+    return 'Invalid state field';
+  } if (isString(city) && !city.trim()) {
+    // there's an empty city field
+    return 'City cannot be empty';
+  } if (city && (!isString(city) || hasNumber(city))) {
+    // there's an invalid city field
+    return 'Invalid city field';
+  } if (isString(address) && !address.trim()) {
+    // there's an empty address field
+    return 'Address cannot be empty';
+  } if (address && (!isString(address) || isNumber(address))) {
+    // there's an invalid address field
+    return 'Invalid address field';
+  } if (price !== undefined && (
+    price === '' || !isNumber(price) || parseFloat(price) <= 0)) {
+    // price field is: '' | non-number | < 0
+    return 'Invalid price field';
+  }
+  return false;
+};
+
+
+/**
+ * Checks the body of a property update request if it contains an "id"
+ * or/and an "owner" field
+ * @param {object} body
+ *
+ * @returns {boolean}
+ */
+export const hasForbiddenField = (body) => {
+  const keys = Object.keys(body);
+  return keys.includes('id') || keys.includes('owner');
 };
