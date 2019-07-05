@@ -135,6 +135,7 @@ export default () => {
   });
 
 
+  // Tests that are meant to pass
   describe('success', () => {
     it('should delete a property ad successfully', async () => {
       const res = await chai.request(app)
@@ -155,6 +156,7 @@ export default () => {
   });
 
 
+  // Tests that are meant to fail
   describe('failure', () => {
     it('should fail to delete property ad for an unauthorized user', async () => {
       const res = await chai.request(app)

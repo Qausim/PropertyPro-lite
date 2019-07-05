@@ -216,7 +216,13 @@ export const updateProperty = (request, response) => {
 };
 
 
-
+/**
+ * Deletes a property ad
+ * @param {*} request
+ * @param {*} response
+ *
+ * @returns {response}
+ */
 export const deleteProperty = (request, response) => {
   const propertyId = parseFloat(request.params.propertyId);
   const propertyIndex = properties.findIndex(el => el.id === propertyId);
