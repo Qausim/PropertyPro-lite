@@ -17,10 +17,18 @@
     "type": "git",
     "url": "git+https://github.com/Qausim/PropertyPro-lite.git"
   },
+  "engines": {
+    "node": "10.15.0",
+    "npm": "6.4.1"
+  },
   "keywords": [
     "propertypro-lite",
     "property",
-    "house"
+    "real estate",
+    "house",
+    "node",
+    "express",
+    "heroku"
   ],
   "author": "Olawumi Yusuff",
   "license": "MIT",
