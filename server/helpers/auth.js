@@ -54,10 +54,6 @@ export const getSignUpError = ({
     return 'Invalid email';
   }
 
-  if (users.find(user => user.email === email)) {
-    return 'Email address is taken';
-  }
-
   if (!isValidPassword(password)) {
     return 'Invalid password';
   }

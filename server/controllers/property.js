@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import Property from '../models/property';
 import properties from '../db/properties';
 import users from '../db/users';
+import ResponseHelper from '../helpers/response_helper';
 import {
   getCreatePropertyError,
   getPropertyDetails,
@@ -15,6 +16,7 @@ import {
 
 dotenv.config();
 
+const propertyEditAccessError = 'Only an advert owner (agent) can edit it';
 
 /**
  * Creates a new property advertisement and returns it or returns an
@@ -29,19 +31,14 @@ dotenv.config();
 export const createProperty = (request, response) => {
   const errorMessage = getCreatePropertyError(request.body);
   if (errorMessage) {
-    return response.status(400).json({
-      status: 'error',
-      error: errorMessage,
-    });
+    return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
   }
   const { userId } = request.userData;
   const user = users.find(el => el.id === userId);
 
   if (!user || !user.isAgent) {
-    return response.status(403).json({
-      status: 'error',
-      error: 'Only agents can create property ads',
-    });
+    return ResponseHelper.getForbiddenErrorResponse(response,
+      'Only agents can create property ads');
   }
 
   let imageUrl = '';
@@ -61,10 +58,7 @@ export const createProperty = (request, response) => {
 
   const property = properties.find(el => el.id === propertyId);
 
-  return response.status(201).json({
-    status: 'success',
-    data: property,
-  });
+  return ResponseHelper.getSuccessResponse(response, property, 201);
 };
 
 /**
@@ -79,15 +73,13 @@ export const createProperty = (request, response) => {
 export const getProperties = (request, response) => {
   const queryText = request.query.type;
 
+  // Handle search queries by type
   if (queryText !== undefined) {
     return filterPropertiesByType(response, properties, queryText);
   }
 
   const data = properties.map(getPropertyDetails);
-  response.status(200).json({
-    status: 'success',
-    data,
-  });
+  return ResponseHelper.getSuccessResponse(response, data);
 };
 
 
@@ -106,16 +98,10 @@ export const getPropertyById = (request, response) => {
   const result = properties.find(property => property.id === propertyId);
   if (result) {
     const data = getPropertyDetails(result);
-    return response.status(200).json({
-      status: 'success',
-      data,
-    });
+    return ResponseHelper.getSuccessResponse(response, data);
   }
 
-  response.status(404).json({
-    status: 'error',
-    error: 'Not found',
-  });
+  return ResponseHelper.getNotFoundErrorResponse(response);
 };
 
 
@@ -131,6 +117,7 @@ export const markPropertyAsSold = (request, response) => {
   const { userId } = request.userData;
   const user = users.find(el => el.id === userId);
   const propertyIndex = properties.findIndex(property => property.id === propertyId);
+
   if (propertyIndex >= 0) {
     const property = properties[propertyIndex];
     if (property.owner === userId && user.isAgent) {
@@ -138,22 +125,13 @@ export const markPropertyAsSold = (request, response) => {
       property.updatedOn = new Date();
       properties[propertyIndex] = property;
 
-      return response.status(200).json({
-        status: 'success',
-        data: property,
-      });
+      return ResponseHelper.getSuccessResponse(response, property);
     }
 
-    return response.status(403).json({
-      status: 'error',
-      error: 'Only an advert owner (agent) can edit it',
-    });
+    return ResponseHelper.getForbiddenErrorResponse(response, propertyEditAccessError);
   }
 
-  response.status(404).json({
-    status: 'error',
-    error: 'Not found',
-  });
+  return ResponseHelper.getNotFoundErrorResponse(response);
 };
 
 
@@ -173,32 +151,22 @@ export const updateProperty = (request, response) => {
   const property = properties[propertyIndex];
 
   if (!property) {
-    return response.status(404).json({
-      status: 'error',
-      error: 'Not found',
-    });
+    return ResponseHelper.getNotFoundErrorResponse(response);
   }
 
   if (!user.isAgent || user.id !== property.owner) {
-    return response.status(403).json({
-      status: 'error',
-      error: 'Only an advert owner (agent) can edit it',
-    });
+    return ResponseHelper.getForbiddenErrorResponse(response, propertyEditAccessError);
   }
 
   const errorMessage = getUpdatePropertyError(request.body);
+
   if (errorMessage) {
-    return response.status(400).json({
-      status: 'error',
-      error: errorMessage,
-    });
+    return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
   }
 
   if (hasForbiddenField(request.body)) {
-    return response.status(403).json({
-      status: 'error',
-      error: 'You cannot update fields "id" and "owner"',
-    });
+    return ResponseHelper.getForbiddenErrorResponse(response,
+      'You cannot update fields "id" and "owner"');
   }
 
   Object.entries(request.body).forEach((entry) => {
@@ -208,11 +176,7 @@ export const updateProperty = (request, response) => {
 
   property.updatedOn = new Date();
   properties[propertyIndex] = property;
-
-  response.status(200).json({
-    status: 'success',
-    data: property,
-  });
+  return ResponseHelper.getSuccessResponse(response, property);
 };
 
 
@@ -228,10 +192,7 @@ export const deleteProperty = (request, response) => {
   const propertyIndex = properties.findIndex(el => el.id === propertyId);
 
   if (propertyIndex < 0) {
-    return response.status(404).json({
-      status: 'error',
-      error: 'Not found',
-    });
+    return ResponseHelper.getNotFoundErrorResponse(response);
   }
 
   const property = properties[propertyIndex];
@@ -239,18 +200,12 @@ export const deleteProperty = (request, response) => {
   const user = users.find(el => el.id === userId);
 
   if (!user.isAgent || userId !== property.owner) {
-    return response.status(403).json({
-      status: 'error',
-      error: 'Only an advert owner (agent) can delete it',
-    });
+    return ResponseHelper.getForbiddenErrorResponse(response,
+      'Only an advert owner (agent) can delete it');
   }
 
   properties.splice(propertyIndex, 1);
-
-  response.status(200).json({
-    status: 'success',
-    data: {
-      message: 'Successfully deleted property ad',
-    },
+  return ResponseHelper.getSuccessResponse(response, {
+    message: 'Successfully deleted property ad',
   });
 };
