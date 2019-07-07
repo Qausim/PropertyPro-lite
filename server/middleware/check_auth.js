@@ -1,6 +1,8 @@
 // Handles user authentication before having access to resources
 import jwt from 'jsonwebtoken';
 
+import ResponseHelper from '../helpers/response_helper';
+
 /**
  * Decodes authentication token and proceeds with the request or returns
  * and error response.
@@ -12,9 +14,6 @@ export default (request, response, next) => {
     request.userData = decoded;
     next();
   } catch (error) {
-    return response.status(401).json({
-      status: 'error',
-      error: 'Unauthorized request',
-    });
+    return ResponseHelper.getUnauthorizedErrorResponse(response);
   }
 };

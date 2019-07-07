@@ -1,4 +1,5 @@
 import users from '../db/users';
+import ResponseHelper from './response_helper';
 
 /**
  * Validates that its value argument is of string type
@@ -92,8 +93,8 @@ export const getPropertyDetails = (property) => {
 
 
 /**
- * Filters the list of property by a given query text and returns an
- * appropriate response or error message
+ * Filters the list of property by a given query text against property type
+ * and returns an appropriate response or error message
  *
  * @param {*} response
  * @param {Array} properties
@@ -104,18 +105,12 @@ export const getPropertyDetails = (property) => {
 export const filterPropertiesByType = (response, properties, queryText) => {
   const trimmedText = queryText.trim().toLowerCase();
   if (!trimmedText) {
-    return response.status(400).json({
-      status: 'error',
-      error: 'Empty query text',
-    });
+    return ResponseHelper.getBadRequestErrorResponse(response, 'Empty query text');
   }
 
   const data = properties.filter(property => property.type
     .toLowerCase().includes(trimmedText)).map(getPropertyDetails);
-  return response.status(200).json({
-    status: 'success',
-    data,
-  });
+  return ResponseHelper.getSuccessResponse(response, data);
 };
 
 

@@ -1,8 +1,5 @@
 // Contains helper functions for authentication routes handlers
-
 import jwt from 'jsonwebtoken';
-
-import users from '../db/users';
 
 
 /**
@@ -52,10 +49,6 @@ export const getSignUpError = ({
 }) => {
   if (!isValidEmail(email)) {
     return 'Invalid email';
-  }
-
-  if (users.find(user => user.email === email)) {
-    return 'Email address is taken';
   }
 
   if (!isValidPassword(password)) {

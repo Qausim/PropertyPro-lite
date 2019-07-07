@@ -1,10 +1,9 @@
-import app from '../app';
 import users from '../db/users';
 import properties from '../db/properties';
 import testConfig from '../config/test_config';
 
 
-const { chai, expect } = testConfig;
+const { chai, expect, app } = testConfig;
 
 export default () => {
   const propertyUrl = '/api/v1/property';

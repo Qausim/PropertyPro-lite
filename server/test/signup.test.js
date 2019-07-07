@@ -1,9 +1,8 @@
-import app from '../app';
 import users from '../db/users';
 import testConfig from '../config/test_config';
 
 
-const { chai, expect } = testConfig;
+const { chai, expect, app } = testConfig;
 const signupUrl = '/api/v1/auth/signup';
 
 
@@ -142,7 +141,7 @@ export default () => {
         .post(signupUrl)
         .send(data);
 
-      expect(res.status).to.equal(400);
+      expect(res.status).to.equal(409);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');

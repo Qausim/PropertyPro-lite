@@ -1,10 +1,9 @@
-import app from '../app';
 import testConfig from '../config/test_config';
 import users from '../db/users';
 import properties from '../db/properties';
 
 
-const { chai, expect } = testConfig;
+const { chai, expect, app } = testConfig;
 
 
 export default () => {
