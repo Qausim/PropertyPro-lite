@@ -12,6 +12,9 @@ URL: https://github.com/Qausim/PropertyPro-lite.git
 ## Github Pages URL
 URL: https://qausim.github.io/PropertyPro-lite/UI
 
+## Heroku Link
+URL: https://tranquil-temple-44573.herokuapp.com/
+
 ## Pivotal Tracker
 URL: https://www.pivotaltracker.com/n/projects/2354402
 
