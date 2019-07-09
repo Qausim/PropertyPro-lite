@@ -4,9 +4,13 @@ import * as dotenv from 'dotenv';
 
 import authRouter from './routes/auth';
 import propertyRouter from './routes/property';
+import Migration from './db/migration';
+import './config/tables_config';
 
 
 dotenv.config();
+Migration.createTable();
+
 
 const app = express();
 app.use(bodyParser.json());
