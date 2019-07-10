@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import authRouter from './routes/auth';
 import propertyRouter from './routes/property';
 import Migration from './db/migration';
-import './config/tables_config';
 
 
 dotenv.config();
@@ -17,11 +16,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-// auth routes
 const baseApiRoute = '/api/v1';
 
+// auth routes
 app.use(`${baseApiRoute}/auth`, authRouter);
-
 // property route
 app.use(`${baseApiRoute}/property`, propertyRouter);
 

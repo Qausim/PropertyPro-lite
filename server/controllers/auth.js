@@ -13,7 +13,8 @@ import {
 import '../config/tables_config';
 
 const usersTable = process.env.USERS_TABLE;
-
+console.log(usersTable);
+console.log(process.env.NODE_ENV);
 
 /**
  * Handles POST /api/v1/auth/signup requests
