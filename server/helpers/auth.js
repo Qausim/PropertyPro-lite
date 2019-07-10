@@ -69,40 +69,44 @@ export const getSignUpError = ({
 };
 
 
-// const setUserResponseFormat = (data) => {
-//   const newData = {};
-//   Object.entries(data).forEach(entry => {
-//     // const [key, value] = entry;
-//     const splitKey = entry[0].split('_');
-//     const secondHalf = splitKey[1];
-//     const newKey = secondHalf ? `${splitKey[0]}${secondHalf[0]
-//       .toUpperCase()}${secondHalf.slice(1)}` : splitKey[0];
-//     // eslint-disable-next-line prefer-destructuring
-//     newData[newKey] = entry[1];
-//   });
-
-//   return newData;
-// };
-
-
 /**
  * Retrieves public user fields
  *
  * @param {User} user
  * @returns {object}
  */
-const getUserData = (user) => {
-  return {
-    id: user.id,
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    phoneNumber: user.phoneNumber,
-    address: user.address,
-    isAdmin: user.isAdmin,
-    isAgent: user.isAgent,
-    token: user.token,
-  };
+const getPublicUserData = user => ({
+  id: parseFloat(user.id),
+  email: user.email,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  phoneNumber: user.phoneNumber,
+  address: user.address,
+  isAdmin: user.isAdmin,
+  isAgent: user.isAgent,
+  token: user.token,
+});
+
+
+/**
+ * Reformats database fields (with underscores) into camelCase
+ * and returns them as such as fields of a new object
+ *
+ * @param {object} data
+ * @returns {object}
+ */
+export const reformatUserData = (data) => {
+  const newData = {};
+  Object.entries(data).forEach((entry) => {
+    const splitKey = entry[0].split('_');
+    const secondHalf = splitKey[1];
+    const newKey = secondHalf ? `${splitKey[0]}${secondHalf[0]
+      .toUpperCase()}${secondHalf.slice(1)}` : splitKey[0];
+    // eslint-disable-next-line prefer-destructuring
+    newData[newKey] = entry[1];
+  });
+
+  return getPublicUserData(newData);
 };
 
 
@@ -131,7 +135,7 @@ export const createUser = async ({
       user.lastName, user.password, user.phoneNumber, user.address, user.isAdmin, user.isAgent]);
 
     if (userInsertQueryResult.rowCount) {
-      const data = getUserData(user);
+      const data = getPublicUserData(user);
       return data;
     } throw new Error();
   } else throw new Error();
