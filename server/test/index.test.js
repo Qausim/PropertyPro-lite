@@ -9,8 +9,12 @@ import queryPropertyTypeTests from './search_property_by_type.test';
 import updatePropertyAdTests from './update_property.test';
 import deletePropertyAdTests from './delete_property.test';
 
-Migration.createTable();
 
+before((done) => {
+  Migration.createTestTables()
+    .then(() => done())
+    .catch(e => done(e));
+})
 
 // Tests for signup requests
 describe('POST /api/v1/auth/signup', signupTests);

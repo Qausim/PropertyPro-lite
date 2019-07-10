@@ -1,8 +1,9 @@
 import testConfig from '../config/test_config';
 import dbConnection from '../db/database';
+import app from '../app';
 
 
-const { chai, expect, app } = testConfig;
+const { chai, expect } = testConfig;
 const signupUrl = '/api/v1/auth/signup';
 
 

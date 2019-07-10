@@ -63,8 +63,11 @@ const propertyTestTableCreationQuery = `
 export default {
   async createTable() {
     await dbConnection.dbConnect(userTableCreationQuery);
-    await dbConnection.dbConnect(userTestTableCreationQuery);
     await dbConnection.dbConnect(propertyTableCreationQuery);
+  },
+
+  async createTestTables() {
+    await dbConnection.dbConnect(userTestTableCreationQuery);
     await dbConnection.dbConnect(propertyTestTableCreationQuery);
   },
 };
