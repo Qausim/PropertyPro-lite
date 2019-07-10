@@ -1,14 +1,15 @@
-import users from '../db/users';
 import testConfig from '../config/test_config';
+import dbConnection from '../db/database';
+import app from '../app';
 
 
-const { chai, expect, app } = testConfig;
+const { chai, expect } = testConfig;
 const signupUrl = '/api/v1/auth/signup';
 
 
 export default () => {
   // Test user object
-  const admin = {
+  let admin = {
     email: 'qauzeem@propertyprolite.com',
     firstName: 'Olawumi',
     lastName: 'Yusuff',
@@ -21,11 +22,15 @@ export default () => {
 
   // Sign up test user before any test run
   before((done) => {
-    chai.request(app)
-      .post(signupUrl)
-      .send(admin)
+    dbConnection.dbConnect('ALTER SEQUENCE users_test_id_seq RESTART WITH 1;')
+      .then(() => {
+        return chai.request(app)
+          .post(signupUrl)
+          .send(admin);
+      })
       .then((res) => {
         if (res.status === 201) {
+          admin = res.body.data;
           done();
         } else {
           throw new Error('Could not insert admin');
@@ -36,14 +41,16 @@ export default () => {
 
   // Clear new entries into the db save the initial test object
   afterEach((done) => {
-    users.splice(1);
-    done();
+    dbConnection.dbConnect('DELETE FROM users_test WHERE id <> $1', [admin.id])
+      .then(() => done())
+      .catch(e => done(e));
   });
 
   // Clear the db after
   after((done) => {
-    users.splice(0);
-    done();
+    dbConnection.dbConnect('DELETE FROM users_test;')
+      .then(() => done())
+      .catch(e => done(e));
   });
 
   // Tests that are meant to pass

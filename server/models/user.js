@@ -1,6 +1,6 @@
 export default class User {
   constructor(id = null, email, firstName, lastName,
-    password, phoneNumber = '', address = '', isAdmin = false, isAgent = false) {
+    password, phoneNumber = null, address = null, isAdmin = false, isAgent = false) {
     this.id = id;
     this.email = email;
     this.firstName = firstName;
