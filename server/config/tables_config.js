@@ -1,11 +1,7 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
 if (process.env.NODE_ENV === 'test') {
-  process.env.USERS_TABLE_NAME = 'users_test';
-  process.env.PROPERTIES_TABLE_NAME = 'properties_test';
+  process.env.USERS_TABLE = 'users_test';
+  process.env.PROPERTIES_TABLE = 'properties_test';
 } else {
-  process.env.USERS_TABLE_NAME = 'users';
-  process.env.PROPERTIES_TABLE_NAME = 'properties';
+  process.env.USERS_TABLE = 'users';
+  process.env.PROPERTIES_TABLE = 'properties';
 }

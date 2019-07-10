@@ -1,17 +1,26 @@
 import bcrypt from 'bcrypt';
 
-import User from '../models/user';
 import users from '../db/users';
+import dbConnection from '../db/database';
 import ResponseHelper from '../helpers/response_helper';
-
 import {
-  getSignUpError, getToken, isValidEmail,
+  getSignUpError,
+  getToken,
+  isValidEmail,
   isValidPassword,
+  createUser,
 } from '../helpers/auth';
+import '../config/tables_config';
+
+const usersTable = process.env.USERS_TABLE;
 
 
 /**
  * Handles POST /api/v1/auth/signup requests
+ * Calls @function getSignUpError, @function createUser
+ *
+ * @param {*} request
+ * @param {*} response
  */
 export const signup = (request, response) => {
   const errorMessage = getSignUpError(request.body);
@@ -19,42 +28,21 @@ export const signup = (request, response) => {
     return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
   }
 
-  const {
-    email, firstName,
-    lastName, phoneNumber,
-    address, isAdmin, isAgent,
-  } = request.body;
+  dbConnection.dbConnect(`SELECT FROM ${usersTable} WHERE email = $1`, [request.body.email])
+    .then((existsResult) => {
+      if (existsResult.rowCount) {
+        return ResponseHelper.getConflictErrorResponse(response, 'Email address is taken');
+      }
 
-  if (users.find(user => user.email === email)) {
-    return ResponseHelper.getConflictErrorResponse(response, 'Email address is taken');
-  }
+      bcrypt.hash(request.body.password, 10, (error, hash) => {
+        if (error) return ResponseHelper.getInternalServerError(response);
 
-  bcrypt.hash(request.body.password, 10, (error, hash) => {
-    if (error) {
-      return ResponseHelper.getInternalServerError(response);
-    }
-
-
-    const lastUser = users[users.length - 1];
-    const userId = lastUser ? lastUser.id + 1 : 1;
-    users.push(new User(userId, email, firstName, lastName,
-      hash, phoneNumber, address, isAdmin, isAgent));
-
-    const user = users[users.length - 1];
-    user.token = getToken(email, userId);
-
-    return ResponseHelper.getSuccessResponse(response, {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      address: user.address,
-      phoneNumber: user.phoneNumber,
-      token: user.token,
-      isAdmin,
-      isAgent,
-    }, 201);
-  });
+        createUser(request.body, hash, usersTable)
+          .then(user => ResponseHelper.getSuccessResponse(response, user, 201))
+          .catch(() => ResponseHelper.getInternalServerError(response));
+      });
+    })
+    .catch(() => ResponseHelper.getInternalServerError(response));
 };
 
 
