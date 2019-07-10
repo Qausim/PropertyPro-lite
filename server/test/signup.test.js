@@ -22,12 +22,9 @@ export default () => {
 
   // Sign up test user before any test run
   before((done) => {
-    dbConnection.dbConnect('ALTER SEQUENCE users_test_id_seq RESTART WITH 1;')
-      .then(() => {
-        return chai.request(app)
-          .post(signupUrl)
-          .send(admin);
-      })
+    chai.request(app)
+      .post(signupUrl)
+      .send(admin)
       .then((res) => {
         if (res.status === 201) {
           admin = res.body.data;

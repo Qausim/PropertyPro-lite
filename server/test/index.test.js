@@ -1,4 +1,5 @@
 import Migration from '../db/migration';
+import dbConnection from '../db/database';
 import signupTests from './signup.test';
 import signinTests from './signin.test';
 import createPropertyAdTests from './create_property.test';
@@ -12,6 +13,9 @@ import deletePropertyAdTests from './delete_property.test';
 
 before((done) => {
   Migration.createTestTables()
+    .then(() => {
+      return dbConnection.dbConnect('ALTER SEQUENCE users_test_id_seq RESTART WITH 1;');
+    })
     .then(() => done())
     .catch(e => done(e));
 })
@@ -19,8 +23,8 @@ before((done) => {
 // Tests for signup requests
 describe('POST /api/v1/auth/signup', signupTests);
 
-// // Tests for signin requests
-// describe('POST /api/v1/auth/signin', signinTests);
+// Tests for signin requests
+describe('POST /api/v1/auth/signin', signinTests);
 
 // // Tests for create property ad requests
 // describe('POST /api/v1/property', createPropertyAdTests);

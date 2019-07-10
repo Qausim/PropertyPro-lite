@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 
-import users from '../db/users';
 import dbConnection from '../db/database';
 import ResponseHelper from '../helpers/response_helper';
 import {
@@ -9,6 +8,7 @@ import {
   isValidEmail,
   isValidPassword,
   createUser,
+  reformatUserData,
 } from '../helpers/auth';
 import '../config/tables_config';
 
@@ -55,34 +55,26 @@ export const signup = (request, response) => {
  */
 export const signin = (request, response) => {
   const signinErrorMessage = 'Invalid email or password';
-
   const { email, password } = request.body;
 
   if (!isValidEmail(email) || !isValidPassword(password)) {
     return ResponseHelper.getUnauthorizedErrorResponse(response, signinErrorMessage);
   }
 
-  const user = users.find(el => el.email === email);
-  if (!user) {
-    return ResponseHelper.getUnauthorizedErrorResponse(response, signinErrorMessage);
-  }
+  dbConnection.dbConnect(`SELECT * FROM ${usersTable} WHERE email = $1`, [email])
+    .then((res) => {
+      if (!res.rowCount) {
+        return ResponseHelper.getUnauthorizedErrorResponse(response, signinErrorMessage);
+      }
 
-  bcrypt.compare(password, user.password, (error, result) => {
-    if (result) {
-      user.token = getToken(email, user.id);
-      return ResponseHelper.getSuccessResponse(response, {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        address: user.address,
-        phoneNumber: user.phoneNumber,
-        token: user.token,
-        isAdmin: user.isAdmin,
-        isAgent: user.isAgent,
+      const user = res.rows[0];
+      bcrypt.compare(password, user.password, (error, authRes) => {
+        if (authRes) {
+          user.token = getToken(email, user.id);
+          return ResponseHelper.getSuccessResponse(response, reformatUserData(user));
+        }
+        return ResponseHelper.getUnauthorizedErrorResponse(response, signinErrorMessage);
       });
-    }
-
-    return ResponseHelper.getUnauthorizedErrorResponse(response, signinErrorMessage);
-  });
+    })
+    .catch(() => ResponseHelper.getInternalServerError(response));
 };
