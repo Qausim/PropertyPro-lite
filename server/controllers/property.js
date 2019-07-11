@@ -64,15 +64,17 @@ export const createProperty = (request, response) => {
  * @returns {response}
  */
 export const getProperties = (request, response) => {
-  const queryText = request.query.type;
+  // const queryText = request.query.type;
 
-  // Handle search queries by type
-  if (queryText !== undefined) {
-    return filterPropertiesByType(response, properties, queryText);
-  }
-
-  const data = properties.map(getPropertyDetails);
-  return ResponseHelper.getSuccessResponse(response, data);
+  // // Handle search queries by type
+  // if (queryText !== undefined) {
+  //   return filterPropertiesByType(response, properties, queryText);
+  // }
+  dbConnection.dbConnect(`SELECT * FROM ${propertiesTable};`)
+    .then(res => res.rows.map(ad => getPropertyDetails(ad, usersTable)))
+    .then(res => Promise.all(res))
+    .then(data => ResponseHelper.getSuccessResponse(response, data))
+    .catch(() => ResponseHelper.getInternalServerError());
 };
 
 

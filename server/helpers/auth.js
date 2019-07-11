@@ -76,7 +76,7 @@ export const getSignUpError = ({
  * @returns {object}
  */
 const getPublicUserData = user => ({
-  id: parseFloat(user.id),
+  id: user.id,
   email: user.email,
   firstName: user.firstName,
   lastName: user.lastName,
@@ -125,7 +125,7 @@ export const createUser = async ({
   const userIdQueryResult = await dbConnection.dbConnect(`SELECT nextval('${usersTable}_id_seq');`);
 
   if (userIdQueryResult.rowCount) {
-    const userId = parseFloat(userIdQueryResult.rows[0].nextval);
+    const userId = userIdQueryResult.rows[0].nextval;
     const user = new User(userId, email, firstName, lastName, hash, phoneNumber, address,
       isAdmin, isAgent);
     user.token = getToken(email, userId);
