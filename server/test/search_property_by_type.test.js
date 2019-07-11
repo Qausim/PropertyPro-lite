@@ -1,6 +1,5 @@
 import testConfig from '../config/test_config';
-import properties from '../db/properties';
-import users from '../db/users';
+import { clearAllTestRecords } from '../helpers/test_hooks_helper';
 
 const { chai, expect, app } = testConfig;
 
@@ -149,11 +148,7 @@ export default () => {
       .catch(error => done(error));
   });
 
-  after((done) => {
-    properties.splice(0);
-    users.splice(0);
-    done();
-  });
+  after(clearAllTestRecords);
 
   describe('success', () => {
     it('should get properties of same type irrespective of case', async () => {

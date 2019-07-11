@@ -40,7 +40,7 @@ describe('GET /api/v1/property', getAllPropertiesTests);
 // describe('PATCH /api/v1/property/<:propertyId>/sold', markPropertyAsSoldTests);
 
 // // Tests for property list search
-// describe('GET /api/v1/property?type=queryText', queryPropertyTypeTests);
+describe('GET /api/v1/property?type=propertyType', queryPropertyTypeTests);
 
 // // Tests for property update
 // describe('PATCH /api/v1/property/<:propertyId>', updatePropertyAdTests);
