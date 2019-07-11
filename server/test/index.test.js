@@ -26,8 +26,8 @@ describe('POST /api/v1/auth/signup', signupTests);
 // Tests for signin requests
 describe('POST /api/v1/auth/signin', signinTests);
 
-// // Tests for create property ad requests
-// describe('POST /api/v1/property', createPropertyAdTests);
+// Tests for create property ad requests
+describe('POST /api/v1/property', createPropertyAdTests);
 
 // // Tests for get all properties requests
 // describe('GET /api/v1/property', getAllPropertiesTests);
