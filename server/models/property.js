@@ -8,7 +8,7 @@ export default class Property {
     this.state = state;
     this.city = city;
     this.address = address;
-    this.price = parseFloat(parseFloat(price).toFixed(2));
+    this.price = parseFloat(price).toFixed(2);
     this.createdOn = new Date().toLocaleString();
     this.updatedOn = null;
     this.imageUrl = imageUrl || '';

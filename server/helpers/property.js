@@ -1,4 +1,3 @@
-import users from '../db/users';
 import Property from '../models/property';
 import ResponseHelper from './response_helper';
 import dbConnection from '../db/database';
@@ -72,11 +71,9 @@ export const getCreatePropertyError = ({
  * @param {Property} property
  * @returns {object}
  */
-export const getPropertyDetails = (property) => {
-  const {
-    email, firstName, lastName, phoneNumber,
-  } = users.find(user => user.id === property.owner);
-
+export const getPropertyDetails = async (property, usersTable) => {
+  const { rows: [ownerData] } = await dbConnection.dbConnect(`SELECT email, first_name, last_name, phone_number,
+  address FROM ${usersTable} WHERE id = $1`, [property.owner]);
   return {
     id: property.id,
     status: property.status,
@@ -85,12 +82,13 @@ export const getPropertyDetails = (property) => {
     city: property.city,
     address: property.address,
     price: property.price,
-    createdOn: property.createdOn,
-    updatedOn: property.updatedOn,
-    imageUrl: property.imageUrl,
-    ownerEmail: email,
-    ownerPhoneNumber: phoneNumber,
-    ownerName: `${firstName} ${lastName}`,
+    createdOn: property.created_on,
+    updatedOn: property.updated_on,
+    imageUrl: property.image_url,
+    ownerEmail: ownerData.email,
+    ownerPhoneNumber: ownerData.phone_number,
+    ownerName: `${ownerData.first_name} ${ownerData.last_name}`,
+    ownerAddress: ownerData.address,
   };
 };
 
@@ -186,7 +184,7 @@ export const dbInsertNewProperty = async ({
   const propertyIdQueryRes = await dbConnection.dbConnect(`SELECT nextval('${propertiesTable}_id_seq');`);
 
   if (propertyIdQueryRes.rowCount) {
-    const propertyId = parseFloat(propertyIdQueryRes.rows[0].nextval);
+    const propertyId = propertyIdQueryRes.rows[0].nextval;
     const property = new Property(propertyId, userId, type, state, city, address, price, imageUrl);
     const propertyInsertRes = await dbConnection.dbConnect(`INSERT INTO ${propertiesTable}
     (id, type, state, city, address, price, created_on, updated_on, image_url, owner) VALUES

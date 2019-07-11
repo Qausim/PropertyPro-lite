@@ -17,5 +17,6 @@ module.exports = {
     "rules": {
         "linebreak-style": 0,
         "consistent-return": 0,
+        "camelcase": 0,
     }
 };

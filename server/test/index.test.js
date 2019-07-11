@@ -16,9 +16,10 @@ before((done) => {
     .then(() => {
       return dbConnection.dbConnect('ALTER SEQUENCE users_test_id_seq RESTART WITH 1;');
     })
+    .then(() => dbConnection.dbConnect('ALTER SEQUENCE properties_test_id_seq RESTART WITH 1;'))
     .then(() => done())
     .catch(e => done(e));
-})
+});
 
 // Tests for signup requests
 describe('POST /api/v1/auth/signup', signupTests);
@@ -29,8 +30,8 @@ describe('POST /api/v1/auth/signin', signinTests);
 // Tests for create property ad requests
 describe('POST /api/v1/property', createPropertyAdTests);
 
-// // Tests for get all properties requests
-// describe('GET /api/v1/property', getAllPropertiesTests);
+// Tests for get all properties requests
+describe('GET /api/v1/property', getAllPropertiesTests);
 
 // // Tests for get property by id requests
 // describe('GET /api/v1/property/<:propertyId>', getPropertyByIdTests);

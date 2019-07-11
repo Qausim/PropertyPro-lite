@@ -1,6 +1,5 @@
-import users from '../db/users';
-import properties from '../db/properties';
 import testConfig from '../config/test_config';
+import { clearAllTestRecords } from '../helpers/test_hooks_helper';
 
 
 const { chai, expect, app } = testConfig;
@@ -109,11 +108,7 @@ export default () => {
   });
 
   // Clear all db records after tests run
-  after((done) => {
-    properties.splice(0);
-    users.splice(0);
-    done();
-  });
+  after(clearAllTestRecords);
 
   describe('success', () => {
     it('should get all properties ads', async () => {
@@ -142,6 +137,7 @@ export default () => {
       expect(res.body.data[0]).to.have.property('ownerName');
       expect(res.body.data[0]).to.have.property('ownerEmail');
       expect(res.body.data[0]).to.have.property('ownerPhoneNumber');
+      expect(res.body.data[0]).to.have.property('ownerAddress');
       expect(res.body.data[0].id).to.equal(propertyEntries[0].id);
       expect(res.body.data[0].status).to.equal(propertyEntries[0].status);
       expect(res.body.data[0].type).to.equal(propertyEntries[0].type);
@@ -153,6 +149,7 @@ export default () => {
       expect(res.body.data[0].ownerName).to.equal(`${agent.firstName} ${agent.lastName}`);
       expect(res.body.data[0].ownerEmail).to.equal(agent.email);
       expect(res.body.data[0].ownerPhoneNumber).to.equal(agent.phoneNumber);
+      expect(res.body.data[0].ownerAddress).to.equal(agent.address);
       expect(res.body.data[1]).to.have.property('id');
       expect(res.body.data[1]).to.have.property('status');
       expect(res.body.data[1]).to.have.property('type');
@@ -166,6 +163,7 @@ export default () => {
       expect(res.body.data[1]).to.have.property('ownerName');
       expect(res.body.data[1]).to.have.property('ownerEmail');
       expect(res.body.data[1]).to.have.property('ownerPhoneNumber');
+      expect(res.body.data[1]).to.have.property('ownerAddress');
       expect(res.body.data[1].id).to.equal(propertyEntries[1].id);
       expect(res.body.data[1].status).to.equal(propertyEntries[1].status);
       expect(res.body.data[1].type).to.equal(propertyEntries[1].type);
@@ -177,6 +175,7 @@ export default () => {
       expect(res.body.data[1].ownerName).to.equal(`${agent.firstName} ${agent.lastName}`);
       expect(res.body.data[1].ownerEmail).to.equal(agent.email);
       expect(res.body.data[1].ownerPhoneNumber).to.equal(agent.phoneNumber);
+      expect(res.body.data[1].ownerAddress).to.equal(agent.address);
     });
   });
 
