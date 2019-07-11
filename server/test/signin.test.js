@@ -1,9 +1,8 @@
 import testConfig from '../config/test_config';
-import dbConnection from '../db/database';
+import { clearTestUsersRecords } from '../helpers/test_hooks_helper';
+
 
 const { chai, expect, app } = testConfig;
-
-
 const signinUrl = '/api/v1/auth/signin';
 
 export default () => {
@@ -36,11 +35,7 @@ export default () => {
   });
 
   // Clear user db after tests run
-  after((done) => {
-    dbConnection.dbConnect('DELETE FROM users_test;')
-      .then(() => done())
-      .catch(e => done(e));
-  });
+  after(clearTestUsersRecords);
 
 
   // Tests that are meant to pass

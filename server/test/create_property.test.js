@@ -1,5 +1,5 @@
 import testConfig from '../config/test_config';
-import dbConnection from '../db/database';
+import { clearAllTestRecords } from '../helpers/test_hooks_helper';
 
 
 const { chai, expect, app } = testConfig;
@@ -58,12 +58,7 @@ export default () => {
   });
 
   // Clear db records after tests run
-  after((done) => {
-    dbConnection.dbConnect('DELETE FROM properties_test;')
-      .then(() => dbConnection.dbConnect('DELETE FROM users_test;'))
-      .then(() => done())
-      .catch(e => done(e));
-  });
+  after(clearAllTestRecords);
 
   // Tests that are meant to pass
   describe('success', () => {

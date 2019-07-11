@@ -18,7 +18,7 @@ before((done) => {
     })
     .then(() => done())
     .catch(e => done(e));
-})
+});
 
 // Tests for signup requests
 describe('POST /api/v1/auth/signup', signupTests);
