@@ -106,7 +106,7 @@ export default () => {
       expect(res.body.data.type).to.equal(data.type);
       expect(res.body.data.state).to.equal(data.state);
       expect(res.body.data.city).to.equal(data.city);
-      expect(res.body.data.price).to.equal(data.price);
+      expect(res.body.data.price).to.equal(data.price.toFixed(2));
       expect(res.body.data.imageUrl).to.not.equal('');
     });
 
@@ -148,7 +148,7 @@ export default () => {
       expect(res.body.data.type).to.equal(data.type);
       expect(res.body.data.state).to.equal(data.state);
       expect(res.body.data.city).to.equal(data.city);
-      expect(res.body.data.price).to.equal(data.price);
+      expect(res.body.data.price).to.equal(data.price.toFixed(2));
     });
   });
 

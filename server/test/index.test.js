@@ -16,6 +16,7 @@ before((done) => {
     .then(() => {
       return dbConnection.dbConnect('ALTER SEQUENCE users_test_id_seq RESTART WITH 1;');
     })
+    .then(() => dbConnection.dbConnect('ALTER SEQUENCE properties_test_id_seq RESTART WITH 1;'))
     .then(() => done())
     .catch(e => done(e));
 });
