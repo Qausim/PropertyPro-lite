@@ -72,8 +72,8 @@ export const getCreatePropertyError = ({
  * @returns {object}
  */
 export const getPropertyDetails = async (property, usersTable) => {
-  const { rows: [ownerData] } = await dbConnection.dbConnect(`SELECT email, first_name, last_name, phone_number,
-  address FROM ${usersTable} WHERE id = $1`, [property.owner]);
+  const { rows: [ownerData] } = await dbConnection.dbConnect(`SELECT email, first_name,
+  last_name, phone_number, address FROM ${usersTable} WHERE id = $1`, [property.owner]);
   return {
     id: property.id,
     status: property.status,
@@ -103,14 +103,16 @@ export const getPropertyDetails = async (property, usersTable) => {
  *
  * @returns {response}
  */
-export const filterPropertiesByType = (response, properties, queryText) => {
-  const trimmedText = queryText.trim().toLowerCase();
+export const filterPropertiesByType = async (response, queryText, propertiesTable, usersTable) => {
+  const trimmedText = queryText.trim();
   if (!trimmedText) {
     return ResponseHelper.getBadRequestErrorResponse(response, 'Empty query text');
   }
 
-  const data = properties.filter(property => property.type
-    .toLowerCase().includes(trimmedText)).map(getPropertyDetails);
+  const { rows } = await dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE type
+  ilike '%${trimmedText}%';`);
+  const promisedProperties = rows.map(property => getPropertyDetails(property, usersTable));
+  const data = await Promise.all(promisedProperties);
   return ResponseHelper.getSuccessResponse(response, data);
 };
 
