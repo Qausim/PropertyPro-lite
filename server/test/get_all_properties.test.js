@@ -1,6 +1,5 @@
-import users from '../db/users';
-import properties from '../db/properties';
 import testConfig from '../config/test_config';
+import { clearAllTestRecords } from '../helpers/test_hooks_helper';
 
 
 const { chai, expect, app } = testConfig;
@@ -109,11 +108,7 @@ export default () => {
   });
 
   // Clear all db records after tests run
-  after((done) => {
-    properties.splice(0);
-    users.splice(0);
-    done();
-  });
+  after(clearAllTestRecords);
 
   describe('success', () => {
     it('should get all properties ads', async () => {
