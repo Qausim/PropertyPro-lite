@@ -37,8 +37,8 @@ const propertyTableCreationQuery = `
     city VARCHAR(50) NOT NULL,
     address VARCHAR(250) NOT NULL,
     price NUMERIC(19, 2) NOT NULL,
-    created_on VARCHAR(15) NOT NULL,
-    updated_on VARCHAR(15),
+    created_on VARCHAR(50) NOT NULL,
+    updated_on VARCHAR(50),
     image_url VARCHAR(200),
     owner BIGINT REFERENCES users (id) NOT NULL
   );
@@ -53,8 +53,8 @@ const propertyTestTableCreationQuery = `
     city VARCHAR(50) NOT NULL,
     address VARCHAR(250) NOT NULL,
     price NUMERIC(19, 2) NOT NULL,
-    created_on VARCHAR(15) NOT NULL,
-    updated_on VARCHAR(15),
+    created_on VARCHAR(50) NOT NULL,
+    updated_on VARCHAR(50),
     image_url VARCHAR(200),
     owner BIGINT REFERENCES users_test (id) NOT NULL
   );

@@ -121,13 +121,13 @@ export const reformatUserData = (data) => {
 export const createUser = async ({
   email, firstName, lastName, phoneNumber, address, isAdmin, isAgent,
 }, hash, usersTable) => {
-  let userId;
+  // Get next database serial key
   const userIdQueryResult = await dbConnection.dbConnect(`SELECT nextval('${usersTable}_id_seq');`);
 
   if (userIdQueryResult.rowCount) {
-    userId = parseFloat(userIdQueryResult.rows[0].nextval);
-    const user = new User(userId, email, firstName, lastName, hash, phoneNumber || null,
-      address || null, isAdmin, isAgent);
+    const userId = parseFloat(userIdQueryResult.rows[0].nextval);
+    const user = new User(userId, email, firstName, lastName, hash, phoneNumber, address,
+      isAdmin, isAgent);
     user.token = getToken(email, userId);
     const userInsertQueryResult = await dbConnection.dbConnect(`INSERT INTO ${usersTable} (
       id, email, first_name, last_name, password, phone_number, address, is_admin, is_agent)

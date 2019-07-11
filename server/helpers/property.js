@@ -1,5 +1,7 @@
 import users from '../db/users';
+import Property from '../models/property';
 import ResponseHelper from './response_helper';
+import dbConnection from '../db/database';
 
 /**
  * Validates that its value argument is of string type
@@ -42,24 +44,25 @@ const hasNumber = value => /\d/.test(value);
 export const getCreatePropertyError = ({
   type, state, city, address, price,
 }) => {
+  let errorMessage;
   if (!isString(type)) {
-    return 'Invalid type field';
-  } if (!state) {
-    return 'State is required';
-  } if (!isString(state) || hasNumber(state)) {
-    return 'Invalid state field';
-  } if (!city) {
-    return 'City is required';
-  } if (!isString(city) || hasNumber(city)) {
-    return 'Invalid city field';
-  } if (!address) {
-    return 'Address is required';
-  } if (!isString(address) || isNumber(address)) {
-    return 'Invalid address field';
-  } if (!parseFloat(price) || !isNumber(price)) {
-    return 'Invalid price field';
+    errorMessage = 'Invalid type field';
+  } else if (!state) {
+    errorMessage = 'State is required';
+  } else if (!isString(state) || hasNumber(state)) {
+    errorMessage = 'Invalid state field';
+  } else if (!city) {
+    errorMessage = 'City is required';
+  } else if (!isString(city) || hasNumber(city)) {
+    errorMessage = 'Invalid city field';
+  } else if (!address) {
+    errorMessage = 'Address is required';
+  } else if (!isString(address) || isNumber(address)) {
+    errorMessage = 'Invalid address field';
+  } else if (!parseFloat(price) || !isNumber(price)) {
+    errorMessage = 'Invalid price field';
   }
-  return false;
+  return errorMessage;
 };
 
 
@@ -124,33 +127,34 @@ export const filterPropertiesByType = (response, properties, queryText) => {
 export const getUpdatePropertyError = ({
   type, state, city, address, price,
 }) => {
+  let errorMessage;
   if (isString(type) && !type.trim()) {
     // there's an empty type field
-    return 'Type cannot be empty';
-  } if (isString(state) && !state.trim()) {
+    errorMessage = 'Type cannot be empty';
+  } else if (isString(state) && !state.trim()) {
     // there's an empty state field
-    return 'State cannot be empty';
-  } if (state && (!isString(state) || hasNumber(state))) {
+    errorMessage = 'State cannot be empty';
+  } else if (state && (!isString(state) || hasNumber(state))) {
     // there's an invalid state field
-    return 'Invalid state field';
-  } if (isString(city) && !city.trim()) {
+    errorMessage = 'Invalid state field';
+  } else if (isString(city) && !city.trim()) {
     // there's an empty city field
-    return 'City cannot be empty';
-  } if (city && (!isString(city) || hasNumber(city))) {
+    errorMessage = 'City cannot be empty';
+  } else if (city && (!isString(city) || hasNumber(city))) {
     // there's an invalid city field
-    return 'Invalid city field';
-  } if (isString(address) && !address.trim()) {
+    errorMessage = 'Invalid city field';
+  } else if (isString(address) && !address.trim()) {
     // there's an empty address field
-    return 'Address cannot be empty';
-  } if (address && (!isString(address) || isNumber(address))) {
+    errorMessage = 'Address cannot be empty';
+  } else if (address && (!isString(address) || isNumber(address))) {
     // there's an invalid address field
-    return 'Invalid address field';
-  } if (price !== undefined && (
+    errorMessage = 'Invalid address field';
+  } else if (price !== undefined && (
     price === '' || !isNumber(price) || parseFloat(price) <= 0)) {
     // price field is: '' | non-number | < 0
-    return 'Invalid price field';
+    errorMessage = 'Invalid price field';
   }
-  return false;
+  return errorMessage;
 };
 
 
@@ -164,4 +168,33 @@ export const getUpdatePropertyError = ({
 export const hasForbiddenField = (body) => {
   const keys = Object.keys(body);
   return keys.includes('id') || keys.includes('owner');
+};
+
+
+/**
+ * Inserts a new property item into the database
+ * @param {object} request_body
+ * @param {string} imageUrl
+ * @param {number} userId
+ * @param {string} propertiesTable
+ *
+ * @returns {Property} object
+ */
+export const dbInsertNewProperty = async ({
+  type, state, city, address, price,
+}, imageUrl, userId, propertiesTable) => {
+  const propertyIdQueryRes = await dbConnection.dbConnect(`SELECT nextval('${propertiesTable}_id_seq');`);
+
+  if (propertyIdQueryRes.rowCount) {
+    const propertyId = parseFloat(propertyIdQueryRes.rows[0].nextval);
+    const property = new Property(propertyId, userId, type, state, city, address, price, imageUrl);
+    const propertyInsertRes = await dbConnection.dbConnect(`INSERT INTO ${propertiesTable}
+    (id, type, state, city, address, price, created_on, updated_on, image_url, owner) VALUES
+    ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [propertyId, type, state, city, address, property.price,
+      property.createdOn, property.updatedOn, property.imageUrl, property.owner]);
+
+    if (propertyInsertRes.rowCount) {
+      return property;
+    } throw new Error();
+  } else throw new Error();
 };
