@@ -1,6 +1,5 @@
-import users from '../db/users';
-import properties from '../db/properties';
 import testConfig from '../config/test_config';
+import dbConnection from '../db/database';
 
 
 const { chai, expect, app } = testConfig;
@@ -60,9 +59,10 @@ export default () => {
 
   // Clear db records after tests run
   after((done) => {
-    users.splice(0);
-    properties.splice(0);
-    done();
+    dbConnection.dbConnect('DELETE FROM properties_test;')
+      .then(() => dbConnection.dbConnect('DELETE FROM users_test;'))
+      .then(() => done())
+      .catch(e => done(e));
   });
 
   // Tests that are meant to pass

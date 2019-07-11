@@ -1,16 +1,16 @@
 export default class Property {
   constructor(id, owner, type, state, city, address, price,
-    imageUrl = '', status = 'available') {
+    imageUrl) {
     this.id = id;
     this.owner = owner;
-    this.status = status;
+    this.status = 'available';
     this.type = type;
     this.state = state;
     this.city = city;
     this.address = address;
-    this.price = price;
-    this.createdOn = new Date();
+    this.price = parseFloat(parseFloat(price).toFixed(2));
+    this.createdOn = new Date().toLocaleString();
     this.updatedOn = null;
-    this.imageUrl = imageUrl;
+    this.imageUrl = imageUrl || '';
   }
 }

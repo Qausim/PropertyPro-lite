@@ -1,9 +1,8 @@
 // /property routes controller
-
-import dotenv from 'dotenv';
-
 import Property from '../models/property';
 import properties from '../db/properties';
+import dbConnection from '../db/database';
+import '../config/tables_config';
 import users from '../db/users';
 import ResponseHelper from '../helpers/response_helper';
 import {
@@ -12,21 +11,24 @@ import {
   filterPropertiesByType,
   getUpdatePropertyError,
   hasForbiddenField,
+  dbInsertNewProperty,
 } from '../helpers/property';
 
-dotenv.config();
 
 const propertyEditAccessError = 'Only an advert owner (agent) can edit it';
+const usersTable = process.env.USERS_TABLE;
+const propertiesTable = process.env.PROPERTIES_TABLE;
+
 
 /**
  * Creates a new property advertisement and returns it or returns an
  * appropriate error message.
- * Calls @function getCreatePropertyError
+ * Calls @function getCreatePropertyError, @function dbInsertNewProperty
  *
  * @param {*} request
  * @param {*} response
  *
- * @returns {responses}
+ * @returns {response}
  */
 export const createProperty = (request, response) => {
   const errorMessage = getCreatePropertyError(request.body);
@@ -34,31 +36,22 @@ export const createProperty = (request, response) => {
     return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
   }
   const { userId } = request.userData;
-  const user = users.find(el => el.id === userId);
+  dbConnection.dbConnect(`SELECT is_agent FROM ${usersTable} WHERE id = $1`, [userId])
+    .then((isAgentRes) => {
+      if (!isAgentRes.rows[0].is_agent) {
+        return ResponseHelper.getForbiddenErrorResponse(response,
+          'Only agents can create property ads');
+      }
 
-  if (!user || !user.isAgent) {
-    return ResponseHelper.getForbiddenErrorResponse(response,
-      'Only agents can create property ads');
-  }
-
-  let imageUrl = '';
-  if (request.file) {
-    imageUrl = request.file.url;
-  }
-
-  const {
-    type, state, city, address, price,
-  } = request.body;
-
-  const lastProperty = properties[properties.length - 1];
-  const propertyId = lastProperty ? lastProperty.id + 1 : 1;
-
-  properties.push(new Property(propertyId, userId, type, state, city,
-    address, parseFloat(price), imageUrl));
-
-  const property = properties.find(el => el.id === propertyId);
-
-  return ResponseHelper.getSuccessResponse(response, property, 201);
+      let imageUrl = '';
+      if (request.file) {
+        imageUrl = request.file.url;
+      }
+      dbInsertNewProperty(request.body, imageUrl, userId, propertiesTable)
+        .then(property => ResponseHelper.getSuccessResponse(response, property, 201))
+        .catch(() => ResponseHelper.getInternalServerError(response));
+    })
+    .catch(() => ResponseHelper.getInternalServerError(response));
 };
 
 /**
