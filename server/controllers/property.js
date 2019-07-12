@@ -1,5 +1,4 @@
 // /property routes controller
-import Property from '../models/property';
 import properties from '../db/properties';
 import dbConnection from '../db/database';
 import '../config/tables_config';
@@ -90,15 +89,17 @@ export const getProperties = (request, response) => {
  * @returns {response}
  */
 export const getPropertyById = (request, response) => {
-  const propertyId = parseFloat(request.params.propertyId);
-
-  const result = properties.find(property => property.id === propertyId);
-  if (result) {
-    const data = getPropertyDetails(result);
-    return ResponseHelper.getSuccessResponse(response, data);
-  }
-
-  return ResponseHelper.getNotFoundErrorResponse(response);
+  const { propertyId } = request.params;
+  dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE id = $1;`, [propertyId])
+    .then((res) => {
+      if (res.rowCount) {
+        return getPropertyDetails(res.rows[0], usersTable)
+          .then(data => (() => ResponseHelper.getSuccessResponse(response, data)));
+      }
+      return (() => ResponseHelper.getNotFoundErrorResponse(response));
+    })
+    .then(res => res())
+    .catch(() => ResponseHelper.getNotFoundErrorResponse(response));
 };
 
 

@@ -1,5 +1,4 @@
-import properties from '../db/properties';
-import users from '../db/users';
+import { clearAllTestRecords } from '../helpers/test_hooks_helper';
 import testConfig from '../config/test_config';
 
 const { chai, expect, app } = testConfig;
@@ -84,11 +83,7 @@ export default () => {
   });
 
   // Clear all db records after tests run
-  after((done) => {
-    properties.splice(0);
-    users.splice(0);
-    done();
-  });
+  after(clearAllTestRecords);
 
   // Tests that are meant to pass
   describe('success', () => {

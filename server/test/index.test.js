@@ -33,8 +33,8 @@ describe('POST /api/v1/property', createPropertyAdTests);
 // Tests for get all properties requests
 describe('GET /api/v1/property', getAllPropertiesTests);
 
-// // Tests for get property by id requests
-// describe('GET /api/v1/property/<:propertyId>', getPropertyByIdTests);
+// Tests for get property by id requests
+describe('GET /api/v1/property/<:propertyId>', getPropertyByIdTests);
 
 // // Tests for marking a property ad as sold
 // describe('PATCH /api/v1/property/<:propertyId>/sold', markPropertyAsSoldTests);
