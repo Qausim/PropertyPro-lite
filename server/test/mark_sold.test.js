@@ -1,6 +1,6 @@
+import dbConnection from '../db/database';
 import testConfig from '../config/test_config';
-import properties from '../db/properties';
-import users from '../db/users';
+import { clearAllTestRecords } from '../helpers/test_hooks_helper';
 
 
 const { chai, expect, app } = testConfig;
@@ -131,17 +131,24 @@ export default () => {
 
   // Reset each property's status after each test
   afterEach((done) => {
-    properties[0].status = 'available';
-    properties[1].status = 'available';
-    [propertyEntries[0], propertyEntries[1]] = properties;
-    done();
+    dbConnection.dbConnect("UPDATE properties_test SET status='available' WHERE id = $1",
+      [propertyEntries[0].id])
+      .then((res) => {
+        if (res.rowCount) {
+          return dbConnection.dbConnect("UPDATE properties_test SET status='available' WHERE id = $1",
+            [propertyEntries[0].id])
+        }
+        throw new Error('Could not reset property status');
+      })
+      .then((res) => {
+        if (res.rowCount) {
+          done();
+        } else throw new Error('Could not reset property status');
+      })
+      .catch(e => done(e));
   });
   // Clear all db records after tests run
-  after((done) => {
-    properties.splice(0);
-    users.splice(0);
-    done();
-  });
+  after(clearAllTestRecords);
 
 
   describe('success', () => {
