@@ -282,6 +282,22 @@ export default () => {
       });
 
 
+    it('should fail for an empty request body',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('Empty request');
+      });
+
+
     it('should fail to update property ad for a non owner agent',
       async () => {
         const res = await chai.request(app)
@@ -466,7 +482,7 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Invalid price field');
+      expect(res.body.error).to.equal('Invalid, zero or empty price field');
     });
 
     it('should fail to update property ad with invalid price',
@@ -482,7 +498,7 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid price field');
+        expect(res.body.error).to.equal('Invalid, zero or empty price field');
       });
 
     it('should fail to update property ad with zero price',
@@ -498,7 +514,7 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid price field');
+        expect(res.body.error).to.equal('Invalid, zero or empty price field');
       });
 
     it('should fail to update property id', async () => {
