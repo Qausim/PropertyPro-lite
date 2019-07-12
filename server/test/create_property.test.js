@@ -401,7 +401,7 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid price field');
+        expect(res.body.error).to.equal('Invalid, zero or empty price field');
       });
 
     it('should fail to create a new property ad due to zero price',
@@ -429,7 +429,7 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid price field');
+        expect(res.body.error).to.equal('Invalid, zero or empty price field');
       });
   });
 };

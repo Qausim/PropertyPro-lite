@@ -38,29 +38,21 @@ const hasNumber = value => /\d/.test(value);
  *
  * @param {object}
  *
- * @returns {string | boolean}
+ * @returns {string | undefined}
  */
 export const getCreatePropertyError = ({
   type, state, city, address, price,
 }) => {
   let errorMessage;
-  if (!isString(type)) {
-    errorMessage = 'Invalid type field';
-  } else if (!state) {
-    errorMessage = 'State is required';
-  } else if (!isString(state) || hasNumber(state)) {
-    errorMessage = 'Invalid state field';
-  } else if (!city) {
-    errorMessage = 'City is required';
-  } else if (!isString(city) || hasNumber(city)) {
-    errorMessage = 'Invalid city field';
-  } else if (!address) {
-    errorMessage = 'Address is required';
-  } else if (!isString(address) || isNumber(address)) {
-    errorMessage = 'Invalid address field';
-  } else if (!parseFloat(price) || !isNumber(price)) {
-    errorMessage = 'Invalid price field';
-  }
+  if (!isString(type)) errorMessage = 'Invalid type field';
+  else if (!state) errorMessage = 'State is required';
+  else if (!isString(state) || hasNumber(state)) errorMessage = 'Invalid state field';
+  else if (!city) errorMessage = 'City is required';
+  else if (!isString(city) || hasNumber(city)) errorMessage = 'Invalid city field';
+  else if (!address) errorMessage = 'Address is required';
+  else if (!isString(address) || isNumber(address)) errorMessage = 'Invalid address field';
+  else if (!parseFloat(price) || !isNumber(price)) errorMessage = 'Invalid, zero or empty price field';
+
   return errorMessage;
 };
 
@@ -122,38 +114,30 @@ export const filterPropertiesByType = async (response, queryText, propertiesTabl
  * required fields, and invalid fields
  * @param {object}
  *
- * @returns {string | boolean}
+ * @returns {string | undefined}
  */
 export const getUpdatePropertyError = ({
   type, state, city, address, price,
 }) => {
   let errorMessage;
-  if (isString(type) && !type.trim()) {
-    // there's an empty type field
-    errorMessage = 'Type cannot be empty';
-  } else if (isString(state) && !state.trim()) {
-    // there's an empty state field
-    errorMessage = 'State cannot be empty';
-  } else if (state && (!isString(state) || hasNumber(state))) {
-    // there's an invalid state field
-    errorMessage = 'Invalid state field';
-  } else if (isString(city) && !city.trim()) {
-    // there's an empty city field
-    errorMessage = 'City cannot be empty';
-  } else if (city && (!isString(city) || hasNumber(city))) {
-    // there's an invalid city field
-    errorMessage = 'Invalid city field';
-  } else if (isString(address) && !address.trim()) {
-    // there's an empty address field
-    errorMessage = 'Address cannot be empty';
-  } else if (address && (!isString(address) || isNumber(address))) {
-    // there's an invalid address field
-    errorMessage = 'Invalid address field';
-  } else if (price !== undefined && (
-    price === '' || !isNumber(price) || parseFloat(price) <= 0)) {
-    // price field is: '' | non-number | < 0
-    errorMessage = 'Invalid price field';
-  }
+  // if there's an empty type field
+  if (isString(type) && !type.trim()) errorMessage = 'Type cannot be empty';
+  // there's an empty state field
+  else if (isString(state) && !state.trim()) errorMessage = 'State cannot be empty';
+  // if there's an invalid state field
+  else if (state && (!isString(state) || hasNumber(state))) errorMessage = 'Invalid state field';
+  // there's an empty city field
+  else if (isString(city) && !city.trim()) errorMessage = 'City cannot be empty';
+  // there's an invalid city field
+  else if (city && (!isString(city) || hasNumber(city))) errorMessage = 'Invalid city field';
+  // there's an empty address field
+  else if (isString(address) && !address.trim()) errorMessage = 'Address cannot be empty';
+  // there's an invalid address field
+  else if (address && (!isString(address) || isNumber(address))) errorMessage = 'Invalid address field';
+  // price field is: '' | non-number | <= 0
+  else if (price !== undefined && (
+    price === '' || !isNumber(price) || parseFloat(price) <= 0)) errorMessage = 'Invalid, zero or empty price field';
+
   return errorMessage;
 };
 
@@ -201,18 +185,44 @@ export const dbInsertNewProperty = async ({
 
 
 /**
+ * @async function that retrieves the owner details of a property ad and requesting
+ * user type to help validate the permission level of the user to operate on the advert
+ *
+ * @param {number} userId Id of user requesting to operate on property ad
+ * @param {number} propertyId Id of property to be operated on
+ * @param {string} usersTable Users table name
+ * @param {string} propertiesTable Properties table name
+ *
+ * @returns {object} with attributes 'error' || isAgent && propertyOwner
+ */
+export const dbGetPropertyOwnerAndRequesterAgentStatus = async (userId, propertyId, usersTable,
+  propertiesTable) => {
+  const isAgentQueryRes = await dbConnection.dbConnect(`SELECT is_agent FROM ${usersTable}
+    WHERE id = $1;`, [userId]);
+  const ownerqueryRes = await dbConnection.dbConnect(`SELECT owner FROM ${propertiesTable}
+    WHERE id = $1;`, [propertyId]);
+  if (!ownerqueryRes.rowCount) return { error: true };
+  return {
+    propertyOwner: ownerqueryRes.rows[0].owner,
+    isAgent: isAgentQueryRes.rows[0].is_agent,
+  };
+};
+
+
+/**
  * Updates database property record's status
  * @param {*} response
  * @param {string} propertiesTable
  * @param {number string} propertyId
  * @param {string} usersTable
  *
- * @returns {response} or @throws {Error}
+ * @returns {Promise} a function that can be invoked when resolved
  */
-export const dbMarkPropertyAsSold = async (response, propertiesTable, propertyId, usersTable) => {
+export const dbMarkPropertyAsSold = async (response, propertiesTable,
+  propertyId, usersTable) => {
   const updateTime = new Date().toLocaleString();
   const updateRes = await dbConnection.dbConnect(`UPDATE ${propertiesTable} SET status='sold',
-    updated_on= $1 WHERE id = $2`, [updateTime, propertyId]);
+  updated_on= $1 WHERE id = $2`, [updateTime, propertyId]);
   if (updateRes.rowCount) {
     return dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE id = $1;`,
       [propertyId])
@@ -220,4 +230,41 @@ export const dbMarkPropertyAsSold = async (response, propertiesTable, propertyId
         .then(data => () => ResponseHelper.getSuccessResponse(response, data)));
   }
   return (() => { throw new Error(); });
+};
+
+
+/**
+ * Updates a property ad with new details
+ * @param {*} response object
+ * @param {object} body request body
+ * @param {string} propertiesTable properties table name
+ * @param {number} propertyId id of property to be updated
+ * @param {string} usersTable users table name
+ *
+ * @returns {Promise} a function that can be invoked when resolved
+ */
+export const dbUpdateProperty = async (response, body, propertiesTable,
+  propertyId, usersTable) => {
+  // Obtain supplied request fields to create a database query string and datasets
+  const entries = Object.entries(body);
+  let queryString = '';
+  const querySet = [];
+  entries.forEach((el, ind) => {
+    queryString += `${el[0]}=$${ind + 1},`;
+    querySet.push(el[1]);
+  });
+  // Add update time to db query, query db and return updated data or an error
+  querySet.push(new Date().toLocaleString());
+  queryString += `updated_on=$${querySet.length}`;
+  querySet.push(propertyId);
+  queryString = `UPDATE ${propertiesTable} SET ${queryString} WHERE id = $${querySet.length};`;
+  return dbConnection.dbConnect(queryString, querySet)
+    .then((res) => {
+      if (res.rowCount) {
+        return dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE id = $1;`, [propertyId])
+          .then(selectRes => getPropertyDetails(selectRes.rows[0], usersTable))
+          .then(data => () => ResponseHelper.getSuccessResponse(response, data));
+      }
+      return (() => { throw new Error(); });
+    });
 };

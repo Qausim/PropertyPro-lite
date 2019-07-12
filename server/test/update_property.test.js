@@ -129,11 +129,12 @@ export default () => {
 
   describe('success', () => {
     it('should update property ad price successfully', async () => {
+      const newPrice = 15000000;
       const res = await chai.request(app)
         .patch(`${propertyUrl}/${propertyEntries[0].id}`)
         .set('Content-Type', 'multipart/form-data')
         .set('Authorization', `Bearer ${agentOne.token}`)
-        .field('price', 15000000);
+        .field('price', newPrice);
 
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
@@ -151,7 +152,7 @@ export default () => {
       expect(res.body.data).to.have.property('createdOn');
       expect(res.body.data).to.have.property('updatedOn');
       expect(res.body.data).to.have.property('imageUrl');
-      expect(res.body.data.price).to.equal(15000000);
+      expect(res.body.data.price).to.equal(newPrice.toFixed(2));
       expect(res.body.data.updatedOn).to.not.equal(null);
     });
 
@@ -236,7 +237,7 @@ export default () => {
       expect(res.body.data.updatedOn).to.not.equal(null);
     });
 
-    it('should update property ad price successfully', async () => {
+    it('should update property address successfully', async () => {
       const res = await chai.request(app)
         .patch(`${propertyUrl}/${propertyEntries[0].id}`)
         .set('Content-Type', 'multipart/form-data')
