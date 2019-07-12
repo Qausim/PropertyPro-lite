@@ -4,6 +4,7 @@ import * as propertyController from '../controllers/property';
 import checkAuth from '../middleware/check_auth';
 import imageUploader from '../middleware/image_upload';
 import validatePropertyId from '../middleware/validate_property_id';
+import serverErrorHandlerMiddleware from '../middleware/server_error_handler';
 
 
 const router = Router();
@@ -19,7 +20,7 @@ router.patch('/:propertyId/sold', checkAuth, validatePropertyId,
   propertyController.markPropertyAsSold);
 
 router.patch('/:propertyId', checkAuth, validatePropertyId,
-  imageUploader, propertyController.updateProperty);
+  imageUploader, serverErrorHandlerMiddleware, propertyController.updateProperty);
 
 router.delete('/:propertyId', checkAuth, validatePropertyId,
   propertyController.deleteProperty);
