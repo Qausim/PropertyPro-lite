@@ -36,8 +36,8 @@ describe('GET /api/v1/property', getAllPropertiesTests);
 // Tests for get property by id requests
 describe('GET /api/v1/property/<:propertyId>', getPropertyByIdTests);
 
-// // Tests for marking a property ad as sold
-// describe('PATCH /api/v1/property/<:propertyId>/sold', markPropertyAsSoldTests);
+// Tests for marking a property ad as sold
+describe('PATCH /api/v1/property/<:propertyId>/sold', markPropertyAsSoldTests);
 
 // // Tests for property list search
 describe('GET /api/v1/property?type=propertyType', queryPropertyTypeTests);

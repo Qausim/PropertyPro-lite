@@ -11,6 +11,7 @@ import {
   getUpdatePropertyError,
   hasForbiddenField,
   dbInsertNewProperty,
+  dbMarkPropertyAsSold,
 } from '../helpers/property';
 
 
@@ -111,25 +112,28 @@ export const getPropertyById = (request, response) => {
  * @returns {response}
  */
 export const markPropertyAsSold = (request, response) => {
-  const propertyId = parseFloat(request.params.propertyId);
+  const { propertyId } = request.params;
   const { userId } = request.userData;
-  const user = users.find(el => el.id === userId);
-  const propertyIndex = properties.findIndex(property => property.id === propertyId);
-
-  if (propertyIndex >= 0) {
-    const property = properties[propertyIndex];
-    if (property.owner === userId && user.isAgent) {
-      property.status = 'sold';
-      property.updatedOn = new Date();
-      properties[propertyIndex] = property;
-
-      return ResponseHelper.getSuccessResponse(response, property);
-    }
-
-    return ResponseHelper.getForbiddenErrorResponse(response, propertyEditAccessError);
-  }
-
-  return ResponseHelper.getNotFoundErrorResponse(response);
+  let isAgent;
+  let propertyOwner;
+  dbConnection.dbConnect(`SELECT is_agent FROM ${usersTable} WHERE id = $1;`, [userId])
+    .then((res) => {
+      isAgent = res.rows[0].is_agent;
+      return dbConnection.dbConnect(`SELECT owner FROM ${propertiesTable} WHERE id = $1;`,
+        [propertyId]);
+    })
+    .then((res) => {
+      if (res.rowCount) {
+        propertyOwner = res.rows[0].owner;
+        if (isAgent && propertyOwner === userId) {
+          return dbMarkPropertyAsSold(response, propertiesTable, propertyId, usersTable);
+        }
+        return (() => ResponseHelper.getForbiddenErrorResponse(response, propertyEditAccessError));
+      }
+      return (() => ResponseHelper.getNotFoundErrorResponse(response));
+    })
+    .then(res => res())
+    .catch(() => ResponseHelper.getInternalServerError(response));
 };
 
 
