@@ -289,12 +289,12 @@ export default () => {
           .set('Content-Type', 'multipart/form-data')
           .set('Authorization', `Bearer ${agentOne.token}`)
 
-        expect(res.status).to.equal(400);
+        expect(res.status).to.equal(500);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Empty request');
+        expect(res.body.error).to.equal('Internal server error');
       });
 
 
