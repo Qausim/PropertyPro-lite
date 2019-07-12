@@ -1,6 +1,5 @@
 import testConfig from '../config/test_config';
-import users from '../db/users';
-import properties from '../db/properties';
+import { clearAllTestRecords } from '../helpers/test_hooks_helper';
 
 
 const { chai, expect, app } = testConfig;
@@ -126,11 +125,7 @@ export default () => {
   });
 
   // Clear records after
-  after((done) => {
-    users.splice(0);
-    properties.splice(0);
-    done();
-  });
+  after(clearAllTestRecords);
 
   describe('success', () => {
     it('should update property ad price successfully', async () => {
