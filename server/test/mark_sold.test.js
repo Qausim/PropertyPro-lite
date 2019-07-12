@@ -136,7 +136,7 @@ export default () => {
       .then((res) => {
         if (res.rowCount) {
           return dbConnection.dbConnect("UPDATE properties_test SET status='available' WHERE id = $1",
-            [propertyEntries[0].id])
+            [propertyEntries[0].id]);
         }
         throw new Error('Could not reset property status');
       })

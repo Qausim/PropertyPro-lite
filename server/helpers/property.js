@@ -198,3 +198,26 @@ export const dbInsertNewProperty = async ({
     } throw new Error();
   } else throw new Error();
 };
+
+
+/**
+ * Updates database property record's status
+ * @param {*} response
+ * @param {string} propertiesTable
+ * @param {number string} propertyId
+ * @param {string} usersTable
+ *
+ * @returns {response} or @throws {Error}
+ */
+export const dbMarkPropertyAsSold = async (response, propertiesTable, propertyId, usersTable) => {
+  const updateTime = new Date().toLocaleString();
+  const updateRes = await dbConnection.dbConnect(`UPDATE ${propertiesTable} SET status='sold',
+    updated_on= $1 WHERE id = $2`, [updateTime, propertyId]);
+  if (updateRes.rowCount) {
+    return dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE id = $1;`,
+      [propertyId])
+      .then(selectRes => getPropertyDetails(selectRes.rows[0], usersTable)
+        .then(data => () => ResponseHelper.getSuccessResponse(response, data)));
+  }
+  return (() => { throw new Error(); });
+};
