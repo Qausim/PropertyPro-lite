@@ -42,8 +42,8 @@ describe('PATCH /api/v1/property/<:propertyId>/sold', markPropertyAsSoldTests);
 // // Tests for property list search
 describe('GET /api/v1/property?type=propertyType', queryPropertyTypeTests);
 
-// // Tests for property update
-// describe('PATCH /api/v1/property/<:propertyId>', updatePropertyAdTests);
+// Tests for property update
+describe('PATCH /api/v1/property/<:propertyId>', updatePropertyAdTests);
 
 // // Tests for property delete
 // describe('DELETE /api/v1/property/<:propertyId>', deletePropertyAdTests);
