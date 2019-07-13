@@ -288,7 +288,7 @@ export default () => {
         const res = await chai.request(app)
           .patch(`${propertyUrl}/${propertyEntries[1].id}`)
           .set('Content-Type', 'multipart/form-data')
-          .set('Authorization', `Bearer ${agentOne.token}`)
+          .set('Authorization', `Bearer ${agentOne.token}`);
 
         expect(res.status).to.equal(500);
         expect(res.body).to.be.an('object');

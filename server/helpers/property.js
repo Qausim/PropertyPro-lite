@@ -268,3 +268,15 @@ export const dbUpdateProperty = async (response, body, propertiesTable,
       return (() => { throw new Error(); });
     });
 };
+
+
+export const dbDeleteProperty = async (response, propertyId, propertiesTable) => dbConnection
+  .dbConnect(`DELETE FROM ${propertiesTable} WHERE id = $1;`, [propertyId])
+  .then((res) => {
+    if (res.rowCount) {
+      return (() => ResponseHelper.getSuccessResponse(response, {
+        message: 'Successfully deleted property ad',
+      }));
+    }
+    return (() => { throw new Error(); });
+  });
