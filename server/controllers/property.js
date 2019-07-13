@@ -1,8 +1,6 @@
 // /property routes controller
-import properties from '../db/properties';
 import dbConnection from '../db/database';
 import '../config/tables_config';
-import users from '../db/users';
 import ResponseHelper from '../helpers/response_helper';
 import {
   getCreatePropertyError,
@@ -14,6 +12,7 @@ import {
   dbMarkPropertyAsSold,
   dbGetPropertyOwnerAndRequesterAgentStatus,
   dbUpdateProperty,
+  dbDeleteProperty,
 } from '../helpers/property';
 
 
@@ -166,31 +165,25 @@ export const updateProperty = (request, response) => {
 
 
 /**
- * Deletes a property ad
+ * Deletes a property ad, first validates the property ad exists, then that the
+ * user has permission to delete before proceeding with deletion
+ * Calls @function dbGetPropertyOwnerAndRequesterAgentStatus, and
+ * @function dbDeleteProperty
+ *
  * @param {*} request
  * @param {*} response
- *
- * @returns {response}
  */
 export const deleteProperty = (request, response) => {
-  const propertyId = parseFloat(request.params.propertyId);
-  const propertyIndex = properties.findIndex(el => el.id === propertyId);
-
-  if (propertyIndex < 0) {
-    return ResponseHelper.getNotFoundErrorResponse(response);
-  }
-
-  const property = properties[propertyIndex];
-  const { userId } = request.userData;
-  const user = users.find(el => el.id === userId);
-
-  if (!user.isAgent || userId !== property.owner) {
-    return ResponseHelper.getForbiddenErrorResponse(response,
-      'Only an advert owner (agent) can delete it');
-  }
-
-  properties.splice(propertyIndex, 1);
-  return ResponseHelper.getSuccessResponse(response, {
-    message: 'Successfully deleted property ad',
-  });
+  const { params: { propertyId }, userData: { userId } } = request;
+  dbGetPropertyOwnerAndRequesterAgentStatus(userId, propertyId, usersTable, propertiesTable)
+    .then(({ error, propertyOwner, isAgent }) => {
+      if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
+      if (isAgent && propertyOwner === userId) {
+        return dbDeleteProperty(response, propertyId, propertiesTable);
+      }
+      return (() => ResponseHelper.getForbiddenErrorResponse(response,
+        'Only an advert owner (agent) can delete it'));
+    })
+    .then(res => res())
+    .catch(() => ResponseHelper.getInternalServerError(response));
 };

@@ -1,6 +1,5 @@
 import testConfig from '../config/test_config';
-import users from '../db/users';
-import properties from '../db/properties';
+import { clearAllTestRecords } from '../helpers/test_hooks_helper';
 
 
 const { chai, expect, app } = testConfig;
@@ -127,11 +126,7 @@ export default () => {
   });
 
   // Clear records after
-  after((done) => {
-    users.splice(0);
-    properties.splice(0);
-    done();
-  });
+  after(clearAllTestRecords);
 
 
   // Tests that are meant to pass
@@ -150,7 +145,6 @@ export default () => {
       expect(res.body.data).to.be.an('object');
       expect(res.body.data).to.have.property('message');
       expect(res.body.data.message).to.equal('Successfully deleted property ad');
-      expect(properties.length).to.equal(1);
     });
   });
 

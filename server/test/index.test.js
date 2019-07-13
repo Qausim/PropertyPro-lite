@@ -13,9 +13,7 @@ import deletePropertyAdTests from './delete_property.test';
 
 before((done) => {
   Migration.createTestTables()
-    .then(() => {
-      return dbConnection.dbConnect('ALTER SEQUENCE users_test_id_seq RESTART WITH 1;');
-    })
+    .then(() => dbConnection.dbConnect('ALTER SEQUENCE users_test_id_seq RESTART WITH 1;'))
     .then(() => dbConnection.dbConnect('ALTER SEQUENCE properties_test_id_seq RESTART WITH 1;'))
     .then(() => done())
     .catch(e => done(e));
@@ -46,4 +44,4 @@ describe('GET /api/v1/property?type=propertyType', queryPropertyTypeTests);
 describe('PATCH /api/v1/property/<:propertyId>', updatePropertyAdTests);
 
 // // Tests for property delete
-// describe('DELETE /api/v1/property/<:propertyId>', deletePropertyAdTests);
+describe('DELETE /api/v1/property/<:propertyId>', deletePropertyAdTests);
