@@ -46,4 +46,4 @@ describe('GET /api/v1/property?type=propertyType', queryPropertyTypeTests);
 describe('PATCH /api/v1/property/<:propertyId>', updatePropertyAdTests);
 
 // // Tests for property delete
-// describe('DELETE /api/v1/property/<:propertyId>', deletePropertyAdTests);
+describe('DELETE /api/v1/property/<:propertyId>', deletePropertyAdTests);
