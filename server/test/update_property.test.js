@@ -11,35 +11,35 @@ export default () => {
   // Test user objects
   let agentOne = {
     email: 'qauzeem@example.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: false,
-    isAgent: true,
+    is_admin: false,
+    is_agent: true,
   };
 
   let agentTwo = {
     email: 'agent.two@example.com',
-    firstName: 'Bolu',
-    lastName: 'Olujide',
+    first_name: 'Bolu',
+    last_name: 'Olujide',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Egbeda, Lagos',
-    isAdmin: false,
-    isAgent: true,
+    is_admin: false,
+    is_agent: true,
   };
 
   let user = {
     email: 'user@example.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: false,
-    isAgent: false,
+    is_admin: false,
+    is_agent: false,
   };
 
   // Test property objects
@@ -149,11 +149,11 @@ export default () => {
       expect(res.body.data).to.have.property('city');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('price');
-      expect(res.body.data).to.have.property('createdOn');
-      expect(res.body.data).to.have.property('updatedOn');
-      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data).to.have.property('created_on');
+      expect(res.body.data).to.have.property('updated_on');
+      expect(res.body.data).to.have.property('image_url');
       expect(res.body.data.price).to.equal(newPrice.toFixed(2));
-      expect(res.body.data.updatedOn).to.not.equal(null);
+      expect(res.body.data.updated_on).to.not.equal(null);
     });
 
     it('should update property ad type successfully', async () => {
@@ -176,11 +176,11 @@ export default () => {
       expect(res.body.data).to.have.property('city');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('price');
-      expect(res.body.data).to.have.property('createdOn');
-      expect(res.body.data).to.have.property('updatedOn');
-      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data).to.have.property('created_on');
+      expect(res.body.data).to.have.property('updated_on');
+      expect(res.body.data).to.have.property('image_url');
       expect(res.body.data.type).to.equal('3 bedroom duplex');
-      expect(res.body.data.updatedOn).to.not.equal(null);
+      expect(res.body.data.updated_on).to.not.equal(null);
     });
 
     it('should update property ad state successfully', async () => {
@@ -203,11 +203,11 @@ export default () => {
       expect(res.body.data).to.have.property('city');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('price');
-      expect(res.body.data).to.have.property('createdOn');
-      expect(res.body.data).to.have.property('updatedOn');
-      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data).to.have.property('created_on');
+      expect(res.body.data).to.have.property('updated_on');
+      expect(res.body.data).to.have.property('image_url');
       expect(res.body.data.state).to.equal('Oyo');
-      expect(res.body.data.updatedOn).to.not.equal(null);
+      expect(res.body.data.updated_on).to.not.equal(null);
     });
 
     it('should update property ad city successfully', async () => {
@@ -230,11 +230,11 @@ export default () => {
       expect(res.body.data).to.have.property('city');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('price');
-      expect(res.body.data).to.have.property('createdOn');
-      expect(res.body.data).to.have.property('updatedOn');
-      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data).to.have.property('created_on');
+      expect(res.body.data).to.have.property('updated_on');
+      expect(res.body.data).to.have.property('image_url');
       expect(res.body.data.city).to.equal('Ibadan');
-      expect(res.body.data.updatedOn).to.not.equal(null);
+      expect(res.body.data.updated_on).to.not.equal(null);
     });
 
     it('should update property address successfully', async () => {
@@ -257,11 +257,11 @@ export default () => {
       expect(res.body.data).to.have.property('city');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('price');
-      expect(res.body.data).to.have.property('createdOn');
-      expect(res.body.data).to.have.property('updatedOn');
-      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data).to.have.property('created_on');
+      expect(res.body.data).to.have.property('updated_on');
+      expect(res.body.data).to.have.property('image_url');
       expect(res.body.data.address).to.equal('13 Samonda Street');
-      expect(res.body.data.updatedOn).to.not.equal(null);
+      expect(res.body.data.updated_on).to.not.equal(null);
     });
   });
 
@@ -530,9 +530,7 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal(
-        'You cannot update fields "id" and "owner"',
-      );
+      expect(res.body.error).to.equal('You cannot update fields "id" and "owner"');
     });
 
     it('should fail to update property owner', async () => {
@@ -547,9 +545,7 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal(
-        'You cannot update fields "id" and "owner"',
-      );
+      expect(res.body.error).to.equal('You cannot update fields "id" and "owner"');
     });
   });
 };
