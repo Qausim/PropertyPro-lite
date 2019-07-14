@@ -9,13 +9,13 @@ export default () => {
   // Test user object
   let admin = {
     email: 'qauzeem@propertyprolite.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: true,
-    isAgent: false,
+    is_admin: true,
+    is_agent: false,
   };
 
   // Sign up test user object before tests
@@ -55,21 +55,21 @@ export default () => {
       expect(res.body).to.have.property('data');
       expect(res.body.data).to.have.property('id');
       expect(res.body.data).to.have.property('email');
-      expect(res.body.data).to.have.property('firstName');
-      expect(res.body.data).to.have.property('lastName');
-      expect(res.body.data).to.have.property('phoneNumber');
+      expect(res.body.data).to.have.property('first_name');
+      expect(res.body.data).to.have.property('last_name');
+      expect(res.body.data).to.have.property('phone_number');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('token');
-      expect(res.body.data).to.have.property('isAdmin');
-      expect(res.body.data).to.have.property('isAgent');
+      expect(res.body.data).to.have.property('is_admin');
+      expect(res.body.data).to.have.property('is_agent');
       expect(res.body.data.id).to.equal(admin.id);
       expect(res.body.data.email).to.equal(admin.email);
-      expect(res.body.data.firstName).to.equal(admin.firstName);
-      expect(res.body.data.lastName).to.equal(admin.lastName);
-      expect(res.body.data.phoneNumber).to.equal(admin.phoneNumber);
+      expect(res.body.data.first_name).to.equal(admin.first_name);
+      expect(res.body.data.last_name).to.equal(admin.last_name);
+      expect(res.body.data.phone_number).to.equal(admin.phone_number);
       expect(res.body.data.address).to.equal(admin.address);
-      expect(res.body.data.isAdmin).to.equal(admin.isAdmin);
-      expect(res.body.data.isAgent).to.equal(admin.isAgent);
+      expect(res.body.data.is_admin).to.equal(admin.is_admin);
+      expect(res.body.data.is_agent).to.equal(admin.is_agent);
     });
   });
 
