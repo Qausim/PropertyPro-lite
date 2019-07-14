@@ -81,7 +81,7 @@ export default () => {
       expect(res.body.data.email).to.equal(data.email);
       expect(res.body.data.first_name).to.equal(data.first_name);
       expect(res.body.data.last_name).to.equal(data.last_name);
-      expect(res.body.data.phone_aumber).to.equal(data.phone_number);
+      expect(res.body.data.phone_number).to.equal(data.phone_number);
       expect(res.body.data.address).to.equal(data.address);
       expect(res.body.data.is_admin).to.equal(data.is_admin);
       expect(res.body.data.is_agent).to.equal(data.is_agent);

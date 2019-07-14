@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import authRouter from './routes/auth';
 import propertyRouter from './routes/property';
 import Migration from './db/migration';
+import ResponseHelper from './helpers/response_helper';
 
 
 dotenv.config();
@@ -25,11 +26,6 @@ app.use(`${baseApiRoute}/property`, propertyRouter);
 
 
 // Handle all requests to non-existing URLs
-app.use((request, response) => {
-  response.status(404).send({
-    status: 'error',
-    error: 'Not found',
-  });
-});
+app.use((request, response) => ResponseHelper.getNotFoundErrorResponse(response));
 
 export default app;

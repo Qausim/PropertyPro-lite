@@ -162,7 +162,7 @@ export default () => {
       expect(res.body.data[1]).to.have.property('updated_on');
       expect(res.body.data[1]).to.have.property('owner_name');
       expect(res.body.data[1]).to.have.property('owner_email');
-      expect(res.body.data[1]).to.have.property('owner_phone_pumber');
+      expect(res.body.data[1]).to.have.property('owner_phone_number');
       expect(res.body.data[1]).to.have.property('owner_address');
       expect(res.body.data[1].id).to.equal(propertyEntries[1].id);
       expect(res.body.data[1].status).to.equal(propertyEntries[1].status);

@@ -152,7 +152,7 @@ export default () => {
       expect(res.body.data).to.have.property('created_on');
       expect(res.body.data).to.have.property('updated_on');
       expect(res.body.data).to.have.property('image_url');
-      expect(res.body.data.price).to.equal(newPrice.toFixed(2));
+      expect(res.body.data.price).to.equal(newPrice);
       expect(res.body.data.updated_on).to.not.equal(null);
     });
 

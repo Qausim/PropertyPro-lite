@@ -237,7 +237,7 @@ export default () => {
       expect(res.body.data[0]).to.have.property('address');
       expect(res.body.data[0]).to.have.property('price');
       expect(res.body.data[0]).to.have.property('image_url');
-      expect(res.body.data[0]).to.have.property('created-on');
+      expect(res.body.data[0]).to.have.property('created_on');
       expect(res.body.data[0]).to.have.property('updated_on');
       expect(res.body.data[0]).to.have.property('owner_name');
       expect(res.body.data[0]).to.have.property('owner_email');
