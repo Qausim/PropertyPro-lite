@@ -1,10 +1,10 @@
 // /property routes controller
 import dbConnection from '../db/database';
-import '../config/tables_config';
+import '../config/db_tables_config';
 import ResponseHelper from '../helpers/response_helper';
 import {
   getCreatePropertyError,
-  getPropertyDetails,
+  getFullPropertyDetails,
   filterPropertiesByType,
   getUpdatePropertyError,
   hasForbiddenField,
@@ -74,7 +74,7 @@ export const getProperties = (request, response) => {
       .catch(() => ResponseHelper.getInternalServerError(response));
   }
   dbConnection.dbConnect(`SELECT * FROM ${propertiesTable};`)
-    .then(res => res.rows.map(ad => getPropertyDetails(ad, usersTable)))
+    .then(res => res.rows.map(ad => getFullPropertyDetails(ad, usersTable)))
     .then(res => Promise.all(res))
     .then(data => ResponseHelper.getSuccessResponse(response, data))
     .catch(() => ResponseHelper.getInternalServerError());
@@ -95,7 +95,7 @@ export const getPropertyById = (request, response) => {
   dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE id = $1;`, [propertyId])
     .then((res) => {
       if (res.rowCount) {
-        return getPropertyDetails(res.rows[0], usersTable)
+        return getFullPropertyDetails(res.rows[0], usersTable)
           .then(data => (() => ResponseHelper.getSuccessResponse(response, data)));
       }
       return (() => ResponseHelper.getNotFoundErrorResponse(response));

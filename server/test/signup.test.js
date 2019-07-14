@@ -11,13 +11,13 @@ export default () => {
   // Test user object
   let admin = {
     email: 'qauzeem@propertyprolite.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: true,
-    isAgent: false,
+    is_admin: true,
+    is_agent: false,
   };
 
   // Sign up test user before any test run
@@ -51,13 +51,13 @@ export default () => {
     it('should create a new agent', async () => {
       const data = {
         email: 'akin.i@example.com',
-        firstName: 'Akin',
-        lastName: 'Ige',
-        phoneNumber: '08000000000',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        isAdmin: false,
-        isAgent: true,
+        is_admin: false,
+        is_agent: true,
       };
 
       const res = await chai.request(app)
@@ -71,31 +71,31 @@ export default () => {
       expect(res.body).to.have.property('data');
       expect(res.body.data).to.have.property('id');
       expect(res.body.data).to.have.property('email');
-      expect(res.body.data).to.have.property('firstName');
-      expect(res.body.data).to.have.property('lastName');
-      expect(res.body.data).to.have.property('phoneNumber');
+      expect(res.body.data).to.have.property('first_name');
+      expect(res.body.data).to.have.property('last_name');
+      expect(res.body.data).to.have.property('phone_number');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('token');
-      expect(res.body.data).to.have.property('isAdmin');
-      expect(res.body.data).to.have.property('isAgent');
+      expect(res.body.data).to.have.property('is_admin');
+      expect(res.body.data).to.have.property('is_agent');
       expect(res.body.data.email).to.equal(data.email);
-      expect(res.body.data.firstName).to.equal(data.firstName);
-      expect(res.body.data.lastName).to.equal(data.lastName);
-      expect(res.body.data.phoneNumber).to.equal(data.phoneNumber);
+      expect(res.body.data.first_name).to.equal(data.first_name);
+      expect(res.body.data.last_name).to.equal(data.last_name);
+      expect(res.body.data.phone_number).to.equal(data.phone_number);
       expect(res.body.data.address).to.equal(data.address);
-      expect(res.body.data.isAdmin).to.equal(data.isAdmin);
-      expect(res.body.data.isAgent).to.equal(data.isAgent);
+      expect(res.body.data.is_admin).to.equal(data.is_admin);
+      expect(res.body.data.is_agent).to.equal(data.is_agent);
     });
 
 
     it('should create a new user with no phone number nor address', async () => {
       const data = {
         email: 'akin.i@example.com',
-        firstName: 'Akin',
-        lastName: 'Ige',
+        first_name: 'Akin',
+        last_name: 'Ige',
         password: '123456',
-        isAdmin: false,
-        isAgent: false,
+        is_admin: false,
+        is_agent: false,
       };
 
       const res = await chai.request(app)
@@ -109,16 +109,16 @@ export default () => {
       expect(res.body).to.have.property('data');
       expect(res.body.data).to.have.property('id');
       expect(res.body.data).to.have.property('email');
-      expect(res.body.data).to.have.property('firstName');
-      expect(res.body.data).to.have.property('lastName');
+      expect(res.body.data).to.have.property('first_name');
+      expect(res.body.data).to.have.property('last_name');
       expect(res.body.data).to.have.property('token');
-      expect(res.body.data).to.have.property('isAdmin');
-      expect(res.body.data).to.have.property('isAgent');
+      expect(res.body.data).to.have.property('is_admin');
+      expect(res.body.data).to.have.property('is_agent');
       expect(res.body.data.email).to.equal(data.email);
-      expect(res.body.data.firstName).to.equal(data.firstName);
-      expect(res.body.data.lastName).to.equal(data.lastName);
-      expect(res.body.data.isAdmin).to.equal(data.isAdmin);
-      expect(res.body.data.isAgent).to.equal(data.isAgent);
+      expect(res.body.data.first_name).to.equal(data.first_name);
+      expect(res.body.data.last_name).to.equal(data.last_name);
+      expect(res.body.data.is_admin).to.equal(data.is_admin);
+      expect(res.body.data.is_agent).to.equal(data.is_agent);
     });
   });
 
@@ -128,13 +128,13 @@ export default () => {
     it('should fail to create a new user with duplicate email', async () => {
       const data = {
         email: 'qauzeem@propertyprolite.com',
-        firstName: 'Akin',
-        lastName: 'Ige',
-        phoneNumber: '08000000000',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        isAdmin: false,
-        isAgent: true,
+        is_admin: false,
+        is_agent: true,
       };
 
       const res = await chai.request(app)
@@ -153,13 +153,13 @@ export default () => {
     it('should fail to create a new user with invalid email', async () => {
       const data = {
         email: 'akin.i@example',
-        firstName: 'Akin',
-        lastName: 'Ige',
-        phoneNumber: '08000000000',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        isAdmin: false,
-        isAgent: true,
+        is_admin: false,
+        is_agent: true,
       };
 
       const res = await chai.request(app)
@@ -178,13 +178,13 @@ export default () => {
     it('should fail to create a new user due with invalid password', async () => {
       const data = {
         email: 'akin.i@example.com',
-        firstName: 'Akin',
-        lastName: 'Ige',
-        phoneNumber: '08000000000',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '',
-        isAdmin: false,
-        isAgent: true,
+        is_admin: false,
+        is_agent: true,
       };
 
       const res = await chai.request(app)
@@ -203,13 +203,13 @@ export default () => {
     it('should fail to create a new user with empty first name', async () => {
       const data = {
         email: 'akin.i@example.com',
-        firstName: '',
-        lastName: 'Ige',
-        phoneNumber: '08000000000',
+        first_name: '',
+        last_name: 'Ige',
+        phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        isAdmin: false,
-        isAgent: true,
+        is_admin: false,
+        is_agent: true,
       };
 
       const res = await chai.request(app)
@@ -228,13 +228,13 @@ export default () => {
     it('should fail to create a new user with empty last name', async () => {
       const data = {
         email: 'akin.i@example.com',
-        firstName: 'Akin',
-        lastName: '',
-        phoneNumber: '08000000000',
+        first_name: 'Akin',
+        last_name: '',
+        phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        isAdmin: false,
-        isAgent: true,
+        is_admin: false,
+        is_agent: true,
       };
 
       const res = await chai.request(app)
@@ -253,13 +253,13 @@ export default () => {
     it('should fail to create a new agent with empty phone number', async () => {
       const data = {
         email: 'akin.i@example.com',
-        firstName: 'Akin',
-        lastName: 'Ige',
-        phoneNumber: '',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '',
         address: 'Dopemu, Lagos',
         password: '123456',
-        isAdmin: false,
-        isAgent: true,
+        is_admin: false,
+        is_agent: true,
       };
 
       const res = await chai.request(app)
@@ -278,13 +278,13 @@ export default () => {
     it('should fail to create a new agent with empty address', async () => {
       const data = {
         email: 'akin.i@example.com',
-        firstName: 'Akin',
-        lastName: 'Ige',
-        phoneNumber: '08000000000',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
         address: '',
         password: '123456',
-        isAdmin: false,
-        isAgent: true,
+        is_admin: false,
+        is_agent: true,
       };
 
       const res = await chai.request(app)

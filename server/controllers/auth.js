@@ -10,7 +10,7 @@ import {
   createUser,
   reformatUserData,
 } from '../helpers/auth';
-import '../config/tables_config';
+import '../config/db_tables_config';
 
 const usersTable = process.env.USERS_TABLE;
 

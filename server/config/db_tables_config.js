@@ -1,3 +1,4 @@
+// Configure different tables for tests
 if (process.env.NODE_ENV === 'test') {
   process.env.USERS_TABLE = 'users_test';
   process.env.PROPERTIES_TABLE = 'properties_test';

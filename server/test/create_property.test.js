@@ -12,24 +12,24 @@ export default () => {
   // Test user objects
   let agent = {
     email: 'qauzeem@example.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: false,
-    isAgent: true,
+    is_admin: false,
+    is_agent: true,
   };
 
   let user = {
     email: 'user@example.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: false,
-    isAgent: false,
+    is_admin: false,
+    is_agent: false,
   };
 
   // Sign up test user objects before tests run
@@ -85,7 +85,7 @@ export default () => {
         .field('city', data.city)
         .field('address', data.address)
         .field('price', data.price)
-        .attach('propertyImage', data.image);
+        .attach('property_image', data.image);
 
       expect(res.status).to.equal(201);
       expect(res.body).to.be.an('object');
@@ -99,15 +99,15 @@ export default () => {
       expect(res.body.data).to.have.property('city');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('price');
-      expect(res.body.data).to.have.property('createdOn');
-      expect(res.body.data).to.have.property('updatedOn');
-      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data).to.have.property('created_on');
+      expect(res.body.data).to.have.property('updated_on');
+      expect(res.body.data).to.have.property('image_url');
       expect(res.body.data.status).to.equal('available');
       expect(res.body.data.type).to.equal(data.type);
       expect(res.body.data.state).to.equal(data.state);
       expect(res.body.data.city).to.equal(data.city);
-      expect(res.body.data.price).to.equal(data.price.toFixed(2));
-      expect(res.body.data.imageUrl).to.not.equal('');
+      expect(res.body.data.price).to.equal(parseFloat(data.price.toFixed(2)));
+      expect(res.body.data.image_url).to.not.equal('');
     });
 
     it('should create a property ad without an image', async () => {
@@ -141,14 +141,15 @@ export default () => {
       expect(res.body.data).to.have.property('city');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('price');
-      expect(res.body.data).to.have.property('createdOn');
-      expect(res.body.data).to.have.property('updatedOn');
-      expect(res.body.data).to.have.property('imageUrl');
+      expect(res.body.data).to.have.property('created_on');
+      expect(res.body.data).to.have.property('updated_on');
+      expect(res.body.data).to.have.property('image_url');
       expect(res.body.data.status).to.equal('available');
       expect(res.body.data.type).to.equal(data.type);
       expect(res.body.data.state).to.equal(data.state);
       expect(res.body.data.city).to.equal(data.city);
-      expect(res.body.data.price).to.equal(data.price.toFixed(2));
+      expect(res.body.data.price).to.equal(parseFloat(data.price.toFixed(2)));
+      expect(res.body.data.image_url).to.equal('');
     });
   });
 

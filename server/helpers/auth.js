@@ -48,20 +48,20 @@ process.env.JWT_KEY);
  * @function isEmpty, and @function isValidPhoneNumber
  */
 export const getSignUpError = ({
-  email, password, firstName, lastName, address, isAgent, phoneNumber,
+  email, password, first_name, last_name, address, is_agent, phone_number,
 }) => {
   let errorMsg = '';
   if (!isValidEmail(email)) {
     errorMsg = 'Invalid email';
   } else if (!isValidPassword(password)) {
     errorMsg = 'Invalid password';
-  } else if (!firstName || isEmpty(firstName)) {
+  } else if (!first_name || isEmpty(first_name)) {
     errorMsg = 'First name is required';
-  } else if (!lastName || isEmpty(lastName)) {
+  } else if (!last_name || isEmpty(last_name)) {
     errorMsg = 'Last name is required';
-  } else if ((!address || isEmpty(address)) && isAgent) {
+  } else if ((!address || isEmpty(address)) && is_agent) {
     errorMsg = 'Address is required for agents';
-  } else if (!isValidPhoneNumber(phoneNumber) && isAgent) {
+  } else if (!isValidPhoneNumber(phone_number) && is_agent) {
     errorMsg = 'Phone number is required for agents';
   }
 
@@ -76,14 +76,14 @@ export const getSignUpError = ({
  * @returns {object}
  */
 const getPublicUserData = user => ({
-  id: user.id,
+  id: parseFloat(user.id),
   email: user.email,
-  firstName: user.firstName,
-  lastName: user.lastName,
-  phoneNumber: user.phoneNumber,
+  first_name: user.firstName,
+  last_name: user.lastName,
+  phone_number: user.phoneNumber,
   address: user.address,
-  isAdmin: user.isAdmin,
-  isAgent: user.isAgent,
+  is_admin: user.isAdmin,
+  is_agent: user.isAgent,
   token: user.token,
 });
 
@@ -119,15 +119,15 @@ export const reformatUserData = (data) => {
  * @returns {user}
  */
 export const createUser = async ({
-  email, firstName, lastName, phoneNumber, address, isAdmin, isAgent,
+  email, first_name, last_name, phone_number, address, is_admin, is_agent,
 }, hash, usersTable) => {
   // Get next database serial key
   const userIdQueryResult = await dbConnection.dbConnect(`SELECT nextval('${usersTable}_id_seq');`);
 
   if (userIdQueryResult.rowCount) {
     const userId = userIdQueryResult.rows[0].nextval;
-    const user = new User(userId, email, firstName, lastName, hash, phoneNumber, address,
-      isAdmin, isAgent);
+    const user = new User(userId, email, first_name, last_name, hash, phone_number, address,
+      is_admin, is_agent);
     user.token = getToken(email, userId);
     const userInsertQueryResult = await dbConnection.dbConnect(`INSERT INTO ${usersTable} (
       id, email, first_name, last_name, password, phone_number, address, is_admin, is_agent)

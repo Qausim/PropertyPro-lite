@@ -36,7 +36,7 @@ const hasNumber = value => /\d/.test(value);
  * an appropriate error message or false
  * Calls @function isString, @function isNumber, @function hasNumber
  *
- * @param {object}
+ * @param {object} body
  *
  * @returns {string | undefined}
  */
@@ -63,26 +63,46 @@ export const getCreatePropertyError = ({
  * @param {Property} property
  * @returns {object}
  */
-export const getPropertyDetails = async (property, usersTable) => {
+export const getFullPropertyDetails = async (property, usersTable) => {
   const { rows: [ownerData] } = await dbConnection.dbConnect(`SELECT email, first_name,
   last_name, phone_number, address FROM ${usersTable} WHERE id = $1`, [property.owner]);
   return {
-    id: property.id,
+    id: parseFloat(property.id),
     status: property.status,
     type: property.type,
     state: property.state,
     city: property.city,
     address: property.address,
-    price: property.price,
-    createdOn: property.created_on,
-    updatedOn: property.updated_on,
-    imageUrl: property.image_url,
-    ownerEmail: ownerData.email,
-    ownerPhoneNumber: ownerData.phone_number,
-    ownerName: `${ownerData.first_name} ${ownerData.last_name}`,
-    ownerAddress: ownerData.address,
+    price: parseFloat(property.price),
+    created_on: property.created_on,
+    updated_on: property.updated_on,
+    image_url: property.image_url,
+    owner_email: ownerData.email,
+    owner_phone_number: ownerData.phone_number,
+    owner_name: `${ownerData.first_name} ${ownerData.last_name}`,
+    owner_address: ownerData.address,
   };
 };
+
+
+/**
+ * Retrieves the details of a property ad without extending to
+ * agent details
+ * @param {Property} property
+ * @returns {object}
+ */
+export const getOnlyPropertyDetails = property => ({
+  id: parseFloat(property.id),
+  status: property.status,
+  type: property.type,
+  state: property.state,
+  city: property.city,
+  address: property.address,
+  price: parseFloat(property.price),
+  created_on: property.created_on || property.createdOn,
+  updated_on: property.updated_on || property.updatedOn,
+  image_url: property.image_url || property.imageUrl,
+});
 
 
 /**
@@ -103,7 +123,7 @@ export const filterPropertiesByType = async (response, queryText, propertiesTabl
 
   const { rows } = await dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE type
   ilike '%${trimmedText}%';`);
-  const promisedProperties = rows.map(property => getPropertyDetails(property, usersTable));
+  const promisedProperties = rows.map(property => getFullPropertyDetails(property, usersTable));
   const data = await Promise.all(promisedProperties);
   return ResponseHelper.getSuccessResponse(response, data);
 };
@@ -178,7 +198,7 @@ export const dbInsertNewProperty = async ({
       property.createdOn, property.updatedOn, property.imageUrl, property.owner]);
 
     if (propertyInsertRes.rowCount) {
-      return property;
+      return getOnlyPropertyDetails(property);
     } throw new Error();
   } else throw new Error();
 };
@@ -226,7 +246,7 @@ export const dbMarkPropertyAsSold = async (response, propertiesTable,
   if (updateRes.rowCount) {
     return dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE id = $1;`,
       [propertyId])
-      .then(selectRes => getPropertyDetails(selectRes.rows[0], usersTable)
+      .then(selectRes => getFullPropertyDetails(selectRes.rows[0], usersTable)
         .then(data => () => ResponseHelper.getSuccessResponse(response, data)));
   }
   return (() => { throw new Error(); });
@@ -262,7 +282,7 @@ export const dbUpdateProperty = async (response, body, propertiesTable,
     .then((res) => {
       if (res.rowCount) {
         return dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE id = $1;`, [propertyId])
-          .then(selectRes => getPropertyDetails(selectRes.rows[0], usersTable))
+          .then(selectRes => getFullPropertyDetails(selectRes.rows[0], usersTable))
           .then(data => () => ResponseHelper.getSuccessResponse(response, data));
       }
       return (() => { throw new Error(); });
