@@ -43,4 +43,4 @@ const upload = multer({
 });
 
 // Export multer object
-export default upload.single('propertyImage');
+export default upload.single('property_image');
