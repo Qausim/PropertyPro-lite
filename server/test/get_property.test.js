@@ -11,23 +11,23 @@ export default () => {
   // Test user object
   let agent = {
     email: 'qauzeem@example.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: false,
-    isAgent: true,
+    is_admin: false,
+    is_agent: true,
   };
   let user = {
     email: 'user@example.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: false,
-    isAgent: false,
+    is_admin: false,
+    is_agent: false,
   };
 
   // Test property objects
@@ -106,12 +106,12 @@ export default () => {
       expect(res.body.data).to.have.property('city');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('price');
-      expect(res.body.data).to.have.property('imageUrl');
-      expect(res.body.data).to.have.property('createdOn');
-      expect(res.body.data).to.have.property('updatedOn');
-      expect(res.body.data).to.have.property('ownerName');
-      expect(res.body.data).to.have.property('ownerEmail');
-      expect(res.body.data).to.have.property('ownerPhoneNumber');
+      expect(res.body.data).to.have.property('image_url');
+      expect(res.body.data).to.have.property('created_on');
+      expect(res.body.data).to.have.property('updated_on');
+      expect(res.body.data).to.have.property('owner_name');
+      expect(res.body.data).to.have.property('owner_email');
+      expect(res.body.data).to.have.property('owner_phone_number');
       expect(res.body.data.id).to.equal(propertyEntry.id);
       expect(res.body.data.status).to.equal(propertyEntry.status);
       expect(res.body.data.type).to.equal(propertyEntry.type);
@@ -119,10 +119,10 @@ export default () => {
       expect(res.body.data.city).to.equal(propertyEntry.city);
       expect(res.body.data.address).to.equal(propertyEntry.address);
       expect(res.body.data.price).to.equal(propertyEntry.price);
-      expect(res.body.data.imageUrl).to.equal(propertyEntry.imageUrl);
-      expect(res.body.data.ownerName).to.equal(`${agent.firstName} ${agent.lastName}`);
-      expect(res.body.data.ownerEmail).to.equal(agent.email);
-      expect(res.body.data.ownerPhoneNumber).to.equal(agent.phoneNumber);
+      expect(res.body.data.image_url).to.equal(propertyEntry.image_url);
+      expect(res.body.data.owner_name).to.equal(`${agent.first_name} ${agent.last_name}`);
+      expect(res.body.data.owner_email).to.equal(agent.email);
+      expect(res.body.data.owner_phone_number).to.equal(agent.phone_number);
     });
 
     it('should get a property ad successfully by its id for a user', async () => {
@@ -144,12 +144,12 @@ export default () => {
       expect(res.body.data).to.have.property('city');
       expect(res.body.data).to.have.property('address');
       expect(res.body.data).to.have.property('price');
-      expect(res.body.data).to.have.property('imageUrl');
-      expect(res.body.data).to.have.property('createdOn');
-      expect(res.body.data).to.have.property('updatedOn');
-      expect(res.body.data).to.have.property('ownerName');
-      expect(res.body.data).to.have.property('ownerEmail');
-      expect(res.body.data).to.have.property('ownerPhoneNumber');
+      expect(res.body.data).to.have.property('image_url');
+      expect(res.body.data).to.have.property('created_on');
+      expect(res.body.data).to.have.property('updated_on');
+      expect(res.body.data).to.have.property('owner_name');
+      expect(res.body.data).to.have.property('owner_email');
+      expect(res.body.data).to.have.property('owner_phone_number');
       expect(res.body.data.id).to.equal(propertyEntry.id);
       expect(res.body.data.status).to.equal(propertyEntry.status);
       expect(res.body.data.type).to.equal(propertyEntry.type);
@@ -157,10 +157,10 @@ export default () => {
       expect(res.body.data.city).to.equal(propertyEntry.city);
       expect(res.body.data.address).to.equal(propertyEntry.address);
       expect(res.body.data.price).to.equal(propertyEntry.price);
-      expect(res.body.data.imageUrl).to.equal(propertyEntry.imageUrl);
-      expect(res.body.data.ownerName).to.equal(`${agent.firstName} ${agent.lastName}`);
-      expect(res.body.data.ownerEmail).to.equal(agent.email);
-      expect(res.body.data.ownerPhoneNumber).to.equal(agent.phoneNumber);
+      expect(res.body.data.image_url).to.equal(propertyEntry.image_url);
+      expect(res.body.data.owner_name).to.equal(`${agent.first_name} ${agent.last_name}`);
+      expect(res.body.data.owner_email).to.equal(agent.email);
+      expect(res.body.data.owner_phone_number).to.equal(agent.phone_number);
     });
   });
 
