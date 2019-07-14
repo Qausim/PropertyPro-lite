@@ -12,35 +12,35 @@ export default () => {
   // Test user objects
   let agentOne = {
     email: 'qauzeem@example.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: false,
-    isAgent: true,
+    is_admin: false,
+    is_agent: true,
   };
 
   let agentTwo = {
     email: 'agent.two@example.com',
-    firstName: 'Bolu',
-    lastName: 'Olujide',
+    first_name: 'Bolu',
+    last_name: 'Olujide',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Egbeda, Lagos',
-    isAdmin: false,
-    isAgent: true,
+    is_admin: false,
+    is_agent: true,
   };
 
   let user = {
     email: 'user@example.com',
-    firstName: 'Olawumi',
-    lastName: 'Yusuff',
+    first_name: 'Olawumi',
+    last_name: 'Yusuff',
     password: '123456',
-    phoneNumber: '08000000000',
+    phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    isAdmin: false,
-    isAgent: false,
+    is_admin: false,
+    is_agent: false,
   };
 
   // Test property objects
