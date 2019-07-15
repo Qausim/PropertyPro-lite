@@ -1,0 +1,38 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "A property listing web application, for creating and/or search properties for sale or rent",
+    "version": "1.0.0",
+    "title": "PropertyPro-lite"
+  },
+  "host": "https://tranquil-temple-44573.herokuapp.com",
+  "basePath": "/api",
+  "shemes": [
+    "https"
+  ],
+  "paths": {
+    "v1/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth",
+          "Sign up"
+        ],
+        "summary": "Users can signup",
+        "description": "this endpoint receives a POST request to create a new user",
+        "operationId": "signup",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "first_name",
+            "in": ""
+          }
+        ]
+      }
+    }
+  }
+}
