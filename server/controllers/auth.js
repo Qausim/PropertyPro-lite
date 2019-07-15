@@ -54,6 +54,7 @@ export const signup = (request, response) => {
  * @param response
  */
 export const signin = (request, response) => {
+  console.log(JSON.stringify(request.body, null, 4));
   const signinErrorMessage = 'Invalid email or password';
   const { email, password } = request.body;
 
