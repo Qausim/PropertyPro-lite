@@ -7,6 +7,5 @@ export default (request, response, next) => {
     return ResponseHelper.getBadRequestErrorResponse(response,
       'Invalid property id');
   }
-
   next();
 };
