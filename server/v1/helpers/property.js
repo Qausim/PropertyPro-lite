@@ -2,6 +2,8 @@ import Property from '../models/property';
 import ResponseHelper from './response_helper';
 import dbConnection from '../db/database';
 
+const propertyEditableFields = ['price', 'type', 'state', 'city', 'address'];
+
 /**
  * Validates that its value argument is of string type
  * @param {*} value
@@ -261,7 +263,7 @@ export const dbMarkPropertyAsSold = async (response, propertiesTable,
 export const dbUpdateProperty = async (response, body, propertiesTable,
   propertyId, usersTable) => {
   // Obtain supplied request fields to create a database query string and datasets
-  const entries = Object.entries(body);
+  const entries = Object.entries(body).filter(el => propertyEditableFields.includes(el));
   let queryString = '';
   const querySet = [];
   entries.forEach((el, ind) => {
@@ -273,7 +275,6 @@ export const dbUpdateProperty = async (response, body, propertiesTable,
   queryString += `updated_on=$${querySet.length}`;
   querySet.push(propertyId);
   queryString = `UPDATE ${propertiesTable} SET ${queryString} WHERE id = $${querySet.length};`;
-  console.log(queryString, querySet);
   return dbConnection.dbConnect(queryString, querySet)
     .then((res) => {
       if (res.rowCount) {
