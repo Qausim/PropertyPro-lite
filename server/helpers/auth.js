@@ -119,7 +119,7 @@ export const reformatUserData = (data) => {
  * @returns {user}
  */
 export const createUser = async ({
-  email, first_name, last_name, phone_number, address, is_admin, is_agent,
+  email, first_name, last_name, phone_number, address, is_agent,
 }, hash, usersTable) => {
   // Get next database serial key
   const userIdQueryResult = await dbConnection.dbConnect(`SELECT nextval('${usersTable}_id_seq');`);
@@ -127,7 +127,7 @@ export const createUser = async ({
   if (userIdQueryResult.rowCount) {
     const userId = userIdQueryResult.rows[0].nextval;
     const user = new User(userId, email, first_name, last_name, hash, phone_number, address,
-      is_admin, is_agent);
+      is_agent);
     user.token = getToken(email, userId);
     const userInsertQueryResult = await dbConnection.dbConnect(`INSERT INTO ${usersTable} (
       id, email, first_name, last_name, password, phone_number, address, is_admin, is_agent)

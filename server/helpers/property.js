@@ -215,16 +215,17 @@ export const dbInsertNewProperty = async ({
  *
  * @returns {object} with attributes 'error' || isAgent && propertyOwner
  */
-export const dbGetPropertyOwnerAndRequesterAgentStatus = async (userId, propertyId, usersTable,
+export const dbGetPropertyOwnerAndRequesterPermissionLevel = async (userId, propertyId, usersTable,
   propertiesTable) => {
-  const isAgentQueryRes = await dbConnection.dbConnect(`SELECT is_agent FROM ${usersTable}
+  const permissionQueryRes = await dbConnection.dbConnect(`SELECT is_agent, is_admin FROM ${usersTable}
     WHERE id = $1;`, [userId]);
   const ownerqueryRes = await dbConnection.dbConnect(`SELECT owner FROM ${propertiesTable}
     WHERE id = $1;`, [propertyId]);
   if (!ownerqueryRes.rowCount) return { error: true };
   return {
     propertyOwner: ownerqueryRes.rows[0].owner,
-    isAgent: isAgentQueryRes.rows[0].is_agent,
+    isAgent: permissionQueryRes.rows[0].is_agent,
+    isAdmin: permissionQueryRes.rows[0].is_admin,
   };
 };
 

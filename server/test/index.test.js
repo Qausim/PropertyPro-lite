@@ -1,5 +1,4 @@
 import Migration from '../db/migration';
-import dbConnection from '../db/database';
 import signupTests from './signup.test';
 import signinTests from './signin.test';
 import createPropertyAdTests from './create_property.test';
@@ -13,8 +12,6 @@ import deletePropertyAdTests from './delete_property.test';
 
 before((done) => {
   Migration.createTestTables()
-    .then(() => dbConnection.dbConnect('ALTER SEQUENCE users_test_id_seq RESTART WITH 1;'))
-    .then(() => dbConnection.dbConnect('ALTER SEQUENCE properties_test_id_seq RESTART WITH 1;'))
     .then(() => done())
     .catch(e => done(e));
 });

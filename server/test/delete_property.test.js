@@ -10,6 +10,7 @@ export default () => {
   const signupUrl = '/api/v1/auth/signup';
 
   // Test user objects
+  let admin;
   let agentOne = {
     email: 'qauzeem@example.com',
     first_name: 'Olawumi',
@@ -17,7 +18,6 @@ export default () => {
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: false,
     is_agent: true,
   };
 
@@ -28,7 +28,6 @@ export default () => {
     password: '123456',
     phone_number: '08000000000',
     address: 'Egbeda, Lagos',
-    is_admin: false,
     is_agent: true,
   };
 
@@ -39,7 +38,6 @@ export default () => {
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: false,
     is_agent: false,
   };
 
@@ -59,13 +57,29 @@ export default () => {
       address: '11 Ologuneru Street, Samonda',
       price: 8000000.00,
     },
+    {
+      type: 'Mini flat',
+      state: 'Lagos',
+      city: 'Lagos',
+      address: '12 Masha Street, Surulere',
+      price: '10000000',
+    },
   ];
 
   // Sign up users and create property objects before tests
   before((done) => {
-    chai.request(app)
-      .post(signupUrl)
-      .send(agentOne)
+    const email = process.env.ADMIN_EMAIL;
+    const password = process.env.ADMIN_PWD;
+    chai.request(app).post('/api/v1/auth/signin').send({ email, password })
+      .then((res) => {
+        if (res.status === 200) {
+          admin = res.body.data;
+          return chai.request(app)
+            .post(signupUrl)
+            .send(agentOne);
+        }
+        throw new Error('Could not sign admin in');
+      })
       .then((res) => {
         if (res.status === 201) {
           agentOne = res.body.data;
@@ -73,7 +87,7 @@ export default () => {
             .post(signupUrl)
             .send(agentTwo);
         }
-        throw new Error('Could not sign agent up');
+        throw new Error('Could not sign agent one up');
       })
       .then((res) => {
         if (res.status === 201) {
@@ -117,10 +131,23 @@ export default () => {
       .then((res) => {
         if (res.status === 201) {
           propertyEntries[1] = res.body.data;
-          done();
-        } else {
-          throw new Error('Could not insert property item');
+          return chai.request(app)
+            .post(propertyUrl)
+            .set('Content-Type', 'multipart/form-data')
+            .set('Authorization', `Bearer ${agentOne.token}`)
+            .field('type', propertyEntries[2].type)
+            .field('state', propertyEntries[2].state)
+            .field('city', propertyEntries[2].city)
+            .field('address', propertyEntries[2].address)
+            .field('price', propertyEntries[2].price);
         }
+        throw new Error('Could not insert property item');
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          propertyEntries[2] = res.body.data;
+          done();
+        } else throw new Error('Unable to insert property item');
       })
       .catch(error => done(error));
   });
@@ -131,10 +158,26 @@ export default () => {
 
   // Tests that are meant to pass
   describe('success', () => {
-    it('should delete a property ad successfully', async () => {
+    it('agent should delete his/her property ad successfully', async () => {
       const res = await chai.request(app)
         .delete(`${propertyUrl}/${propertyEntries[0].id}`)
         .set('Authorization', `Bearer ${agentOne.token}`)
+        .send();
+
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.be.an('object');
+      expect(res.body.data).to.have.property('message');
+      expect(res.body.data.message).to.equal('Successfully deleted property ad');
+    });
+
+    it('admin should delete a property ad successfully', async () => {
+      const res = await chai.request(app)
+        .delete(`${propertyUrl}/${propertyEntries[2].id}`)
+        .set('Authorization', `Bearer ${admin.token}`)
         .send();
 
       expect(res.status).to.equal(200);
