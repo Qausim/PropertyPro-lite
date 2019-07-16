@@ -192,6 +192,7 @@ export const dbInsertNewProperty = async ({
   if (propertyIdQueryRes.rowCount) {
     const propertyId = propertyIdQueryRes.rows[0].nextval;
     const property = new Property(propertyId, userId, type, state, city, address, price, imageUrl);
+    console.log(JSON.stringify(property, null, 4));
     const propertyInsertRes = await dbConnection.dbConnect(`INSERT INTO ${propertiesTable}
     (id, type, state, city, address, price, created_on, updated_on, image_url, owner) VALUES
     ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [propertyId, type, state, city, address, property.price,

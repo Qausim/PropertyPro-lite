@@ -33,6 +33,7 @@ const propertiesTable = process.env.PROPERTIES_TABLE;
  */
 export const createProperty = (request, response) => {
   console.log(JSON.stringify(request.body, null, 4));
+  console.log(JSON.stringify(request.userData, null, 4));
   const errorMessage = getCreatePropertyError(request.body);
   if (errorMessage) {
     return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
@@ -47,7 +48,9 @@ export const createProperty = (request, response) => {
 
       let imageUrl = '';
       if (request.file) {
+        console.log('before image');
         imageUrl = request.file.url;
+        console.log('after image');
       }
       dbInsertNewProperty(request.body, imageUrl, userId, propertiesTable)
         .then(property => ResponseHelper.getSuccessResponse(response, property, 201))
