@@ -32,15 +32,14 @@ const propertiesTable = process.env.PROPERTIES_TABLE;
  * @returns {response}
  */
 export const createProperty = (request, response) => {
-  console.log(JSON.stringify(request.body, null, 4));
   const errorMessage = getCreatePropertyError(request.body);
   if (errorMessage) {
     return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
   }
   const { userId } = request.userData;
-  dbConnection.dbConnect(`SELECT is_agent FROM ${usersTable} WHERE id = $1`, [userId])
-    .then((isAgentRes) => {
-      if (!isAgentRes.rows[0].is_agent) {
+  dbConnection.dbConnect(`SELECT is_agent, is_admin FROM ${usersTable} WHERE id = $1`, [userId])
+    .then((permissionRes) => {
+      if (!permissionRes.rows[0].is_agent && !permissionRes[0].is_admin) {
         return ResponseHelper.getForbiddenErrorResponse(response,
           'Only agents can create property ads');
       }
