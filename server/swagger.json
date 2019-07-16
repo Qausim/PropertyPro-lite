@@ -188,18 +188,29 @@
       },
       "get": {
         "tags": [
-          "Get All Properties"
+          "Get Properties"
         ],
-        "summary": "Get all properties",
-        "description": "This endpoint receives GET requests to retrieve all property ads",
+        "summary": "Get all or filter properties",
+        "description": "This endpoint receives GET requests to retrieve all property ads or filter by type",
         "operationId": "getProperties",
         "security": [
           {
             "authToken": []
           }
         ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
         "produces": [
           "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "The type to filter by",
+            "type": "string"
+          }
         ],
         "responses": {
           "200": {
