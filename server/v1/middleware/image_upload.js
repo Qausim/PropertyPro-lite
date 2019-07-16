@@ -30,17 +30,11 @@ cloudinary.config({
 const storage = cloudinaryStorage({
   cloudinary,
   folder: 'propertypro-lite',
-  allowedFormats: ['jpg', 'png', 'jpeg'],
   filename: fileName,
 });
 
 // Initialize multer object
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5, // 5mb
-  },
-});
+const upload = multer({ storage });
 
 // Export multer object
 export default upload.single('image_url');
