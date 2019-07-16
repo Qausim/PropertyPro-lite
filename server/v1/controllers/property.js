@@ -115,7 +115,7 @@ export const getPropertyById = (request, response) => {
 export const markPropertyAsSold = (request, response) => {
   const { propertyId } = request.params;
   const { userId } = request.userData;
-  dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable, propertiesTable)
+  dbGetPropertyOwnerAndRequesterPermissionLevel(propertyId, propertiesTable)
     .then(({ error, propertyOwner }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
 
@@ -150,8 +150,7 @@ export const updateProperty = (request, response) => {
   console.log(JSON.stringify(request.body, null, 4));
   console.log(JSON.stringify(request.userData, null, 4), userId);
   // Nested database (promise calls) each resolving to the inner till a response is obtainable
-  dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable,
-    propertiesTable)
+  dbGetPropertyOwnerAndRequesterPermissionLevel(propertyId, propertiesTable)
     .then(({ error, propertyOwner }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
       if (propertyOwner === userId) {

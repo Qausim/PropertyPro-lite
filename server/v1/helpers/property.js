@@ -215,7 +215,7 @@ export const dbInsertNewProperty = async ({
  *
  * @returns {object} with attributes 'error' || isAgent && propertyOwner
  */
-export const dbGetPropertyOwnerAndRequesterPermissionLevel = async (userId, propertyId, usersTable,
+export const dbGetPropertyOwnerAndRequesterPermissionLevel = async (propertyId,
   propertiesTable) => {
   const ownerqueryRes = await dbConnection.dbConnect(`SELECT owner FROM ${propertiesTable}
     WHERE id = $1;`, [propertyId]);
@@ -273,6 +273,7 @@ export const dbUpdateProperty = async (response, body, propertiesTable,
   queryString += `updated_on=$${querySet.length}`;
   querySet.push(propertyId);
   queryString = `UPDATE ${propertiesTable} SET ${queryString} WHERE id = $${querySet.length};`;
+  console.log(queryString, querySet);
   return dbConnection.dbConnect(queryString, querySet)
     .then((res) => {
       if (res.rowCount) {
