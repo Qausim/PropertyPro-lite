@@ -39,9 +39,9 @@ export const createProperty = (request, response) => {
     return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
   }
   const { userId } = request.userData;
-  dbConnection.dbConnect(`SELECT is_agent, is_admin FROM ${usersTable} WHERE id = $1`, [userId])
-    .then((permissionRes) => {
-      if (!permissionRes.rows[0].is_agent && !permissionRes[0].is_admin) {
+  dbConnection.dbConnect(`SELECT is_agent FROM ${usersTable} WHERE id = $1`, [userId])
+    .then((selectRes) => {
+      if (!selectRes.rowCount) {
         return ResponseHelper.getForbiddenErrorResponse(response,
           'Only agents can create property ads');
       }
