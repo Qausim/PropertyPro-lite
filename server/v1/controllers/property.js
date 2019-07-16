@@ -32,6 +32,7 @@ const propertiesTable = process.env.PROPERTIES_TABLE;
  * @returns {response}
  */
 export const createProperty = (request, response) => {
+  console.log(JSON.stringify(request.body, null, 4));
   const errorMessage = getCreatePropertyError(request.body);
   if (errorMessage) {
     return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
