@@ -7,7 +7,7 @@ import authRouter from './routes/auth';
 import propertyRouter from './routes/property';
 import Migration from './db/migration';
 import ResponseHelper from './helpers/response_helper';
-import swaggerDoc from './swagger';
+import swaggerDoc from '../swagger';
 
 dotenv.config();
 Migration.createTable();
