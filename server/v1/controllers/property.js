@@ -32,8 +32,6 @@ const propertiesTable = process.env.PROPERTIES_TABLE;
  * @returns {response}
  */
 export const createProperty = (request, response) => {
-  console.log(JSON.stringify(request.body, null, 4));
-  console.log(JSON.stringify(request.userData, null, 4));
   const errorMessage = getCreatePropertyError(request.body);
   if (errorMessage) {
     return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
@@ -48,9 +46,7 @@ export const createProperty = (request, response) => {
 
       let imageUrl = '';
       if (request.file) {
-        console.log('before image');
         imageUrl = request.file.url;
-        console.log('after image');
       }
       dbInsertNewProperty(request.body, imageUrl, userId, propertiesTable)
         .then(property => ResponseHelper.getSuccessResponse(response, property, 201))
@@ -120,10 +116,10 @@ export const markPropertyAsSold = (request, response) => {
   const { propertyId } = request.params;
   const { userId } = request.userData;
   dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable, propertiesTable)
-    .then(({ error, propertyOwner, isAgent }) => {
+    .then(({ error, propertyOwner }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
 
-      if (isAgent && propertyOwner === userId) {
+      if (propertyOwner === userId) {
         return dbMarkPropertyAsSold(response, propertiesTable, propertyId, usersTable);
       }
       return (() => ResponseHelper.getForbiddenErrorResponse(response, propertyEditAccessError));
@@ -154,9 +150,9 @@ export const updateProperty = (request, response) => {
   // Nested database (promise calls) each resolving to the inner till a response is obtainable
   dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable,
     propertiesTable)
-    .then(({ error, propertyOwner, isAgent }) => {
+    .then(({ error, propertyOwner }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
-      if (isAgent && propertyOwner === userId) {
+      if (propertyOwner === userId) {
         return dbUpdateProperty(response, request.body, propertiesTable, propertyId,
           usersTable);
       }

@@ -192,7 +192,6 @@ export const dbInsertNewProperty = async ({
   if (propertyIdQueryRes.rowCount) {
     const propertyId = propertyIdQueryRes.rows[0].nextval;
     const property = new Property(propertyId, userId, type, state, city, address, price, imageUrl);
-    console.log(JSON.stringify(property, null, 4));
     const propertyInsertRes = await dbConnection.dbConnect(`INSERT INTO ${propertiesTable}
     (id, type, state, city, address, price, created_on, updated_on, image_url, owner) VALUES
     ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [propertyId, type, state, city, address, property.price,
@@ -218,16 +217,10 @@ export const dbInsertNewProperty = async ({
  */
 export const dbGetPropertyOwnerAndRequesterPermissionLevel = async (userId, propertyId, usersTable,
   propertiesTable) => {
-  const permissionQueryRes = await dbConnection.dbConnect(`SELECT is_agent, is_admin FROM ${usersTable}
-    WHERE id = $1;`, [userId]);
   const ownerqueryRes = await dbConnection.dbConnect(`SELECT owner FROM ${propertiesTable}
     WHERE id = $1;`, [propertyId]);
   if (!ownerqueryRes.rowCount) return { error: true };
-  return {
-    propertyOwner: ownerqueryRes.rows[0].owner,
-    isAgent: permissionQueryRes.rows[0].is_agent,
-    isAdmin: permissionQueryRes.rows[0].is_admin,
-  };
+  return { propertyOwner: ownerqueryRes.rows[0].owner };
 };
 
 
