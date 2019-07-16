@@ -16,7 +16,6 @@ export default () => {
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: false,
     is_agent: true,
   };
   let user = {
@@ -26,7 +25,6 @@ export default () => {
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: false,
     is_agent: false,
   };
 

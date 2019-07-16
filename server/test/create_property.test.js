@@ -11,13 +11,12 @@ export default () => {
 
   // Test user objects
   let agent = {
-    email: 'qauzeem@example.com',
+    email: 'agent@example.com',
     first_name: 'Olawumi',
     last_name: 'Yusuff',
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: false,
     is_agent: true,
   };
 
@@ -28,7 +27,6 @@ export default () => {
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: false,
     is_agent: false,
   };
 

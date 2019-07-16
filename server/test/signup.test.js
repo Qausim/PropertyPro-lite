@@ -9,14 +9,13 @@ const signupUrl = '/api/v1/auth/signup';
 
 export default () => {
   // Test user object
-  let admin = {
+  let user = {
     email: 'qauzeem@propertyprolite.com',
     first_name: 'Olawumi',
     last_name: 'Yusuff',
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: true,
     is_agent: false,
   };
 
@@ -24,10 +23,10 @@ export default () => {
   before((done) => {
     chai.request(app)
       .post(signupUrl)
-      .send(admin)
+      .send(user)
       .then((res) => {
         if (res.status === 201) {
-          admin = res.body.data;
+          user = res.body.data;
           done();
         } else {
           throw new Error('Could not insert admin');
@@ -38,7 +37,8 @@ export default () => {
 
   // Clear new entries into the db save the initial test object
   afterEach((done) => {
-    dbConnection.dbConnect('DELETE FROM users_test WHERE id <> $1', [admin.id])
+    dbConnection.dbConnect('DELETE FROM users_test WHERE id <> $1 AND email <> $2',
+      [user.id, process.env.ADMIN_EMAIL])
       .then(() => done())
       .catch(e => done(e));
   });
@@ -56,7 +56,6 @@ export default () => {
         phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        is_admin: false,
         is_agent: true,
       };
 
@@ -83,7 +82,6 @@ export default () => {
       expect(res.body.data.last_name).to.equal(data.last_name);
       expect(res.body.data.phone_number).to.equal(data.phone_number);
       expect(res.body.data.address).to.equal(data.address);
-      expect(res.body.data.is_admin).to.equal(data.is_admin);
       expect(res.body.data.is_agent).to.equal(data.is_agent);
     });
 
@@ -94,7 +92,6 @@ export default () => {
         first_name: 'Akin',
         last_name: 'Ige',
         password: '123456',
-        is_admin: false,
         is_agent: false,
       };
 
@@ -117,7 +114,6 @@ export default () => {
       expect(res.body.data.email).to.equal(data.email);
       expect(res.body.data.first_name).to.equal(data.first_name);
       expect(res.body.data.last_name).to.equal(data.last_name);
-      expect(res.body.data.is_admin).to.equal(data.is_admin);
       expect(res.body.data.is_agent).to.equal(data.is_agent);
     });
   });
@@ -133,7 +129,6 @@ export default () => {
         phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        is_admin: false,
         is_agent: true,
       };
 
@@ -158,7 +153,6 @@ export default () => {
         phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        is_admin: false,
         is_agent: true,
       };
 
@@ -183,7 +177,6 @@ export default () => {
         phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '',
-        is_admin: false,
         is_agent: true,
       };
 
@@ -208,7 +201,6 @@ export default () => {
         phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        is_admin: false,
         is_agent: true,
       };
 
@@ -233,7 +225,6 @@ export default () => {
         phone_number: '08000000000',
         address: 'Dopemu, Lagos',
         password: '123456',
-        is_admin: false,
         is_agent: true,
       };
 
@@ -258,7 +249,6 @@ export default () => {
         phone_number: '',
         address: 'Dopemu, Lagos',
         password: '123456',
-        is_admin: false,
         is_agent: true,
       };
 
@@ -283,7 +273,6 @@ export default () => {
         phone_number: '08000000000',
         address: '',
         password: '123456',
-        is_admin: false,
         is_agent: true,
       };
 

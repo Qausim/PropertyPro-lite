@@ -10,6 +10,7 @@ export default () => {
   const signupUrl = '/api/v1/auth/signup';
 
   // Test user objects
+  let admin;
   let agentOne = {
     email: 'qauzeem@example.com',
     first_name: 'Olawumi',
@@ -17,7 +18,6 @@ export default () => {
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: false,
     is_agent: true,
   };
 
@@ -28,7 +28,6 @@ export default () => {
     password: '123456',
     phone_number: '08000000000',
     address: 'Egbeda, Lagos',
-    is_admin: false,
     is_agent: true,
   };
 
@@ -39,7 +38,6 @@ export default () => {
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: false,
     is_agent: false,
   };
 
@@ -63,9 +61,18 @@ export default () => {
 
   // Sign up users and create property objects before tests
   before((done) => {
-    chai.request(app)
-      .post(signupUrl)
-      .send(agentOne)
+    const email = process.env.ADMIN_EMAIL;
+    const password = process.env.ADMIN_PWD;
+    chai.request(app).post('/api/v1/auth/signin').send({ email, password })
+      .then((res) => {
+        if (res.status === 200) {
+          admin = res.body.data;
+          return chai.request(app)
+            .post(signupUrl)
+            .send(agentOne);
+        }
+        throw new Error('Could not sign admin in');
+      })
       .then((res) => {
         if (res.status === 201) {
           agentOne = res.body.data;
@@ -73,7 +80,7 @@ export default () => {
             .post(signupUrl)
             .send(agentTwo);
         }
-        throw new Error('Could not sign agent up');
+        throw new Error('Could not sign agent one up');
       })
       .then((res) => {
         if (res.status === 201) {
@@ -131,7 +138,7 @@ export default () => {
 
   // Tests that are meant to pass
   describe('success', () => {
-    it('should delete a property ad successfully', async () => {
+    it(' delete a property ad successfully', async () => {
       const res = await chai.request(app)
         .delete(`${propertyUrl}/${propertyEntries[0].id}`)
         .set('Authorization', `Bearer ${agentOne.token}`)
@@ -146,6 +153,8 @@ export default () => {
       expect(res.body.data).to.have.property('message');
       expect(res.body.data.message).to.equal('Successfully deleted property ad');
     });
+
+
   });
 
 

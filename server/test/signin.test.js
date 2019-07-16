@@ -7,14 +7,13 @@ const signinUrl = '/api/v1/auth/signin';
 
 export default () => {
   // Test user object
-  let admin = {
+  let user = {
     email: 'qauzeem@propertyprolite.com',
     first_name: 'Olawumi',
     last_name: 'Yusuff',
     password: '123456',
     phone_number: '08000000000',
     address: 'Iyana Ipaja, Lagos',
-    is_admin: true,
     is_agent: false,
   };
 
@@ -22,10 +21,10 @@ export default () => {
   before((done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
-      .send(admin)
+      .send(user)
       .then((res) => {
         if (res.status === 201) {
-          admin = res.body.data;
+          user = res.body.data;
           done();
         } else {
           throw new Error('Could not insert admin');
@@ -41,7 +40,7 @@ export default () => {
   // Tests that are meant to pass
   describe('success', () => {
     it('should log in a user successfully', async () => {
-      const { email } = admin;
+      const { email } = user;
       const password = '123456';
 
       const res = await chai.request(app)
@@ -62,14 +61,13 @@ export default () => {
       expect(res.body.data).to.have.property('token');
       expect(res.body.data).to.have.property('is_admin');
       expect(res.body.data).to.have.property('is_agent');
-      expect(res.body.data.id).to.equal(admin.id);
-      expect(res.body.data.email).to.equal(admin.email);
-      expect(res.body.data.first_name).to.equal(admin.first_name);
-      expect(res.body.data.last_name).to.equal(admin.last_name);
-      expect(res.body.data.phone_number).to.equal(admin.phone_number);
-      expect(res.body.data.address).to.equal(admin.address);
-      expect(res.body.data.is_admin).to.equal(admin.is_admin);
-      expect(res.body.data.is_agent).to.equal(admin.is_agent);
+      expect(res.body.data.id).to.equal(user.id);
+      expect(res.body.data.email).to.equal(user.email);
+      expect(res.body.data.first_name).to.equal(user.first_name);
+      expect(res.body.data.last_name).to.equal(user.last_name);
+      expect(res.body.data.phone_number).to.equal(user.phone_number);
+      expect(res.body.data.address).to.equal(user.address);
+      expect(res.body.data.is_agent).to.equal(user.is_agent);
     });
   });
 
@@ -114,7 +112,7 @@ export default () => {
 
     it('should fail to log in a user with incorrect password', async () => {
       const data = {
-        email: admin.email,
+        email: user.email,
         password: 'abcdefg',
       };
 
