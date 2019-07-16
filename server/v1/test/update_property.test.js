@@ -5,8 +5,8 @@ import { clearAllTestRecords } from '../helpers/test_hooks_helper';
 const { chai, expect, app } = testConfig;
 
 export default () => {
-  const propertyUrl = '/api/v1/property';
-  const signupUrl = '/api/v1/auth/signup';
+  const propertyUrl = '/property';
+  const signupUrl = '/auth/signup';
 
   // Test user objects
   let agentOne = {

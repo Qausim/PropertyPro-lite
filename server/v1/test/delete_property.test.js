@@ -6,8 +6,8 @@ const { chai, expect, app } = testConfig;
 
 
 export default () => {
-  const propertyUrl = '/api/v1/property';
-  const signupUrl = '/api/v1/auth/signup';
+  const propertyUrl = '/property';
+  const signupUrl = '/auth/signup';
 
   // Test user objects
   let admin;
@@ -70,7 +70,7 @@ export default () => {
   before((done) => {
     const email = process.env.ADMIN_EMAIL;
     const password = process.env.ADMIN_PWD;
-    chai.request(app).post('/api/v1/auth/signin').send({ email, password })
+    chai.request(app).post('/auth/signin').send({ email, password })
       .then((res) => {
         if (res.status === 200) {
           admin = res.body.data;
