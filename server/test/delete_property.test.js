@@ -57,6 +57,13 @@ export default () => {
       address: '11 Ologuneru Street, Samonda',
       price: 8000000.00,
     },
+    {
+      type: 'Mini flat',
+      state: 'Lagos',
+      city: 'Lagos',
+      address: '12 Masha Street, Surulere',
+      price: '10000000',
+    },
   ];
 
   // Sign up users and create property objects before tests
@@ -124,10 +131,23 @@ export default () => {
       .then((res) => {
         if (res.status === 201) {
           propertyEntries[1] = res.body.data;
-          done();
-        } else {
-          throw new Error('Could not insert property item');
+          return chai.request(app)
+            .post(propertyUrl)
+            .set('Content-Type', 'multipart/form-data')
+            .set('Authorization', `Bearer ${agentOne.token}`)
+            .field('type', propertyEntries[2].type)
+            .field('state', propertyEntries[2].state)
+            .field('city', propertyEntries[2].city)
+            .field('address', propertyEntries[2].address)
+            .field('price', propertyEntries[2].price);
         }
+        throw new Error('Could not insert property item');
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          propertyEntries[2] = res.body.data;
+          done();
+        } else throw new Error('Unable to insert property item');
       })
       .catch(error => done(error));
   });
@@ -138,7 +158,7 @@ export default () => {
 
   // Tests that are meant to pass
   describe('success', () => {
-    it(' delete a property ad successfully', async () => {
+    it('agent should delete his/her property ad successfully', async () => {
       const res = await chai.request(app)
         .delete(`${propertyUrl}/${propertyEntries[0].id}`)
         .set('Authorization', `Bearer ${agentOne.token}`)
@@ -154,7 +174,21 @@ export default () => {
       expect(res.body.data.message).to.equal('Successfully deleted property ad');
     });
 
+    it('admin should delete a property ad successfully', async () => {
+      const res = await chai.request(app)
+        .delete(`${propertyUrl}/${propertyEntries[2].id}`)
+        .set('Authorization', `Bearer ${admin.token}`)
+        .send();
 
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.be.an('object');
+      expect(res.body.data).to.have.property('message');
+      expect(res.body.data.message).to.equal('Successfully deleted property ad');
+    });
   });
 
 
