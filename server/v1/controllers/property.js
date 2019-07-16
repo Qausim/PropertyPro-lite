@@ -147,6 +147,8 @@ export const updateProperty = (request, response) => {
   }
 
   const { params: { propertyId }, userData: { userId } } = request;
+  console.log(JSON.stringify(request.body, null, 4));
+  console.log(JSON.stringify(request.userData, null, 4), userId);
   // Nested database (promise calls) each resolving to the inner till a response is obtainable
   dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable,
     propertiesTable)
@@ -176,11 +178,9 @@ export const updateProperty = (request, response) => {
 export const deleteProperty = (request, response) => {
   const { params: { propertyId }, userData: { userId } } = request;
   dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable, propertiesTable)
-    .then(({
-      error, propertyOwner, isAgent, isAdmin,
-    }) => {
+    .then(({ error, propertyOwner }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
-      if ((isAgent && propertyOwner === userId) || isAdmin) {
+      if (propertyOwner === userId) {
         return dbDeleteProperty(response, propertyId, propertiesTable);
       }
       return (() => ResponseHelper.getForbiddenErrorResponse(response,
