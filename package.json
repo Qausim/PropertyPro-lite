@@ -56,6 +56,7 @@
   },
   "dependencies": {
     "@babel/cli": "^7.4.3",
+    "@babel/runtime": "^7.5.4",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
