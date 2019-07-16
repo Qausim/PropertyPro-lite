@@ -61,7 +61,7 @@ export default () => {
   // Tests that are meant to pass
   describe('success', () => {
     const splittedDir = __dirname.replace(/[\\]/g, '/').split('/');
-    const projectDir = splittedDir.slice(0, splittedDir.length - 2).join('/');
+    const projectDir = splittedDir.slice(0, splittedDir.length - 3).join('/');
     const image = `${projectDir}/UI/images/propertya1.jpg`;
 
     it('should create a property ad with an image', async () => {

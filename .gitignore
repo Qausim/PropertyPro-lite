@@ -3,4 +3,4 @@ node_modules
 server/build
 .eslintcache
 .nyc_output
-.env
+**/.env
