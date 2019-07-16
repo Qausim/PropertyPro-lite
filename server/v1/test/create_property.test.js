@@ -83,7 +83,7 @@ export default () => {
         .field('city', data.city)
         .field('address', data.address)
         .field('price', data.price)
-        .attach('property_image', data.image);
+        .attach('image_url', data.image);
 
       expect(res.status).to.equal(201);
       expect(res.body).to.be.an('object');

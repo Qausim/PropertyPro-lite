@@ -37,4 +37,4 @@ const storage = cloudinaryStorage({
 const upload = multer({ storage });
 
 // Export multer object
-export default upload.single('property_image');
+export default upload.single('image_url');
