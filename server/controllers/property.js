@@ -10,7 +10,7 @@ import {
   hasForbiddenField,
   dbInsertNewProperty,
   dbMarkPropertyAsSold,
-  dbGetPropertyOwnerAndRequesterAgentStatus,
+  dbGetPropertyOwnerAndRequesterPermissionLevel,
   dbUpdateProperty,
   dbDeleteProperty,
 } from '../helpers/property';
@@ -115,7 +115,7 @@ export const getPropertyById = (request, response) => {
 export const markPropertyAsSold = (request, response) => {
   const { propertyId } = request.params;
   const { userId } = request.userData;
-  dbGetPropertyOwnerAndRequesterAgentStatus(userId, propertyId, usersTable, propertiesTable)
+  dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable, propertiesTable)
     .then(({ error, propertyOwner, isAgent }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
 
@@ -148,7 +148,7 @@ export const updateProperty = (request, response) => {
 
   const { params: { propertyId }, userData: { userId } } = request;
   // Nested database (promise calls) each resolving to the inner till a response is obtainable
-  dbGetPropertyOwnerAndRequesterAgentStatus(userId, propertyId, usersTable,
+  dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable,
     propertiesTable)
     .then(({ error, propertyOwner, isAgent }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
@@ -175,10 +175,12 @@ export const updateProperty = (request, response) => {
  */
 export const deleteProperty = (request, response) => {
   const { params: { propertyId }, userData: { userId } } = request;
-  dbGetPropertyOwnerAndRequesterAgentStatus(userId, propertyId, usersTable, propertiesTable)
-    .then(({ error, propertyOwner, isAgent }) => {
+  dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable, propertiesTable)
+    .then(({
+      error, propertyOwner, isAgent, isAdmin,
+    }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
-      if (isAgent && propertyOwner === userId) {
+      if ((isAgent && propertyOwner === userId) || isAdmin) {
         return dbDeleteProperty(response, propertyId, propertiesTable);
       }
       return (() => ResponseHelper.getForbiddenErrorResponse(response,
