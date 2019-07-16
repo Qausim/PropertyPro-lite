@@ -30,7 +30,6 @@ cloudinary.config({
 const storage = cloudinaryStorage({
   cloudinary,
   folder: 'propertypro-lite',
-  allowedFormats: ['jpg', 'png', 'jpeg'],
   filename: fileName,
 });
 

@@ -9,7 +9,8 @@ import serverErrorHandlerMiddleware from '../middleware/server_error_handler';
 
 const router = Router();
 
-router.post('/', checkAuth, imageUploader, propertyController.createProperty);
+router.post('/', checkAuth, imageUploader, serverErrorHandlerMiddleware,
+  propertyController.createProperty);
 
 router.get('/', checkAuth, propertyController.getProperties);
 
