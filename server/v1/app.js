@@ -18,7 +18,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-
 // Swagger documentation
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 

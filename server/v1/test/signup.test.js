@@ -4,7 +4,7 @@ import { clearTestUsersRecords } from '../helpers/test_hooks_helper';
 
 
 const { chai, expect, app } = testConfig;
-const signupUrl = '/api/v1/auth/signup';
+const signupUrl = '/auth/signup';
 
 
 export default () => {
