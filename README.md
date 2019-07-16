@@ -10,11 +10,91 @@ PropertyPro-lite is a property listing web application, a platform where people 
 ## Clone this Repository.
 URL: https://github.com/Qausim/PropertyPro-lite.git
 
+## Prerequisites
+- Node v10.15.0 or above
+- npm v6.4.1 or above
+
+## Endpoints
+<table>
+  <thead>
+    <tr>
+      <th>HTTP VERB</th>
+      <th>ENDPOINT</th>
+      <th>FUNCTIONALITY</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>POST</td>
+      <td>/api/v1/auth/signup</td>
+      <td>Create a new user acount</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/api/v1/auth/signin</td>
+      <td>Sign into an existing user account</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/api/v1/property</td>
+      <td>Create a new property advert</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/v1/property</td>
+      <td>Retrieve all existing property adverts</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/v1/property?type=propertyType</td>
+      <td>Search records of property adverts by their type</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/v1/property/<:propertyId></td>
+      <td>Retrieve a single property advert</td>
+    </tr>
+    <tr>
+      <td>PATCH</td>
+      <td>/api/v1/property/<:propertyId></td>
+      <td>Update details of a property advert</td>
+    </tr>
+    <tr>
+      <td>PATCH</td>
+      <td>/api/v1/property/<:propertyId>/sold</td>
+      <td>Mark a property advert as sold</td>
+    </tr>
+    <tr>
+      <td>DELETE</td>
+      <td>/api/v1/property/<:propertyId></td>
+      <td>Delete a property advert</td>
+    </tr>
+  </tbody>
+</table>
+
+## Installation
+
+**On your machine**
+- Pull the [develop](https://github.com/Qausim/PropertyPro-lite.git) branch of this repository
+- Run `npm install` to install all dependencies
+- Run `npm run server` to start the app
+- Access endpoints on **localhost:3000**
+
+## Run Tests
+Run `npm test` in the terminal from the root directory of the cloned repository
+
+## Built With
+
+- [Node.js](http://www.nodejs.org/) - runtime environment
+
 ## Github Pages URL
 URL: https://qausim.github.io/PropertyPro-lite/UI
 
 ## Heroku Link
 URL: https://tranquil-temple-44573.herokuapp.com/
+
+## API Documentation
+URL: https://tranquil-temple-44573.herokuapp.com/api-docs
 
 ## Pivotal Tracker
 URL: https://www.pivotaltracker.com/n/projects/2354402
