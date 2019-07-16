@@ -91,10 +91,10 @@ Run `npm test` in the terminal from the root directory of the cloned repository
 URL: https://qausim.github.io/PropertyPro-lite/UI
 
 ## Heroku Link
-URL: https://tranquil-temple-44573.herokuapp.com/
+URL: https://propertyprolite-api.herokuapp.com/
 
 ## API Documentation
-URL: https://tranquil-temple-44573.herokuapp.com/api-docs
+URL: https://propertyprolite-api.herokuapp.com/api-docs
 
 ## Pivotal Tracker
 URL: https://www.pivotaltracker.com/n/projects/2354402

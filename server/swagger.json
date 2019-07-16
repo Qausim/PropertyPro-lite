@@ -9,10 +9,10 @@
     },
     "license": {
       "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
+      "url": "propertyprolite-api.herokuapp.com"
     }
   },
-  "host": "tranquil-temple-44573.herokuapp.com",
+  "host": "",
   "basePath": "/api/v1",
   "tags": [
     {
