@@ -8,9 +8,9 @@
     "start": "node server/build/server.js",
     "build": "npm run clean && babel server -d server/build ./server/v1 -s",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && nyc mocha -r @babel/polyfill -r @babel/core -r @babel/register ./server/v1/test/index.test.js --timeout 30000 --exit",
-    "server": "babel-node server/server",
+    "server": "babel-node server/v1/server",
     "coverage": "nyc --reporter=lcov --reporter=text-lcov npm test && nyc report --reporter=text-lcov | coveralls",
-    "dev": "nodemon --exec babel-node server/server.js",
+    "dev": "nodemon --exec babel-node server/v1/server.js",
     "clean": "rimraf ./server/build"
   },
   "repository": {

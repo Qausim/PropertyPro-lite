@@ -17,28 +17,28 @@ before((done) => {
 });
 
 // Tests for signup requests
-describe('POST /auth/signup', signupTests);
+describe('POST /api/v1/auth/signup', signupTests);
 
 // Tests for signin requests
-describe('POST /auth/signin', signinTests);
+describe('POST /api/v1/auth/signin', signinTests);
 
 // Tests for create property ad requests
-describe('POST /property', createPropertyAdTests);
+describe('POST /api/v1/property', createPropertyAdTests);
 
 // Tests for get all properties requests
-describe('GET /property', getAllPropertiesTests);
+describe('GET /api/v1/property', getAllPropertiesTests);
 
 // Tests for get property by id requests
-describe('GET /property/<:propertyId>', getPropertyByIdTests);
+describe('GET /api/v1/property/<:propertyId>', getPropertyByIdTests);
 
 // Tests for marking a property ad as sold
-describe('PATCH /property/<:propertyId>/sold', markPropertyAsSoldTests);
+describe('PATCH /api/v1/property/<:propertyId>/sold', markPropertyAsSoldTests);
 
 // // Tests for property list search
-describe('GET /property?type=propertyType', queryPropertyTypeTests);
+describe('GET /api/v1/property?type=propertyType', queryPropertyTypeTests);
 
 // Tests for property update
-describe('PATCH /property/<:propertyId>', updatePropertyAdTests);
+describe('PATCH /api/v1/property/<:propertyId>', updatePropertyAdTests);
 
 // // Tests for property delete
-describe('DELETE /property/<:propertyId>', deletePropertyAdTests);
+describe('DELETE /api/v1/property/<:propertyId>', deletePropertyAdTests);
