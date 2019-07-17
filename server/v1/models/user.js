@@ -1,7 +1,7 @@
 export default class User {
   constructor(id, email, firstName, lastName, password, phoneNumber,
     address, isAgent) {
-    this.id = parseFloat(id);
+    this.id = id;
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;

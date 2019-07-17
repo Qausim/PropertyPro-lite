@@ -129,14 +129,11 @@ export const createUser = async ({
     const user = new User(userId, email, first_name, last_name, hash, phone_number, address,
       is_agent);
     user.token = getToken(email, userId);
-    console.log(JSON.stringify(user, null, 4)); console.log(usersTable);
     const userInsertQueryResult = await dbConnection.dbConnect(`INSERT INTO ${usersTable} (
       id, email, first_name, last_name, password, phone_number, address, is_admin, is_agent)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`, [user.id, user.email, user.firstName,
-      user.lastName, user.password, user.phoneNumber, user.address, user.isAdmin, user.isAgent])
-      .catch(err => console.log(JSON.stringify(err, null, 4)));
-    console.log(JSON.stringify(userInsertQueryResult, null, 4));
-    console.log("we're here");
+      user.lastName, user.password, user.phoneNumber, user.address, user.isAdmin, user.isAgent]);
+
     if (userInsertQueryResult.rowCount) {
       const data = getPublicUserData(user);
       return data;

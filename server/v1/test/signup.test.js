@@ -4,7 +4,7 @@ import { clearTestUsersRecords } from '../helpers/test_hooks_helper';
 
 
 const { chai, expect, app } = testConfig;
-const signupUrl = '/api/v1/auth/signup';
+const signupUrl = '/auth/signup';
 
 
 export default () => {
@@ -29,7 +29,7 @@ export default () => {
           user = res.body.data;
           done();
         } else {
-          throw new Error('Could not insert user');
+          throw new Error('Could not insert admin');
         }
       })
       .catch(error => done(error));

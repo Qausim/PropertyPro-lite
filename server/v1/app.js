@@ -17,15 +17,14 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const basePath = '/api/v1';
 
 // Swagger documentation
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
 // auth routes
-app.use(`${basePath}/auth`, authRouter);
+app.use('/auth', authRouter);
 // property route
-app.use(`${basePath}/property`, propertyRouter);
+app.use('/property', propertyRouter);
 
 
 // Handle all requests to non-existing URLs
