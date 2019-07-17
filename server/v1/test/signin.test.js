@@ -3,7 +3,7 @@ import { clearTestUsersRecords } from '../helpers/test_hooks_helper';
 
 
 const { chai, expect, app } = testConfig;
-const signinUrl = '/auth/signin';
+const signinUrl = '/api/v1/auth/signin';
 
 export default () => {
   // Test user object
@@ -20,7 +20,7 @@ export default () => {
   // Sign up test user object before tests
   before((done) => {
     chai.request(app)
-      .post('/auth/signup')
+      .post('/api/v1/auth/signup')
       .send(user)
       .then((res) => {
         if (res.status === 201) {

@@ -35,7 +35,6 @@ export const signup = (request, response) => {
 
       bcrypt.hash(request.body.password, 10, (error, hash) => {
         if (error) return ResponseHelper.getInternalServerError(response);
-
         createUser(request.body, hash, usersTable)
           .then(user => ResponseHelper.getSuccessResponse(response, user, 201))
           .catch(() => ResponseHelper.getInternalServerError(response));

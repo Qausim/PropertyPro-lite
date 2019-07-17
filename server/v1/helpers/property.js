@@ -217,12 +217,17 @@ export const dbInsertNewProperty = async ({
  *
  * @returns {object} with attributes 'error' || isAgent && propertyOwner
  */
-export const dbGetPropertyOwnerAndRequesterPermissionLevel = async (propertyId,
+export const dbGetPropertyOwnerAndRequesterPermissionLevel = async (userId, propertyId, usersTable,
   propertiesTable) => {
+  const permissionQueryRes = await dbConnection.dbConnect(`SELECT is_admin FROM ${usersTable}
+    WHERE id = $1;`, [userId]);
   const ownerqueryRes = await dbConnection.dbConnect(`SELECT owner FROM ${propertiesTable}
     WHERE id = $1;`, [propertyId]);
   if (!ownerqueryRes.rowCount) return { error: true };
-  return { propertyOwner: ownerqueryRes.rows[0].owner };
+  return {
+    propertyOwner: ownerqueryRes.rows[0].owner,
+    isAdmin: permissionQueryRes.rows[0].is_admin,
+  };
 };
 
 
@@ -263,7 +268,7 @@ export const dbMarkPropertyAsSold = async (response, propertiesTable,
 export const dbUpdateProperty = async (response, body, propertiesTable,
   propertyId, usersTable) => {
   // Obtain supplied request fields to create a database query string and datasets
-  const entries = Object.entries(body).filter(el => propertyEditableFields.includes(el));
+  const entries = Object.entries(body).filter(el => propertyEditableFields.includes(el[0]));
   let queryString = '';
   const querySet = [];
   entries.forEach((el, ind) => {
