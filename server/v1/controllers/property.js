@@ -32,15 +32,14 @@ const propertiesTable = process.env.PROPERTIES_TABLE;
  * @returns {response}
  */
 export const createProperty = (request, response) => {
-  console.log(JSON.stringify(request.body, null, 4));
   const errorMessage = getCreatePropertyError(request.body);
   if (errorMessage) {
     return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
   }
   const { userId } = request.userData;
   dbConnection.dbConnect(`SELECT is_agent FROM ${usersTable} WHERE id = $1`, [userId])
-    .then((isAgentRes) => {
-      if (!isAgentRes.rows[0].is_agent) {
+    .then((selectRes) => {
+      if (!selectRes.rows[0].is_agent) {
         return ResponseHelper.getForbiddenErrorResponse(response,
           'Only agents can create property ads');
       }
@@ -117,10 +116,10 @@ export const markPropertyAsSold = (request, response) => {
   const { propertyId } = request.params;
   const { userId } = request.userData;
   dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable, propertiesTable)
-    .then(({ error, propertyOwner, isAgent }) => {
+    .then(({ error, propertyOwner }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
 
-      if (isAgent && propertyOwner === userId) {
+      if (propertyOwner === userId) {
         return dbMarkPropertyAsSold(response, propertiesTable, propertyId, usersTable);
       }
       return (() => ResponseHelper.getForbiddenErrorResponse(response, propertyEditAccessError));
@@ -149,11 +148,10 @@ export const updateProperty = (request, response) => {
 
   const { params: { propertyId }, userData: { userId } } = request;
   // Nested database (promise calls) each resolving to the inner till a response is obtainable
-  dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable,
-    propertiesTable)
-    .then(({ error, propertyOwner, isAgent }) => {
+  dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable, propertiesTable)
+    .then(({ error, propertyOwner }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
-      if (isAgent && propertyOwner === userId) {
+      if (propertyOwner === userId) {
         return dbUpdateProperty(response, request.body, propertiesTable, propertyId,
           usersTable);
       }
@@ -177,11 +175,9 @@ export const updateProperty = (request, response) => {
 export const deleteProperty = (request, response) => {
   const { params: { propertyId }, userData: { userId } } = request;
   dbGetPropertyOwnerAndRequesterPermissionLevel(userId, propertyId, usersTable, propertiesTable)
-    .then(({
-      error, propertyOwner, isAgent, isAdmin,
-    }) => {
+    .then(({ error, propertyOwner, isAdmin }) => {
       if (error) return (() => ResponseHelper.getNotFoundErrorResponse(response));
-      if ((isAgent && propertyOwner === userId) || isAdmin) {
+      if (propertyOwner === userId || isAdmin) {
         return dbDeleteProperty(response, propertyId, propertiesTable);
       }
       return (() => ResponseHelper.getForbiddenErrorResponse(response,

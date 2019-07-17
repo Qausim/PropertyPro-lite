@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "A property listing web application, for creating and/or search properties for sale or rent",
+    "description": "A property listing web application, for creating and/or searching properties for sale or rent",
     "version": "1.0.0",
     "title": "PropertyPro-lite",
     "contact": {
@@ -31,7 +31,7 @@
           "Authentication"
         ],
         "summary": "User can sign up",
-        "description": "This endpoint receives POST requests to create new user accounts",
+        "description": "This endpoint receives POST requests to create new user accounts. Fields \"phone_number\" and \"address\" are only requried if \"is_agent\" is true. All others are required.",
         "operationId": "registerUser",
         "consumes": [
           "application/json"
@@ -95,10 +95,7 @@
             "description": "Success"
           },
           "400": {
-            "description": "Invalid input or empty required field"
-          },
-          "409": {
-            "description": "Email conflicts with existing account's"
+            "description": "Invalid field(s), empty required field(s) or non existing account"
           },
           "500": {
             "description": "Server error"
@@ -112,11 +109,11 @@
           "Create Property Ad"
         ],
         "summary": "Create property advert",
-        "description": "This endpoint receives POST requests to create new property adverts",
+        "description": "This endpoint receives POST requests to create new property adverts. Only agents can create property adverts.",
         "operationId": "createPropertyAd",
         "security": [
           {
-            "authToken": []
+            "bearerToken": []
           }
         ],
         "consumes": [
@@ -163,7 +160,7 @@
           },
           {
             "in": "formData",
-            "name": "property_image",
+            "name": "image_url",
             "description": "Property image",
             "type": "file"
           }
@@ -195,7 +192,7 @@
         "operationId": "getProperties",
         "security": [
           {
-            "authToken": []
+            "bearerToken": []
           }
         ],
         "consumes": [
@@ -235,7 +232,7 @@
         "operationId": "getPropertyById",
         "security": [
           {
-            "authToken": []
+            "bearerToken": []
           }
         ],
         "produces": [
@@ -271,11 +268,11 @@
           "Update Property"
         ],
         "summary": "Update a property item",
-        "description": "This endpoint receives PATCH requests to update the details of a property advert",
+        "description": "This endpoint receives PATCH requests to update the details of a property advert.",
         "operationId": "updateProperty",
         "security": [
           {
-            "authToken": []
+            "bearerToken": []
           }
         ],
         "consumes": [
@@ -288,7 +285,7 @@
           {
             "name": "propertyId",
             "in": "path",
-            "description": "ID of property to return",
+            "description": "ID of property to update",
             "required": true,
             "type": "integer",
             "format": "int64"
@@ -350,11 +347,11 @@
           "Delete Property"
         ],
         "summary": "Delete a property advert",
-        "description": "This endpoint receives DELETE requests to delete a property advert",
+        "description": "This endpoint receives DELETE requests to delete a property advert. An admin has special priviledge to delete a property advert.",
         "operationId": "deleteProperty",
         "security": [
           {
-            "authToken": []
+            "bearerToken": []
           }
         ],
         "produces": [
@@ -402,7 +399,7 @@
         "operationId": "markPropertyAsSold",
         "security": [
           {
-            "authToken": []
+            "bearerToken": []
           }
         ],
         "produces": [
@@ -442,7 +439,7 @@
     }
   },
   "securityDefinitions": {
-    "authToken": {
+    "bearerToken": {
       "type": "apiKey",
       "name": "Authorization",
       "in": "header"
@@ -456,9 +453,7 @@
         "password",
         "first_name",
         "last_name",
-        "is_agent",
-        "phone_number",
-        "address"
+        "is_agent"
       ],
       "properties": {
         "email": {

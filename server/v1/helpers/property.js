@@ -2,6 +2,8 @@ import Property from '../models/property';
 import ResponseHelper from './response_helper';
 import dbConnection from '../db/database';
 
+const propertyEditableFields = ['price', 'type', 'state', 'city', 'address'];
+
 /**
  * Validates that its value argument is of string type
  * @param {*} value
@@ -217,14 +219,13 @@ export const dbInsertNewProperty = async ({
  */
 export const dbGetPropertyOwnerAndRequesterPermissionLevel = async (userId, propertyId, usersTable,
   propertiesTable) => {
-  const permissionQueryRes = await dbConnection.dbConnect(`SELECT is_agent, is_admin FROM ${usersTable}
+  const permissionQueryRes = await dbConnection.dbConnect(`SELECT is_admin FROM ${usersTable}
     WHERE id = $1;`, [userId]);
   const ownerqueryRes = await dbConnection.dbConnect(`SELECT owner FROM ${propertiesTable}
     WHERE id = $1;`, [propertyId]);
   if (!ownerqueryRes.rowCount) return { error: true };
   return {
     propertyOwner: ownerqueryRes.rows[0].owner,
-    isAgent: permissionQueryRes.rows[0].is_agent,
     isAdmin: permissionQueryRes.rows[0].is_admin,
   };
 };
@@ -267,7 +268,7 @@ export const dbMarkPropertyAsSold = async (response, propertiesTable,
 export const dbUpdateProperty = async (response, body, propertiesTable,
   propertyId, usersTable) => {
   // Obtain supplied request fields to create a database query string and datasets
-  const entries = Object.entries(body);
+  const entries = Object.entries(body).filter(el => propertyEditableFields.includes(el[0]));
   let queryString = '';
   const querySet = [];
   entries.forEach((el, ind) => {

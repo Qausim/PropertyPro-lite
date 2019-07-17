@@ -5,6 +5,6 @@ import ResponseHelper from '../helpers/response_helper';
  * Calls @function next if no error
  */
 export default (error, request, response, next) => {
-  if (error) console.log(error);
+  if (error) return ResponseHelper.getInternalServerError(response);
   next();
 };
