@@ -78,7 +78,7 @@ URL: https://github.com/Qausim/PropertyPro-lite.git
 - Pull the [develop](https://github.com/Qausim/PropertyPro-lite.git) branch of this repository
 - Configure a `.env` file in the root directory with variables
   - **JWT_KEY** *(JWT secret key)*
-  - **CLOUDINARY_NAME** *(Cloudinary cloud name, have with a folder propertypro-lite)*
+  - **CLOUDINARY_NAME** *(Cloudinary cloud name, with a folder "propertypro-lite")*
   - **CLOUDINARY_KEY** *(Cloudinary API key)*
   - **CLOUDINARY_SECRET** *(Cloudinary API secret)*
   - **DATABASE_URL** *(PostgreSQL connection string)*
