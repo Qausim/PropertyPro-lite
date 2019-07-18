@@ -76,6 +76,16 @@ URL: https://github.com/Qausim/PropertyPro-lite.git
 
 **On your machine**
 - Pull the [develop](https://github.com/Qausim/PropertyPro-lite.git) branch of this repository
+- Configure a `.env` file in the root directory with variables
+  - **JWT_KEY** *(JWT secret key)*
+  - **CLOUDINARY_NAME** *(Cloudinary cloud name, have with a folder propertypro-lite)*
+  - **CLOUDINARY_KEY** *(Cloudinary API key)*
+  - **CLOUDINARY_SECRET** *(Cloudinary API secret)*
+  - **DATABASE_URL** *(PostgreSQL connection string)*
+  - **ADMIN_EMAIL** *(Email address for an admin user)*
+  - **ADMIN_PWD** *(Admin password)*
+  - **ADMIN_PHONE_NUMBER** *(Admin phone number)*
+  - **ADMIN_ADDRESS** *(Admin address)*
 - Run `npm install` to install all dependencies
 - Run `npm run server` to start the app
 - Access endpoints on **localhost:3000**
