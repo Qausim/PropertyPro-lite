@@ -53,7 +53,7 @@ export const signup = (request, response) => {
  * @param response
  */
 export const signin = (request, response) => {
-  const signinErrorMessage = 'Incorrect email or password';
+  const signinErrorMessage = 'Invalid email or password';
   const { email, password } = request.body;
 
   if (!isValidEmail(email) || !isValidPassword(password)) {
