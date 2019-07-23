@@ -30,6 +30,16 @@ export const isEmpty = field => field.length === 0;
  */
 export const isValidPhoneNumber = phone => /^\d{11,}$/.test(phone);
 
+
+/**
+ * Checks if a given string value contains special characters (i.e.
+ *  any of +/*$^()[]{}\|~`&!@#%_=:;"'<>,.?) or invalid character-hyphen combination
+ * for names.
+ * @param {string} name
+ * @returns {string} error message
+ */
+const hasInvalidSpecialCharacterCombination = name => /[+/*$^()[\]{}\\|~`&!@#%_=:;"'<>,.?]|(^-)|(-$)|(^-$)|(-{2,})/g.test(name);
+
 /**
 * Signs and returns an authentication token
 * @param {string} email
@@ -57,8 +67,12 @@ export const getSignUpError = ({
     errorMsg = 'Invalid password';
   } else if (!first_name || isEmpty(first_name)) {
     errorMsg = 'First name is required';
+  } else if (hasInvalidSpecialCharacterCombination(first_name)) {
+    errorMsg = 'Invalid special character combination in first name';
   } else if (!last_name || isEmpty(last_name)) {
     errorMsg = 'Last name is required';
+  } else if (hasInvalidSpecialCharacterCombination(last_name)) {
+    errorMsg = 'Invalid special character combination in last name';
   } else if ((!address || isEmpty(address)) && is_agent) {
     errorMsg = 'Address is required for agents';
   } else if (!isValidPhoneNumber(phone_number) && is_agent) {
