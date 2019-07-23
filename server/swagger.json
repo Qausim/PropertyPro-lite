@@ -9,7 +9,7 @@
     },
     "license": {
       "name": "MIT",
-      "url": "propertyprolite-api.herokuapp.com"
+      "url": "localhost:3000"
     }
   },
   "host": "",
@@ -91,11 +91,11 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "Success"
           },
-          "400": {
-            "description": "Invalid field(s), empty required field(s) or non existing account"
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Server error"
