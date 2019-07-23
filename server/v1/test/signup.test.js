@@ -116,6 +116,70 @@ export default () => {
       expect(res.body.data.last_name).to.equal(data.last_name);
       expect(res.body.data.is_agent).to.equal(data.is_agent);
     });
+
+
+    it('should create a new user with hyphenated first name', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Bolaji-Esan',
+        last_name: 'Ige',
+        password: '123456',
+        is_agent: false,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(201);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.have.property('id');
+      expect(res.body.data).to.have.property('email');
+      expect(res.body.data).to.have.property('first_name');
+      expect(res.body.data).to.have.property('last_name');
+      expect(res.body.data).to.have.property('token');
+      expect(res.body.data).to.have.property('is_admin');
+      expect(res.body.data).to.have.property('is_agent');
+      expect(res.body.data.email).to.equal(data.email);
+      expect(res.body.data.first_name).to.equal(data.first_name);
+      expect(res.body.data.last_name).to.equal(data.last_name);
+      expect(res.body.data.is_agent).to.equal(data.is_agent);
+    });
+
+
+    it('should create a new user with hyphenated last name', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Bolaji-Esan',
+        password: '123456',
+        is_agent: false,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(201);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+      expect(res.body.data).to.have.property('id');
+      expect(res.body.data).to.have.property('email');
+      expect(res.body.data).to.have.property('first_name');
+      expect(res.body.data).to.have.property('last_name');
+      expect(res.body.data).to.have.property('token');
+      expect(res.body.data).to.have.property('is_admin');
+      expect(res.body.data).to.have.property('is_agent');
+      expect(res.body.data.email).to.equal(data.email);
+      expect(res.body.data.first_name).to.equal(data.first_name);
+      expect(res.body.data.last_name).to.equal(data.last_name);
+      expect(res.body.data.is_agent).to.equal(data.is_agent);
+    });
   });
 
 
@@ -217,6 +281,30 @@ export default () => {
     });
 
 
+    it('should fail to create a new user due to special character in first name', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Olajide--Esan',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid special character combination in first name');
+    });
+
+
     it('should fail to create a new user with empty last name', async () => {
       const data = {
         email: 'akin.i@example.com',
@@ -238,6 +326,30 @@ export default () => {
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.equal('Last name is required');
+    });
+
+
+    it('should fail to create a new user due to special character in last name', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Seyi',
+        last_name: 'Olajide--Esan',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid special character combination in last name');
     });
 
 
