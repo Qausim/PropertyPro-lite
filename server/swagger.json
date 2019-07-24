@@ -54,7 +54,7 @@
             "description": "Success"
           },
           "400": {
-            "description": "Invalid input or empty required field"
+            "description": "Invalid fields or empty required fields"
           },
           "409": {
             "description": "Email conflicts with existing an account"
@@ -93,6 +93,9 @@
         "responses": {
           "200": {
             "description": "Success"
+          },
+          "400": {
+            "description": "Invalid or empty fields"
           },
           "401": {
             "description": "Unauthorized"
