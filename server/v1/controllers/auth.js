@@ -5,17 +5,16 @@ import ResponseHelper from '../helpers/response_helper';
 import {
   getSignUpError,
   getToken,
-  isValidEmail,
-  isValidPassword,
   createUser,
   reformatUserData,
+  getSigninError,
 } from '../helpers/auth';
 import '../config/db_tables_config';
 
 const usersTable = process.env.USERS_TABLE;
 
 /**
- * Handles POST /api/v1/auth/signup requests
+ * Handles signup requests
  * Calls @function getSignUpError, @function createUser
  *
  * @param {*} request
@@ -45,25 +44,23 @@ export const signup = (request, response) => {
 
 
 /**
- * Handles singin request and returns a user object if successful
- * else an error message. Error message is kept consistent so
- * behaviour cannot be guessed.
+ * Handles singin requests
+ * Calls @function getSigninError, @function getToken
  *
  * @param request
  * @param response
  */
 export const signin = (request, response) => {
-  const signinErrorMessage = 'Invalid email or password';
+  const genericError = 'Incorrect email or password';
   const { email, password } = request.body;
+  const errorMessage = getSigninError(email, password);
 
-  if (!isValidEmail(email) || !isValidPassword(password)) {
-    return ResponseHelper.getUnauthorizedErrorResponse(response, signinErrorMessage);
-  }
+  if (errorMessage) return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
 
   dbConnection.dbConnect(`SELECT * FROM ${usersTable} WHERE email = $1`, [email])
     .then((res) => {
       if (!res.rowCount) {
-        return ResponseHelper.getUnauthorizedErrorResponse(response, signinErrorMessage);
+        return ResponseHelper.getUnauthorizedErrorResponse(response, genericError);
       }
 
       const user = res.rows[0];
@@ -72,7 +69,7 @@ export const signin = (request, response) => {
           user.token = getToken(email, user.id);
           return ResponseHelper.getSuccessResponse(response, reformatUserData(user));
         }
-        return ResponseHelper.getUnauthorizedErrorResponse(response, signinErrorMessage);
+        ResponseHelper.getUnauthorizedErrorResponse(response, genericError);
       });
     })
     .catch(() => ResponseHelper.getInternalServerError(response));

@@ -11,7 +11,7 @@ import { isString, isNumber, hasNumber } from './property';
  * @param {string} email
  * @returns {boolean}
  */
-export const isValidEmail = email => /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/
+const isValidEmail = email => /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/
   .test(email);
 
 /**
@@ -19,22 +19,21 @@ export const isValidEmail = email => /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D
  * @param {string} password
  * @returns {boolean}
  */
-export const isValidPassword = password => password.length > 5;
+const isValidPassword = password => password.length > 5;
 
 /**
  * Validates if a given argument is an empty string
  * @param {string} field
  * @returns {boolean}
  */
-export const isEmpty = field => field.length === 0;
+const isEmpty = field => field.length === 0;
 
 /**
  * Validates if a given string argument is all digits and 11 characters long
  * @param {string} phone
  * @returns {boolean}
  */
-export const isValidPhoneNumber = phone => /^\d{11}$/.test(phone);
-
+const isValidPhoneNumber = phone => /^\d{11}$/.test(phone);
 
 /**
  * Checks if a given string value contains special characters (i.e.
@@ -44,7 +43,6 @@ export const isValidPhoneNumber = phone => /^\d{11}$/.test(phone);
  * @returns {boolean}
  */
 const hasInvalidSpecialCharacterCombination = name => /[+/*$^()[\]{}\\|~`&!@#%_=:;"'<>,.?]|(^-)|(-$)|(^-$)|(-{2,})/g.test(name);
-
 
 /**
 * Signs and returns an authentication token
@@ -155,7 +153,7 @@ const getPhoneError = (phone, isAgent) => {
 
 
 /**
- * Checks the request body properties for invalid values and returns
+ * Checks the signup request fields for invalid values and returns
  * an appropriate error message.
  * Calls @function getEmailError, @function getPasswordError, @function getNameError,
  * @function getAddressError, @function getPhoneError
@@ -169,6 +167,23 @@ export const getSignUpError = ({
   const errors = [
     getEmailError(email), getPasswordError(password), getNameError(first_name, last_name),
     getAddressError(address, is_agent), getPhoneError(phone_number, is_agent),
+  ];
+  const errorMessage = errors.find(el => el !== null);
+  return errorMessage;
+};
+
+
+/**
+ * Checks signin request fields for invalid values and returns an appropriate
+ * error message or null
+ *
+ * @param {string} email
+ * @param {string} password
+ * @returns {string | undefined} errorMessage
+ */
+export const getSigninError = (email, password) => {
+  const errors = [
+    getEmailError(email), getPasswordError(password),
   ];
   const errorMessage = errors.find(el => el !== null);
   return errorMessage;
