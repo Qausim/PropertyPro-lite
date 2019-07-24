@@ -10,7 +10,7 @@ const propertyEditableFields = ['price', 'type', 'state', 'city', 'address'];
  *
  * @returns {boolean}
  */
-const isString = value => typeof value === 'string';
+export const isString = value => typeof value === 'string';
 
 
 /**
@@ -30,7 +30,7 @@ export const isNumber = value => typeof value === 'number'
  *
  * @returns {boolean}
  */
-const hasNumber = value => /\d/.test(value);
+export const hasNumber = value => /\d/.test(value);
 
 
 /**
