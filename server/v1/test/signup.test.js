@@ -209,6 +209,76 @@ export default () => {
     });
 
 
+    it('should fail to create a new user with no email field supplied', async () => {
+      const data = {
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Email cannot be empty');
+    });
+
+    it('should fail to create a new user with empty email string', async () => {
+      const data = {
+        email: '',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Email cannot be empty');
+    });
+
+
+    it('should fail to create a new user with non-string email value', async () => {
+      const data = {
+        email: 10,
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Email should be a string value');
+    });
+
+
     it('should fail to create a new user with invalid email', async () => {
       const data = {
         email: 'akin.i@example',
@@ -229,11 +299,34 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Invalid email');
+      expect(res.body.error).to.equal('Invalid email address');
     });
 
 
-    it('should fail to create a new user due with invalid password', async () => {
+    it('should fail to create a new user due with no password field supplied', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Password cannot be empty');
+    });
+
+
+    it('should fail to create a new user due with empty password string', async () => {
       const data = {
         email: 'akin.i@example.com',
         first_name: 'Akin',
@@ -253,11 +346,82 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Invalid password');
+      expect(res.body.error).to.equal('Password cannot be empty');
     });
 
 
-    it('should fail to create a new user with empty first name', async () => {
+    it('should fail to create a new user due with non-string password value', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: 10,
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Password should be a string value');
+    });
+
+
+    it('should fail to create a new user due with less than 6 characters password', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '12345',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Password should be at least six characters long');
+    });
+
+
+    it('should fail to create a new user with no first name supplied', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('First name cannot be empty');
+    });
+
+
+    it('should fail to create a new user with empty first name string', async () => {
       const data = {
         email: 'akin.i@example.com',
         first_name: '',
@@ -277,7 +441,55 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('First name is required');
+      expect(res.body.error).to.equal('First name cannot be empty');
+    });
+
+
+    it('should fail to create a new user with non-string first name value', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 10,
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('First name should be a string value');
+    });
+
+
+    it('should fail to create a new user with first name constaining numbers', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Ade9',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('First name should not contain a number');
     });
 
 
@@ -305,7 +517,30 @@ export default () => {
     });
 
 
-    it('should fail to create a new user with empty last name', async () => {
+    it('should fail to create a new user with no last name supplied', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Last name cannot be empty');
+    });
+
+
+    it('should fail to create a new user with empty last name string', async () => {
       const data = {
         email: 'akin.i@example.com',
         first_name: 'Akin',
@@ -325,7 +560,55 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Last name is required');
+      expect(res.body.error).to.equal('Last name cannot be empty');
+    });
+
+
+    it('should fail to create a new user with non-string last name value', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 10,
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Last name should be a string value');
+    });
+
+
+    it('should fail to create a new user with first name constaining numbers', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige1',
+        phone_number: '08000000000',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Last name should not contain a number');
     });
 
 
@@ -353,6 +636,29 @@ export default () => {
     });
 
 
+    it('should fail to create a new agent with no phone number field supplied', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Phone number is required for agents');
+    });
+
+
     it('should fail to create a new agent with empty phone number', async () => {
       const data = {
         email: 'akin.i@example.com',
@@ -377,7 +683,126 @@ export default () => {
     });
 
 
-    it('should fail to create a new agent with empty address', async () => {
+    it('should fail to create a new user with non-string phone number', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: 10,
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: false,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Phone number should be a string value');
+    });
+
+
+    it('should fail to create a new agent with non-string phone number', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: 10,
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Phone number should be a string value');
+    });
+
+
+    it('should fail to create a new user with invalid phone number', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '090829',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: false,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid phone number');
+    });
+
+
+    it('should fail to create a new agent with invalid phone number', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '090829',
+        address: 'Dopemu, Lagos',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Invalid phone number');
+    });
+
+
+    it('should fail to create a new agent with no address field supplied', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Address is required for agents');
+    });
+
+
+    it('should fail to create a new agent with empty address string', async () => {
       const data = {
         email: 'akin.i@example.com',
         first_name: 'Akin',
@@ -398,6 +823,102 @@ export default () => {
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
       expect(res.body.error).to.equal('Address is required for agents');
+    });
+
+
+    it('should fail to create a new user with non-string address', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 10,
+        password: '123456',
+        is_agent: false,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Address should be a string value');
+    });
+
+
+    it('should fail to create a new agent with non-string phone number', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: 10,
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Address should be a string value');
+    });
+
+
+    it('should fail to create a new user with an all number address', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: '01995',
+        password: '123456',
+        is_agent: false,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Address cannot be all numbers');
+    });
+
+
+    it('should fail to create a new agent with an all number address', async () => {
+      const data = {
+        email: 'akin.i@example.com',
+        first_name: 'Akin',
+        last_name: 'Ige',
+        phone_number: '08000000000',
+        address: '01995',
+        password: '123456',
+        is_agent: true,
+      };
+
+      const res = await chai.request(app)
+        .post(signupUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Address cannot be all numbers');
     });
   });
 };
