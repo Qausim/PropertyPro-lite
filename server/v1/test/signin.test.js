@@ -89,7 +89,60 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Invalid email or password');
+      expect(res.body.error).to.equal('Incorrect email or password');
+    });
+
+    it('should fail to log in a user with no email field in request', async () => {
+      const data = {
+        password: '123456',
+      };
+
+      const res = await chai.request(app)
+        .post(signinUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Email cannot be empty');
+    });
+
+    it('should fail to log in a user with empty email string', async () => {
+      const data = {
+        email: '',
+        password: '123456',
+      };
+
+      const res = await chai.request(app)
+        .post(signinUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Email cannot be empty');
+    });
+
+    it('should fail to log in a user with non-string email value', async () => {
+      const data = {
+        email: 10,
+        password: '123456',
+      };
+
+      const res = await chai.request(app)
+        .post(signinUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Email should be a string value');
     });
 
     it('should fail to log in a user with invalid email format', async () => {
@@ -102,12 +155,12 @@ export default () => {
         .post(signinUrl)
         .send(data);
 
-      expect(res.status).to.equal(401);
+      expect(res.status).to.equal(400);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Invalid email or password');
+      expect(res.body.error).to.equal('Invalid email address');
     });
 
     it('should fail to log in a user with incorrect password', async () => {
@@ -125,7 +178,78 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Invalid email or password');
+      expect(res.body.error).to.equal('Incorrect email or password');
+    });
+
+    it('should fail to log in a user with no password field in request', async () => {
+      const data = {
+        email: user.email,
+      };
+
+      const res = await chai.request(app)
+        .post(signinUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Password cannot be empty');
+    });
+
+    it('should fail to log in a user with empty password string', async () => {
+      const data = {
+        email: user.email,
+        password: '',
+      };
+
+      const res = await chai.request(app)
+        .post(signinUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Password cannot be empty');
+    });
+
+    it('should fail to log in a user with non-string password value', async () => {
+      const data = {
+        email: user.email,
+        password: 10,
+      };
+
+      const res = await chai.request(app)
+        .post(signinUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Password should be a string value');
+    });
+
+    it('should fail to log in a user with a too short password', async () => {
+      const data = {
+        email: user.email,
+        password: 'abcde',
+      };
+
+      const res = await chai.request(app)
+        .post(signinUrl)
+        .send(data);
+
+      expect(res.status).to.equal(400);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('status');
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+      expect(res.body.error).to.equal('Password should be at least six characters long');
     });
   });
 };
