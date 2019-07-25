@@ -10,7 +10,7 @@ const propertyEditableFields = ['price', 'type', 'state', 'city', 'address'];
  *
  * @returns {boolean}
  */
-const isString = value => typeof value === 'string';
+export const isString = value => typeof value === 'string';
 
 
 /**
@@ -30,7 +30,20 @@ export const isNumber = value => typeof value === 'number'
  *
  * @returns {boolean}
  */
-const hasNumber = value => /\d/.test(value);
+export const hasNumber = value => /\d/.test(value);
+
+
+/**
+ * Checks the body of a property update request if it contains an "id"
+ * or/and an "owner" field
+ * @param {object} body
+ *
+ * @returns {boolean}
+ */
+export const hasForbiddenField = (body) => {
+  const keys = Object.keys(body);
+  return keys.includes('id') || keys.includes('owner');
+};
 
 
 /**
@@ -46,14 +59,22 @@ export const getCreatePropertyError = ({
   type, state, city, address, price,
 }) => {
   let errorMessage;
-  if (!isString(type)) errorMessage = 'Invalid type field';
-  else if (!state) errorMessage = 'State is required';
-  else if (!isString(state) || hasNumber(state)) errorMessage = 'Invalid state field';
-  else if (!city) errorMessage = 'City is required';
-  else if (!isString(city) || hasNumber(city)) errorMessage = 'Invalid city field';
-  else if (!address) errorMessage = 'Address is required';
-  else if (!isString(address) || isNumber(address)) errorMessage = 'Invalid address field';
-  else if (!parseFloat(price) || !isNumber(price)) errorMessage = 'Invalid, zero or empty price field';
+  if (!type) errorMessage = 'Type field is required';
+  else if (!isString(type)) errorMessage = 'Type field must be a string';
+  else if (!type.trim()) errorMessage = 'Type field is required';
+  else if (isNumber(type)) errorMessage = 'Type field cannot be all number';
+  else if (!state) errorMessage = 'State field is required';
+  else if (!isString(state) || !state.trim() || hasNumber(state)) {
+    errorMessage = 'State field must be a non-empty string and must not contain a number';
+  } else if (!city) errorMessage = 'City field is required';
+  else if (!isString(city) || !city.trim() || hasNumber(city)) {
+    errorMessage = 'City field must be a non-empty string and must not contain a number';
+  } else if (!address) errorMessage = 'Address field is required';
+  else if (!isString(address) || !address.trim() || isNumber(address)) {
+    errorMessage = 'Address field must be a non-empty string and must not be all number';
+  } else if (!price || !isNumber(price) || !parseFloat(price)) {
+    errorMessage = 'Price field is required and must be a number above zero';
+  }
 
   return errorMessage;
 };
@@ -114,66 +135,56 @@ export const getOnlyPropertyDetails = property => ({
  * @param {*} response
  * @param {Array} properties
  * @param {string} queryText
- *
  * @returns {response}
  */
 export const filterPropertiesByType = async (response, queryText, propertiesTable, usersTable) => {
   const trimmedText = queryText.trim();
   if (!trimmedText) {
-    return ResponseHelper.getBadRequestErrorResponse(response, 'Empty query text');
+    return (() => ResponseHelper.getBadRequestErrorResponse(response, 'Empty query text'));
   }
 
   const { rows } = await dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE type
   ilike '%${trimmedText}%';`);
   const promisedProperties = rows.map(property => getFullPropertyDetails(property, usersTable));
   const data = await Promise.all(promisedProperties);
-  return ResponseHelper.getSuccessResponse(response, data);
+  return (() => ResponseHelper.getSuccessResponse(response, data));
 };
 
 
 /**
  * Checks through the body of a property update request for empty
- * required fields, and invalid fields
- * @param {object}
+ * required fields, and invalid fields.
+ * Calls @function isString, @function isNumber, @function hasNumber
  *
+ * @param {object}
  * @returns {string | undefined}
  */
-export const getUpdatePropertyError = ({
-  type, state, city, address, price,
-}) => {
+export const getUpdatePropertyError = (body) => {
   let errorMessage;
-  // if there's an empty type field
-  if (isString(type) && !type.trim()) errorMessage = 'Type cannot be empty';
-  // there's an empty state field
-  else if (isString(state) && !state.trim()) errorMessage = 'State cannot be empty';
-  // if there's an invalid state field
-  else if (state && (!isString(state) || hasNumber(state))) errorMessage = 'Invalid state field';
-  // there's an empty city field
-  else if (isString(city) && !city.trim()) errorMessage = 'City cannot be empty';
-  // there's an invalid city field
-  else if (city && (!isString(city) || hasNumber(city))) errorMessage = 'Invalid city field';
-  // there's an empty address field
-  else if (isString(address) && !address.trim()) errorMessage = 'Address cannot be empty';
-  // there's an invalid address field
-  else if (address && (!isString(address) || isNumber(address))) errorMessage = 'Invalid address field';
-  // price field is: '' | non-number | <= 0
-  else if (price !== undefined && (
-    price === '' || !isNumber(price) || parseFloat(price) <= 0)) errorMessage = 'Invalid, zero or empty price field';
-
+  const {
+    type, state, city, address, price,
+  } = body;
+  if (hasForbiddenField(body)) errorMessage = 'You cannot update property fields "id" and "owner"';
+  else if (type !== undefined) {
+    if (!isString(type)) errorMessage = 'Type field must be a string value';
+    else if (!type.trim()) errorMessage = 'Type field cannot be updated with an empty value';
+    else if (isNumber(type)) errorMessage = 'Type field cannot be all number';
+  } else if (state !== undefined) {
+    if (!isString(state)) errorMessage = 'State field must be a string value';
+    else if (!state.trim()) errorMessage = 'State field cannot be updated with an empty value';
+    else if (hasNumber(state)) errorMessage = 'State field cannot contain a number';
+  } else if (city !== undefined) {
+    if (!isString(city)) errorMessage = 'City field must be a string value';
+    else if (!city.trim()) errorMessage = 'City field cannot be updated with an empty value';
+    else if (hasNumber(city)) errorMessage = 'City field cannot contain a number';
+  } else if (address !== undefined) {
+    if (!isString(address)) errorMessage = 'Address field must be a string value';
+    else if (!address.trim()) errorMessage = 'Address field cannot be updated with an empty value';
+    else if (isNumber(address)) errorMessage = 'Address field cannot be all number';
+  } else if (price !== undefined && (!isNumber(price) || parseFloat(price) <= 0)) {
+    errorMessage = 'Price field must be a non-zero positive number';
+  }
   return errorMessage;
-};
-
-
-/**
- * Checks the body of a property update request if it contains an "id"
- * or/and an "owner" field
- * @param {object} body
- *
- * @returns {boolean}
- */
-export const hasForbiddenField = (body) => {
-  const keys = Object.keys(body);
-  return keys.includes('id') || keys.includes('owner');
 };
 
 
@@ -292,6 +303,14 @@ export const dbUpdateProperty = async (response, body, propertiesTable,
 };
 
 
+/**
+ * Deletes a property record from the database
+ *
+ * @param {*} response
+ * @param {number} propertyId
+ * @param {string} propertiesTable
+ * @returns {Promise} a function that can be invoked
+ */
 export const dbDeleteProperty = async (response, propertyId, propertiesTable) => dbConnection
   .dbConnect(`DELETE FROM ${propertiesTable} WHERE id = $1;`, [propertyId])
   .then((res) => {

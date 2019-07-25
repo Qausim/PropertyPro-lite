@@ -360,37 +360,123 @@ export default () => {
         expect(res.body.error).to.equal('Invalid property id');
       });
 
-    it('should fail to update property ad with empty type', async () => {
-      const res = await chai.request(app)
-        .patch(`${propertyUrl}/${propertyEntries[1].id}`)
-        .set('Content-Type', 'multipart/form-data')
-        .set('Authorization', `Bearer ${agentOne.token}`)
-        .field('type', '');
+    it('should fail to update property ad with a non-string type value',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .send({ type: 33 });
 
-      expect(res.status).to.equal(400);
-      expect(res.body).to.be.an('object');
-      expect(res.body).to.have.property('status');
-      expect(res.body.status).to.equal('error');
-      expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Type cannot be empty');
-    });
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Type field must be a string value');
+      });
 
-    it('should fail to update property ad with empty state', async () => {
-      const res = await chai.request(app)
-        .patch(`${propertyUrl}/${propertyEntries[1].id}`)
-        .set('Content-Type', 'multipart/form-data')
-        .set('Authorization', `Bearer ${agentOne.token}`)
-        .field('state', '');
+    it('should fail to update property ad with empty type field',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('type', '');
 
-      expect(res.status).to.equal(400);
-      expect(res.body).to.be.an('object');
-      expect(res.body).to.have.property('status');
-      expect(res.body.status).to.equal('error');
-      expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('State cannot be empty');
-    });
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Type field cannot be updated with an empty value');
+      });
 
-    it('should fail to update property ad with invalid state field',
+    it('should fail to update property ad with empty but spaced type field',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('type', '   ');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Type field cannot be updated with an empty value');
+      });
+
+    it('should fail to update property ad with all number type string',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('type', '33');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Type field cannot be all number');
+      });
+
+    it('should fail to update property ad with a non-string state value',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .send({ state: 33 });
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('State field must be a string value');
+      });
+
+    it('should fail to update property ad with empty state string',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('state', '');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('State field cannot be updated with an empty value');
+      });
+
+    it('should fail to update property ad with empty but spaced state string',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('state', '  ');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('State field cannot be updated with an empty value');
+      });
+
+    it('should fail to update property ad with a state value containing a number',
       async () => {
         const res = await chai.request(app)
           .patch(`${propertyUrl}/${propertyEntries[1].id}`)
@@ -403,69 +489,156 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid state field');
+        expect(res.body.error).to.equal('State field cannot contain a number');
       });
 
-    it('should fail to update property ad with empty city', async () => {
-      const res = await chai.request(app)
-        .patch(`${propertyUrl}/${propertyEntries[1].id}`)
-        .set('Content-Type', 'multipart/form-data')
-        .set('Authorization', `Bearer ${agentOne.token}`)
-        .field('city', '');
-
-      expect(res.status).to.equal(400);
-      expect(res.body).to.be.an('object');
-      expect(res.body).to.have.property('status');
-      expect(res.body.status).to.equal('error');
-      expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('City cannot be empty');
-    });
-
-    it('should fail to update property ad with invalid city field',
+    it('should fail to update property ad with a non-string city value',
       async () => {
         const res = await chai.request(app)
           .patch(`${propertyUrl}/${propertyEntries[1].id}`)
-          .set('Content-Type', 'multipart/form-data')
           .set('Authorization', `Bearer ${agentOne.token}`)
-          .field('city', '99 Lagos');
+          .send({ city: 33 });
 
         expect(res.status).to.equal(400);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid city field');
+        expect(res.body.error).to.equal('City field must be a string value');
       });
 
-    it('should fail to update property ad with empty address', async () => {
-      const res = await chai.request(app)
-        .patch(`${propertyUrl}/${propertyEntries[1].id}`)
-        .set('Content-Type', 'multipart/form-data')
-        .set('Authorization', `Bearer ${agentOne.token}`)
-        .field('address', '');
-
-      expect(res.status).to.equal(400);
-      expect(res.body).to.be.an('object');
-      expect(res.body).to.have.property('status');
-      expect(res.body.status).to.equal('error');
-      expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Address cannot be empty');
-    });
-
-    it('should fail to update property ad with all number address field',
+    it('should fail to update property ad with empty city string',
       async () => {
         const res = await chai.request(app)
           .patch(`${propertyUrl}/${propertyEntries[1].id}`)
           .set('Content-Type', 'multipart/form-data')
           .set('Authorization', `Bearer ${agentOne.token}`)
-          .field('address', '876776577');
+          .field('city', '');
 
         expect(res.status).to.equal(400);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid address field');
+        expect(res.body.error).to
+          .equal('City field cannot be updated with an empty value');
+      });
+
+    it('should fail to update property ad with empty but spaced city string',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('city', '  ');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('City field cannot be updated with an empty value');
+      });
+
+    it('should fail to update property ad with a city value containing a number',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('city', '99 Oyo');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('City field cannot contain a number');
+      }); // *********************
+
+    it('should fail to update property ad with a non-string address value',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .send({ address: 33 });
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Address field must be a string value');
+      });
+
+    it('should fail to update property ad with empty address field',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('address', '');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Address field cannot be updated with an empty value');
+      });
+
+    it('should fail to update property ad with empty but spaced address field',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('address', '   ');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Address field cannot be updated with an empty value');
+      });
+
+    it('should fail to update property ad with all number address string',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('address', '33');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Address field cannot be all number');
+      });
+
+    it('should fail to update property ad with non-number price value',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('price', 'adf');
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Price field must be a non-zero positive number');
       });
 
     it('should fail to update property ad with empty price', async () => {
@@ -480,24 +653,9 @@ export default () => {
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('Invalid, zero or empty price field');
+      expect(res.body.error).to
+        .equal('Price field must be a non-zero positive number');
     });
-
-    it('should fail to update property ad with invalid price',
-      async () => {
-        const res = await chai.request(app)
-          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
-          .set('Content-Type', 'multipart/form-data')
-          .set('Authorization', `Bearer ${agentOne.token}`)
-          .field('price', '3928df');
-
-        expect(res.status).to.equal(400);
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('status');
-        expect(res.body.status).to.equal('error');
-        expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid, zero or empty price field');
-      });
 
     it('should fail to update property ad with zero price',
       async () => {
@@ -512,7 +670,25 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid, zero or empty price field');
+        expect(res.body.error).to
+          .equal('Price field must be a non-zero positive number');
+      });
+
+    it('should fail to update property ad with negative price',
+      async () => {
+        const res = await chai.request(app)
+          .patch(`${propertyUrl}/${propertyEntries[1].id}`)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agentOne.token}`)
+          .field('price', -2220);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Price field must be a non-zero positive number');
       });
 
     it('should fail to update property id', async () => {
@@ -522,12 +698,13 @@ export default () => {
         .set('Authorization', `Bearer ${agentOne.token}`)
         .field('id', 1);
 
-      expect(res.status).to.equal(403);
+      expect(res.status).to.equal(400);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('You cannot update fields "id" and "owner"');
+      expect(res.body.error).to
+        .equal('You cannot update property fields "id" and "owner"');
     });
 
     it('should fail to update property owner', async () => {
@@ -537,12 +714,13 @@ export default () => {
         .set('Authorization', `Bearer ${agentOne.token}`)
         .field('owner', 2);
 
-      expect(res.status).to.equal(403);
+      expect(res.status).to.equal(400);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('status');
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
-      expect(res.body.error).to.equal('You cannot update fields "id" and "owner"');
+      expect(res.body.error).to
+        .equal('You cannot update property fields "id" and "owner"');
     });
   });
 };

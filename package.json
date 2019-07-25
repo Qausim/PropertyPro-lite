@@ -4,7 +4,7 @@
   "description": "PropertyPro-lite is a property listing site where people can create and/or search properties for sale or rent",
   "main": "server.js",
   "scripts": {
-    "lint": "eslint ./server --fix",
+    "lint": "eslint ./server/v1 --fix",
     "start": "node server/build/server.js",
     "build": "npm run clean && babel server -d server/build ./server/v1 -s",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && nyc mocha -r @babel/polyfill -r @babel/core -r @babel/register ./server/v1/test/index.test.js --timeout 30000 --exit",

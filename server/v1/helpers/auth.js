@@ -3,40 +3,44 @@ import jwt from 'jsonwebtoken';
 
 import dbConnection from '../db/database';
 import User from '../models/user';
+import { isString, isNumber, hasNumber } from './property';
 
 
 /**
  * Validates a given string argument is a valid email address.
  * @param {string} email
+ * @returns {boolean}
  */
-export const isValidEmail = email => /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/
+const isValidEmail = email => /^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$/
   .test(email);
 
 /**
  * Validates if a given given string argument is at least 6 characters long
  * @param {string} password
+ * @returns {boolean}
  */
-export const isValidPassword = password => password.length > 5;
+const isValidPassword = password => password.length > 5;
 
 /**
  * Validates if a given argument is an empty string
  * @param {string} field
+ * @returns {boolean}
  */
-export const isEmpty = field => field.length === 0;
+const isEmpty = field => field.length === 0;
 
 /**
  * Validates if a given string argument is all digits and 11 characters long
  * @param {string} phone
+ * @returns {boolean}
  */
-export const isValidPhoneNumber = phone => /^\d{11,}$/.test(phone);
-
+const isValidPhoneNumber = phone => /^\d{11}$/.test(phone);
 
 /**
  * Checks if a given string value contains special characters (i.e.
  *  any of +/*$^()[]{}\|~`&!@#%_=:;"'<>,.?) or invalid character-hyphen combination
  * for names.
  * @param {string} name
- * @returns {string} error message
+ * @returns {boolean}
  */
 const hasInvalidSpecialCharacterCombination = name => /[+/*$^()[\]{}\\|~`&!@#%_=:;"'<>,.?]|(^-)|(-$)|(^-$)|(-{2,})/g.test(name);
 
@@ -44,6 +48,8 @@ const hasInvalidSpecialCharacterCombination = name => /[+/*$^()[\]{}\\|~`&!@#%_=
 * Signs and returns an authentication token
 * @param {string} email
 * @param {number} userId
+*
+* @returns {string} token
 */
 export const getToken = (email, userId) => jwt.sign({
   email, userId,
@@ -52,34 +58,135 @@ process.env.JWT_KEY);
 
 
 /**
- * Checks the request body properties for invalid values and returns
+ * Validates an email address
+ * Calls @function isEmpty, @function isString, @function isValidEmail
+ *
+ * @param {string} email
+ * @returns {string | null} error
+ */
+const getEmailError = (email) => {
+  let error = null;
+  if (!email || isEmpty(email)) error = 'Email cannot be empty';
+  else if (!isString(email)) error = 'Email should be a string value';
+  else if (!isValidEmail(email)) error = 'Invalid email address';
+  return error;
+};
+
+
+/**
+ * Validates a password value
+ * Calls @function isEmpty, @function isString, @function isValidPassword
+ *
+ * @param {string} password
+ * @returns {string | null} error
+ */
+const getPasswordError = (password) => {
+  let error = null;
+  if (!password || isEmpty(password)) error = 'Password cannot be empty';
+  else if (!isString(password)) error = 'Password should be a string value';
+  else if (!isValidPassword(password)) error = 'Password should be at least six characters long';
+  return error;
+};
+
+
+/**
+ * Validates user's first and last names
+ * Calls @function isEmpty, @function isString, @function hasNumber,
+ * @function hasInvalidSpecialCharacterCombination
+ *
+ * @param {string} firstName
+ * @param {string} lastName
+ * @returns {string | null} error
+ */
+const getNameError = (firstName, lastName) => {
+  let error = null;
+  if (!firstName || isEmpty(firstName)) error = 'First name cannot be empty';
+  else if (!isString(firstName)) error = 'First name should be a string value';
+  else if (hasNumber(firstName)) error = 'First name should not contain a number';
+  else if (hasInvalidSpecialCharacterCombination(firstName)) {
+    error = 'Invalid special character combination in first name';
+  } else if (!lastName || isEmpty(lastName)) error = 'Last name cannot be empty';
+  else if (!isString(lastName)) error = 'Last name should be a string value';
+  else if (hasNumber(lastName)) error = 'Last name should not contain a number';
+  else if (hasInvalidSpecialCharacterCombination(lastName)) {
+    error = 'Invalid special character combination in last name';
+  }
+
+  return error;
+};
+
+
+/**
+ * Validates the address if in the required format and if supplied when required
+ * Calls @function isEmpty, @function isString, @function isNumber
+ *
+ * @param {string} address
+ * @param {boolean} isAgent
+ * @returns {string | null} error
+ */
+const getAddressError = (address, isAgent) => {
+  let error = null;
+  if (isAgent && (!address || isEmpty(address))) error = 'Address is required for agents';
+  else if (address && !isString(address)) error = 'Address should be a string value';
+  else if (address && isNumber(address)) error = 'Address cannot be all numbers';
+
+  return error;
+};
+
+
+/**
+ * Validates the address if in the required format and if supplied when required
+ * @function isEmpty, @function isString, @function isValidPhoneNumber
+ *
+ * @param {string} phone
+ * @param {boolean} isAgent
+ * @returns {string | null} error
+ */
+const getPhoneError = (phone, isAgent) => {
+  let error = null;
+  if (isAgent && (!phone || isEmpty(phone))) error = 'Phone number is required for agents';
+  else if (phone && !isString(phone)) error = 'Phone number should be a string value';
+  else if (phone && !isValidPhoneNumber(phone)) error = 'Invalid phone number';
+
+  return error;
+};
+
+
+/**
+ * Checks the signup request fields for invalid values and returns
  * an appropriate error message.
- * Calls @function isValidEmail, @function isValidPassword,
- * @function isEmpty, and @function isValidPhoneNumber
+ * Calls @function getEmailError, @function getPasswordError, @function getNameError,
+ * @function getAddressError, @function getPhoneError
+ *
+ * @param {object} requestBody
+ * @returns {string | undefined} errorMessage
  */
 export const getSignUpError = ({
   email, password, first_name, last_name, address, is_agent, phone_number,
 }) => {
-  let errorMsg = '';
-  if (!isValidEmail(email)) {
-    errorMsg = 'Invalid email';
-  } else if (!isValidPassword(password)) {
-    errorMsg = 'Invalid password';
-  } else if (!first_name || isEmpty(first_name)) {
-    errorMsg = 'First name is required';
-  } else if (hasInvalidSpecialCharacterCombination(first_name)) {
-    errorMsg = 'Invalid special character combination in first name';
-  } else if (!last_name || isEmpty(last_name)) {
-    errorMsg = 'Last name is required';
-  } else if (hasInvalidSpecialCharacterCombination(last_name)) {
-    errorMsg = 'Invalid special character combination in last name';
-  } else if ((!address || isEmpty(address)) && is_agent) {
-    errorMsg = 'Address is required for agents';
-  } else if (!isValidPhoneNumber(phone_number) && is_agent) {
-    errorMsg = 'Phone number is required for agents';
-  }
+  const errors = [
+    getEmailError(email), getPasswordError(password), getNameError(first_name, last_name),
+    getAddressError(address, is_agent), getPhoneError(phone_number, is_agent),
+  ];
+  const errorMessage = errors.find(el => el !== null);
+  return errorMessage;
+};
 
-  return errorMsg;
+
+/**
+ * Checks signin request fields for invalid values and returns an appropriate
+ * error message or null
+ *
+ * @param {string} email
+ * @param {string} password
+ * @returns {string | undefined} errorMessage
+ */
+export const getSigninError = (email, password) => {
+  const errors = [
+    getEmailError(email), getPasswordError(password),
+  ];
+  const errorMessage = errors.find(el => el !== null);
+  return errorMessage;
 };
 
 
@@ -105,6 +212,7 @@ const getPublicUserData = user => ({
 /**
  * Reformats database fields (with underscores) into camelCase
  * and returns them as such as fields of a new object
+ * Calls @function getPublicUserData
  *
  * @param {object} data
  * @returns {object}
@@ -126,10 +234,11 @@ export const reformatUserData = (data) => {
 
 /**
  * Creates a new user
+ * Calls @function getToken, @function getPublicUserData
+ *
  * @param {object} body
  * @param {string} hash
- * @param {string} usersTable
- *
+ * @param {string} usersTable *
  * @returns {user}
  */
 export const createUser = async ({
