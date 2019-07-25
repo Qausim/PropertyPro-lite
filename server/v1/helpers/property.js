@@ -46,14 +46,21 @@ export const getCreatePropertyError = ({
   type, state, city, address, price,
 }) => {
   let errorMessage;
-  if (!isString(type)) errorMessage = 'Invalid type field';
-  else if (!state) errorMessage = 'State is required';
-  else if (!isString(state) || hasNumber(state)) errorMessage = 'Invalid state field';
-  else if (!city) errorMessage = 'City is required';
-  else if (!isString(city) || hasNumber(city)) errorMessage = 'Invalid city field';
-  else if (!address) errorMessage = 'Address is required';
-  else if (!isString(address) || isNumber(address)) errorMessage = 'Invalid address field';
-  else if (!parseFloat(price) || !isNumber(price)) errorMessage = 'Invalid, zero or empty price field';
+  if (!type) errorMessage = 'Type field is required';
+  else if (!isString(type)) errorMessage = 'Type field must be a string';
+  else if (isNumber(type)) errorMessage = 'Type field cannot be all number';
+  else if (!state) errorMessage = 'State field is required';
+  else if (!isString(state) || hasNumber(state)) {
+    errorMessage = 'State field must be a string and must not contain a number';
+  } else if (!city) errorMessage = 'City field is required';
+  else if (!isString(city) || hasNumber(city)) {
+    errorMessage = 'City field must be a string and must not contain a number';
+  } else if (!address) errorMessage = 'Address field is required';
+  else if (!isString(address) || isNumber(address)) {
+    errorMessage = 'Address field must be a string and must not be all number';
+  } else if (!price || !parseFloat(price)) {
+    errorMessage = 'Price field is required and must be a number above zero';
+  }
 
   return errorMessage;
 };
@@ -114,7 +121,6 @@ export const getOnlyPropertyDetails = property => ({
  * @param {*} response
  * @param {Array} properties
  * @param {string} queryText
- *
  * @returns {response}
  */
 export const filterPropertiesByType = async (response, queryText, propertiesTable, usersTable) => {
@@ -292,6 +298,14 @@ export const dbUpdateProperty = async (response, body, propertiesTable,
 };
 
 
+/**
+ * Deletes a property record from the database
+ *
+ * @param {*} response
+ * @param {number} propertyId
+ * @param {string} propertiesTable
+ * @returns {Promise} a function that can be invoked
+ */
 export const dbDeleteProperty = async (response, propertyId, propertiesTable) => dbConnection
   .dbConnect(`DELETE FROM ${propertiesTable} WHERE id = $1;`, [propertyId])
   .then((res) => {
