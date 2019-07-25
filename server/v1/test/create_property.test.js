@@ -261,6 +261,34 @@ export default () => {
         expect(res.body.error).to.equal('Type field is required');
       });
 
+    it('should fail to create a new property ad due to empty but spaced type string',
+      async () => {
+        const data = {
+          type: '  ',
+          state: 'Lagos',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('type', data.type)
+          .field('state', data.state)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('Type field is required');
+      });
+
     it('should fail to create a new property ad due to non-string type',
       async () => {
         const data = {
@@ -284,7 +312,7 @@ export default () => {
         expect(res.body.error).to.equal('Type field must be a string');
       });
 
-    it('should fail to create a new property ad due to no all number type string',
+    it('should fail to create a new property ad due to all number type string',
       async () => {
         const data = {
           type: '222',
@@ -366,6 +394,35 @@ export default () => {
         expect(res.body.error).to.equal('State field is required');
       });
 
+    it('should fail to create a new property ad due to empty but spaced state string',
+      async () => {
+        const data = {
+          state: ' ',
+          type: '3 bedroom',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('state', data.state)
+          .field('type', data.type)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('State field must be a non-empty string and must not contain a number');
+      });
+
     it('should fail to create a new property ad due to non-string state field',
       async () => {
         const data = {
@@ -387,10 +444,10 @@ export default () => {
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to
-          .equal('State field must be a string and must not contain a number');
+          .equal('State field must be a non-empty string and must not contain a number');
       });
 
-    it('should fail to create a new property ad due to a state string containing a number',
+    it('should fail to create a new property ad due to state string containing a number',
       async () => {
         const data = {
           type: '3 bedroom',
@@ -416,7 +473,7 @@ export default () => {
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to
-          .equal('State field must be a string and must not contain a number');
+          .equal('State field must be a non-empty string and must not contain a number');
       });
 
     it('should fail to create a new property ad due to no city field supplied',
@@ -473,6 +530,35 @@ export default () => {
         expect(res.body.error).to.equal('City field is required');
       });
 
+    it('should fail to create a new property ad due to empty but spaced city string',
+      async () => {
+        const data = {
+          state: 'Lagos',
+          type: '3 bedroom',
+          city: ' ',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('state', data.state)
+          .field('type', data.type)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('City field must be a non-empty string and must not contain a number');
+      });
+
     it('should fail to create a new property ad due to non-string city field',
       async () => {
         const data = {
@@ -494,7 +580,7 @@ export default () => {
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to
-          .equal('City field must be a string and must not contain a number');
+          .equal('City field must be a non-empty string and must not contain a number');
       });
 
     it('should fail to create a new property ad due to a city string containing a number',
@@ -523,7 +609,7 @@ export default () => {
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to
-          .equal('City field must be a string and must not contain a number');
+          .equal('City field must be a non-empty string and must not contain a number');
       });
 
     it('should fail to create a new property ad due to no address field supplied',
@@ -580,6 +666,35 @@ export default () => {
         expect(res.body.error).to.equal('Address field is required');
       });
 
+    it('should fail to create a new property ad due to empty but spaced address string',
+      async () => {
+        const data = {
+          state: 'Lagos',
+          type: '3 bedroom',
+          city: 'Lagos',
+          address: ' ',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('state', data.state)
+          .field('type', data.type)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Address field must be a non-empty string and must not be all number');
+      });
+
     it('should fail to create a new property ad due to non-string address',
       async () => {
         const data = {
@@ -601,7 +716,7 @@ export default () => {
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to
-          .equal('Address field must be a string and must not be all number');
+          .equal('Address field must be a non-empty string and must not be all number');
       });
 
     it('should fail to create a new property ad due to all number address string',
@@ -630,7 +745,7 @@ export default () => {
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
         expect(res.body.error).to
-          .equal('Address field must be a string and must not be all number');
+          .equal('Address field must be a non-empty string and must not be all number');
       });
 
     it('should fail to create a new property ad due to price field not supplied',

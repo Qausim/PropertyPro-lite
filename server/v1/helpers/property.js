@@ -48,16 +48,17 @@ export const getCreatePropertyError = ({
   let errorMessage;
   if (!type) errorMessage = 'Type field is required';
   else if (!isString(type)) errorMessage = 'Type field must be a string';
+  else if (!type.trim()) errorMessage = 'Type field is required';
   else if (isNumber(type)) errorMessage = 'Type field cannot be all number';
   else if (!state) errorMessage = 'State field is required';
-  else if (!isString(state) || hasNumber(state)) {
-    errorMessage = 'State field must be a string and must not contain a number';
+  else if (!isString(state) || !state.trim() || hasNumber(state)) {
+    errorMessage = 'State field must be a non-empty string and must not contain a number';
   } else if (!city) errorMessage = 'City field is required';
-  else if (!isString(city) || hasNumber(city)) {
-    errorMessage = 'City field must be a string and must not contain a number';
+  else if (!isString(city) || !city.trim() || hasNumber(city)) {
+    errorMessage = 'City field must be a non-empty string and must not contain a number';
   } else if (!address) errorMessage = 'Address field is required';
-  else if (!isString(address) || isNumber(address)) {
-    errorMessage = 'Address field must be a string and must not be all number';
+  else if (!isString(address) || !address.trim() || isNumber(address)) {
+    errorMessage = 'Address field must be a non-empty string and must not be all number';
   } else if (!price || !parseFloat(price)) {
     errorMessage = 'Price field is required and must be a number above zero';
   }
@@ -126,14 +127,14 @@ export const getOnlyPropertyDetails = property => ({
 export const filterPropertiesByType = async (response, queryText, propertiesTable, usersTable) => {
   const trimmedText = queryText.trim();
   if (!trimmedText) {
-    return ResponseHelper.getBadRequestErrorResponse(response, 'Empty query text');
+    return (() => ResponseHelper.getBadRequestErrorResponse(response, 'Empty query text'));
   }
 
   const { rows } = await dbConnection.dbConnect(`SELECT * FROM ${propertiesTable} WHERE type
   ilike '%${trimmedText}%';`);
   const promisedProperties = rows.map(property => getFullPropertyDetails(property, usersTable));
   const data = await Promise.all(promisedProperties);
-  return ResponseHelper.getSuccessResponse(response, data);
+  return (() => ResponseHelper.getSuccessResponse(response, data));
 };
 
 
