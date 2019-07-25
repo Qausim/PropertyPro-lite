@@ -207,7 +207,138 @@ export default () => {
         expect(res.body.error).to.equal('Unauthorized request');
       });
 
-    it('should fail to create a new property ad due to empty state field',
+    it('should fail to create a new property ad due to no type field supplied',
+      async () => {
+        const data = {
+          state: 'Lagos',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('state', data.state)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('Type field is required');
+      });
+
+    it('should fail to create a new property ad due to empty type string',
+      async () => {
+        const data = {
+          type: '',
+          state: 'Lagos',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('type', data.type)
+          .field('state', data.state)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('Type field is required');
+      });
+
+    it('should fail to create a new property ad due to non-string type',
+      async () => {
+        const data = {
+          type: 1,
+          state: 'Lagos',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Authorization', `Bearer ${agent.token}`)
+          .send(data);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('Type field must be a string');
+      });
+
+    it('should fail to create a new property ad due to no all number type string',
+      async () => {
+        const data = {
+          type: '222',
+          state: 'Lagos',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('type', data.type)
+          .field('state', data.state)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('Type field cannot be all number');
+      });
+
+    it('should fail to create a new property ad due to no state field supplied',
+      async () => {
+        const data = {
+          type: '3 bedroom',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('type', data.type)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('State field is required');
+      });
+
+    it('should fail to create a new property ad due to empty state string',
       async () => {
         const data = {
           state: '',
@@ -232,14 +363,38 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('State is required');
+        expect(res.body.error).to.equal('State field is required');
       });
 
-    it('should fail to create a new property ad due to invalid state field',
+    it('should fail to create a new property ad due to non-string state field',
       async () => {
         const data = {
-          state: '119922adfad',
+          state: 33,
           type: '3 bedroom',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Authorization', `Bearer ${agent.token}`)
+          .send(data);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('State field must be a string and must not contain a number');
+      });
+
+    it('should fail to create a new property ad due to a state string containing a number',
+      async () => {
+        const data = {
+          type: '3 bedroom',
+          state: 'Lagos33',
           city: 'Lagos',
           address: '22 Allen Avenue, Ikeja',
           price: 1000000.00,
@@ -249,8 +404,8 @@ export default () => {
           .post(propertyUrl)
           .set('Content-Type', 'multipart/form-data')
           .set('Authorization', `Bearer ${agent.token}`)
-          .field('state', data.state)
           .field('type', data.type)
+          .field('state', data.state)
           .field('city', data.city)
           .field('address', data.address)
           .field('price', data.price);
@@ -260,10 +415,37 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid state field');
+        expect(res.body.error).to
+          .equal('State field must be a string and must not contain a number');
       });
 
-    it('should fail to create a new property ad due to empty city field',
+    it('should fail to create a new property ad due to no city field supplied',
+      async () => {
+        const data = {
+          type: '3 bedroom',
+          state: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('type', data.type)
+          .field('state', data.state)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.equal('City field is required');
+      });
+
+    it('should fail to create a new property ad due to empty city string',
       async () => {
         const data = {
           state: 'Lagos',
@@ -288,16 +470,68 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('City is required');
+        expect(res.body.error).to.equal('City field is required');
       });
 
-    it('should fail to create a new property ad due to invalid city field',
+    it('should fail to create a new property ad due to non-string city field',
       async () => {
         const data = {
           state: 'Lagos',
           type: '3 bedroom',
-          city: '354564353ddfaf',
+          city: 33,
           address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Authorization', `Bearer ${agent.token}`)
+          .send(data);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('City field must be a string and must not contain a number');
+      });
+
+    it('should fail to create a new property ad due to a city string containing a number',
+      async () => {
+        const data = {
+          type: '3 bedroom',
+          state: 'Lagos',
+          city: 'Lagos34',
+          address: '22 Allen Avenue, Ikeja',
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('type', data.type)
+          .field('state', data.state)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('City field must be a string and must not contain a number');
+      });
+
+    it('should fail to create a new property ad due to no address field supplied',
+      async () => {
+        const data = {
+          state: 'Lagos',
+          type: '3 bedroom',
+          city: 'Lagos',
           price: 1000000.00,
         };
 
@@ -308,7 +542,6 @@ export default () => {
           .field('state', data.state)
           .field('type', data.type)
           .field('city', data.city)
-          .field('address', data.address)
           .field('price', data.price);
 
         expect(res.status).to.equal(400);
@@ -316,10 +549,10 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid city field');
+        expect(res.body.error).to.equal('Address field is required');
       });
 
-    it('should fail to create a new property ad due to empty address field',
+    it('should fail to create a new property ad due to empty address string',
       async () => {
         const data = {
           state: 'Lagos',
@@ -344,16 +577,40 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Address is required');
+        expect(res.body.error).to.equal('Address field is required');
       });
 
-    it('should fail to create a new property ad due to invalid address field',
+    it('should fail to create a new property ad due to non-string address',
       async () => {
         const data = {
           state: 'Lagos',
           type: '3 bedroom',
           city: 'Lagos',
-          address: '84848484',
+          address: 33,
+          price: 1000000.00,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Authorization', `Bearer ${agent.token}`)
+          .send(data);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Address field must be a string and must not be all number');
+      });
+
+    it('should fail to create a new property ad due to all number address string',
+      async () => {
+        const data = {
+          state: 'Lagos',
+          type: '3 bedroom',
+          city: 'Lagos',
+          address: '9099',
           price: 1000000.00,
         };
 
@@ -372,17 +629,17 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid address field');
+        expect(res.body.error).to
+          .equal('Address field must be a string and must not be all number');
       });
 
-    it('should fail to create a new property ad due to invalid or empty price',
+    it('should fail to create a new property ad due to price field not supplied',
       async () => {
         const data = {
           state: 'Lagos',
           type: '3 bedroom',
           city: 'Lagos',
           address: '22 Allen Avenue, Ikeja',
-          price: '',
         };
 
         const res = await chai.request(app)
@@ -392,15 +649,15 @@ export default () => {
           .field('state', data.state)
           .field('type', data.type)
           .field('city', data.city)
-          .field('address', data.address)
-          .field('price', data.price);
+          .field('address', data.address);
 
         expect(res.status).to.equal(400);
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid, zero or empty price field');
+        expect(res.body.error).to
+          .equal('Price field is required and must be a number above zero');
       });
 
     it('should fail to create a new property ad due to zero price',
@@ -428,7 +685,37 @@ export default () => {
         expect(res.body).to.have.property('status');
         expect(res.body.status).to.equal('error');
         expect(res.body).to.have.property('error');
-        expect(res.body.error).to.equal('Invalid, zero or empty price field');
+        expect(res.body.error).to
+          .equal('Price field is required and must be a number above zero');
+      });
+
+    it('it should fail to create a new property ad due to a non-number price string',
+      async () => {
+        const data = {
+          state: 'Lagos',
+          type: '3 bedroom',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: 'ad',
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('state', data.state)
+          .field('type', data.type)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Price field is required and must be a number above zero');
       });
   });
 };
