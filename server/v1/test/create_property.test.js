@@ -82,8 +82,8 @@ export default () => {
         .field('state', data.state)
         .field('city', data.city)
         .field('address', data.address)
-        .field('price', data.price);
-        // .attach('image_url', data.image);
+        .field('price', data.price)
+        .attach('image_url', data.image);
 
       expect(res.status).to.equal(201);
       expect(res.body).to.be.an('object');
@@ -105,7 +105,7 @@ export default () => {
       expect(res.body.data.state).to.equal(data.state);
       expect(res.body.data.city).to.equal(data.city);
       expect(res.body.data.price).to.equal(parseFloat(data.price.toFixed(2)));
-      // expect(res.body.data.image_url).to.not.equal('');
+      expect(res.body.data.image_url).to.not.equal('');
     });
 
     it('should create a property ad without an image', async () => {
