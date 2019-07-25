@@ -804,6 +804,35 @@ export default () => {
           .equal('Price field is required and must be a number above zero');
       });
 
+    it('should fail to create a new property ad due to negative price',
+      async () => {
+        const data = {
+          state: 'Lagos',
+          type: '3 bedroom',
+          city: 'Lagos',
+          address: '22 Allen Avenue, Ikeja',
+          price: -22,
+        };
+
+        const res = await chai.request(app)
+          .post(propertyUrl)
+          .set('Content-Type', 'multipart/form-data')
+          .set('Authorization', `Bearer ${agent.token}`)
+          .field('state', data.state)
+          .field('type', data.type)
+          .field('city', data.city)
+          .field('address', data.address)
+          .field('price', data.price);
+
+        expect(res.status).to.equal(400);
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.equal('error');
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to
+          .equal('Price field is required and must be a number above zero');
+      });
+
     it('it should fail to create a new property ad due to a non-number price string',
       async () => {
         const data = {

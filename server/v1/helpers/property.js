@@ -59,7 +59,7 @@ export const getCreatePropertyError = ({
   } else if (!address) errorMessage = 'Address field is required';
   else if (!isString(address) || !address.trim() || isNumber(address)) {
     errorMessage = 'Address field must be a non-empty string and must not be all number';
-  } else if (!price || !parseFloat(price)) {
+  } else if (!price || !isNumber(price) || !parseFloat(price)) {
     errorMessage = 'Price field is required and must be a number above zero';
   }
 
