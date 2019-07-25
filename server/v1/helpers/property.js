@@ -34,6 +34,19 @@ export const hasNumber = value => /\d/.test(value);
 
 
 /**
+ * Checks the body of a property update request if it contains an "id"
+ * or/and an "owner" field
+ * @param {object} body
+ *
+ * @returns {boolean}
+ */
+export const hasForbiddenField = (body) => {
+  const keys = Object.keys(body);
+  return keys.includes('id') || keys.includes('owner');
+};
+
+
+/**
  * Passes the fields in a request body validating each and returning
  * an appropriate error message or false
  * Calls @function isString, @function isNumber, @function hasNumber
@@ -140,47 +153,38 @@ export const filterPropertiesByType = async (response, queryText, propertiesTabl
 
 /**
  * Checks through the body of a property update request for empty
- * required fields, and invalid fields
- * @param {object}
+ * required fields, and invalid fields.
+ * Calls @function isString, @function isNumber, @function hasNumber
  *
+ * @param {object}
  * @returns {string | undefined}
  */
-export const getUpdatePropertyError = ({
-  type, state, city, address, price,
-}) => {
+export const getUpdatePropertyError = (body) => {
   let errorMessage;
-  // if there's an empty type field
-  if (isString(type) && !type.trim()) errorMessage = 'Type cannot be empty';
-  // there's an empty state field
-  else if (isString(state) && !state.trim()) errorMessage = 'State cannot be empty';
-  // if there's an invalid state field
-  else if (state && (!isString(state) || hasNumber(state))) errorMessage = 'Invalid state field';
-  // there's an empty city field
-  else if (isString(city) && !city.trim()) errorMessage = 'City cannot be empty';
-  // there's an invalid city field
-  else if (city && (!isString(city) || hasNumber(city))) errorMessage = 'Invalid city field';
-  // there's an empty address field
-  else if (isString(address) && !address.trim()) errorMessage = 'Address cannot be empty';
-  // there's an invalid address field
-  else if (address && (!isString(address) || isNumber(address))) errorMessage = 'Invalid address field';
-  // price field is: '' | non-number | <= 0
-  else if (price !== undefined && (
-    price === '' || !isNumber(price) || parseFloat(price) <= 0)) errorMessage = 'Invalid, zero or empty price field';
-
+  const {
+    type, state, city, address, price,
+  } = body;
+  if (hasForbiddenField(body)) errorMessage = 'You cannot update property fields "id" and "owner"';
+  else if (type !== undefined) {
+    if (!isString(type)) errorMessage = 'Type field must be a string value';
+    else if (!type.trim()) errorMessage = 'Type field cannot be updated with an empty value';
+    else if (isNumber(type)) errorMessage = 'Type field cannot be all number';
+  } else if (state !== undefined) {
+    if (!isString(state)) errorMessage = 'State field must be a string value';
+    else if (!state.trim()) errorMessage = 'State field cannot be updated with an empty value';
+    else if (hasNumber(state)) errorMessage = 'State field cannot contain a number';
+  } else if (city !== undefined) {
+    if (!isString(city)) errorMessage = 'City field must be a string value';
+    else if (!city.trim()) errorMessage = 'City field cannot be updated with an empty value';
+    else if (hasNumber(city)) errorMessage = 'City field cannot contain a number';
+  } else if (address !== undefined) {
+    if (!isString(address)) errorMessage = 'Address field must be a string value';
+    else if (!address.trim()) errorMessage = 'Address field cannot be updated with an empty value';
+    else if (isNumber(address)) errorMessage = 'Address field cannot be all number';
+  } else if (price !== undefined && (!isNumber(price) || parseFloat(price) <= 0)) {
+    errorMessage = 'Price field must be a non-zero positive number';
+  }
   return errorMessage;
-};
-
-
-/**
- * Checks the body of a property update request if it contains an "id"
- * or/and an "owner" field
- * @param {object} body
- *
- * @returns {boolean}
- */
-export const hasForbiddenField = (body) => {
-  const keys = Object.keys(body);
-  return keys.includes('id') || keys.includes('owner');
 };
 
 

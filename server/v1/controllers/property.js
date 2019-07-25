@@ -70,7 +70,7 @@ export const getProperties = (request, response) => {
   // Handle search queries by type
   if (queryText !== undefined) {
     return filterPropertiesByType(response, queryText, propertiesTable, usersTable)
-      .then(res => res)
+      .then(res => res())
       .catch(() => ResponseHelper.getInternalServerError(response));
   }
   dbConnection.dbConnect(`SELECT * FROM ${propertiesTable};`)
@@ -141,9 +141,10 @@ export const markPropertyAsSold = (request, response) => {
 export const updateProperty = (request, response) => {
   const errorMessage = getUpdatePropertyError(request.body);
   if (errorMessage) return ResponseHelper.getBadRequestErrorResponse(response, errorMessage);
+
   if (hasForbiddenField(request.body)) {
     return ResponseHelper.getForbiddenErrorResponse(response,
-      'You cannot update fields "id" and "owner"');
+      'You cannot update property fields "id" and "owner"');
   }
 
   const { params: { propertyId }, userData: { userId } } = request;
