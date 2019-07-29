@@ -17,6 +17,18 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use((request, response, next) => {
+  response.header('Access-Control-Allow-Origin', '*'); // giving access to all
+  response.header('Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (request.method === 'OPTIONS') {
+    response.header('Access-Control-Allow-Methods',
+      'PUT, POST, PATCH, DELETE, GET');
+    return response.status(200).json({});
+  }
+  next();
+});
+
 const basePath = '/api/v1';
 
 // Swagger documentation
