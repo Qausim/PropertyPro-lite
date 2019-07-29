@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * Script for signup form/page specific behaviours
  */
@@ -14,47 +15,90 @@ const asAgentCheckbox = document.querySelector('formgroup#as_agent input');
  * agents.
  */
 const toggleAddressAndPhoneFieldsDisplay = () => {
-    Array.from(document.querySelectorAll('formgroup.toggle-display'))
-        .forEach(el => el.classList.toggle(noDisplayClassName));
+  Array.from(document.querySelectorAll('formgroup.toggle-display'))
+    .forEach(el => el.classList.toggle(noDisplayClassName));
 };
 
+
+/**
+ * Validates if the phone number input value is valid
+ * @param {string} phone
+ * @returns {boolean}
+ */
 const isValidPhone = phone => /^\+?[\d]+$/.test(phone.replace(' ', ''));
+
+
+/**
+ * Handles successful user signup by storing user data received in sessionStorage
+ * and redirecting to the main page
+ * @param {object} userData
+ */
+const handleSignupSuccess = (userData) => {
+  sessionStorage.setItem('token', userData.token);
+  window.location.replace('./app.html');
+};
+
+
+/**
+ * Handles signup HTTP request, Calls @function handleSignupSuccess if successful or
+ * @function showError if otherwise
+ * @param {object} entries
+ */
+const sendSignupRequest = (entries) => {
+  const url = 'http://localhost:3000/api/v1/auth/signup';
+  const params = {
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(entries),
+    method: 'POST',
+  };
+
+  fetch(url, params)
+    .then(res => res.json())
+    .then((body) => {
+      if (body.status === 'error') {
+        showError(body.error);
+        return;
+      }
+      handleSignupSuccess(body.data);
+    })
+    .catch(() => showError('An error occured!'));
+};
+
 
 /**
  * Handles user clicks on the signup button
- * Validates entries 
- * @param {Event} event 
+ * Validates entries by Calling @function handledEmptyAndShortFields,
+ * @function handleInvalidEmailOrPasswordErrors, @function isValidPhone.
+ * Also calls, @function showError, @function focusOnInput, @function sendSignupRequest
+ * @param {Event} event
  */
-const registerUser = event => {
-    event.preventDefault();
-    if (handledEmptyAndShortFields()) {
-        return;
-    };
+const registerUser = (event) => {
+  event.preventDefault();
+  if (handledEmptyAndShortFields()) return;
+  const fieldEntries = {};
 
-    const fieldEntries = {};
-    fieldEntries.firstName = firstNameField.value;
-    fieldEntries.lastName = lastNameField.value;
-    fieldEntries.email = emailField.value;
-    fieldEntries.password = passwordField.value;
-    
-    if (handleInvalidEmailOrPasswordErrors(fieldEntries.email,
-        fieldEntries.password)) {
-            return;
+  fieldEntries.first_name = firstNameField.value;
+  fieldEntries.last_name = lastNameField.value;
+  fieldEntries.email = emailField.value;
+  fieldEntries.password = passwordField.value;
+
+  if (handleInvalidEmailOrPasswordErrors(fieldEntries.email, fieldEntries.password)) return;
+
+  fieldEntries.isAgent = asAgentCheckbox.checked;
+  if (fieldEntries.isAgent) {
+    fieldEntries.address = addressField.value;
+    fieldEntries.phone = phoneField.value;
+    if (!isValidPhone(fieldEntries.phone)) {
+      showError('Invalid phone number!');
+      focusOnInput(phoneField);
+      return;
     }
-
-    fieldEntries.isAgent = asAgentCheckbox.checked;
-    if (fieldEntries.isAgent) {
-        fieldEntries.address = addressField.value;
-        fieldEntries.phone = phoneField.value;
-        if (!isValidPhone(fieldEntries.phone)) {
-            showError('Invalid phone number!');
-            focusOnInput(phoneField);
-            return;
-        }
-    }
-
-    window.location.href = './app.html';
+  }
+  sendSignupRequest(fieldEntries);
 };
 
-submitButton.addEventListener('click', registerUser)
+submitButton.addEventListener('click', registerUser);
 asAgentCheckbox.addEventListener('click', toggleAddressAndPhoneFieldsDisplay);
