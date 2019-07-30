@@ -5,6 +5,10 @@ const deletePropertyModal = document.querySelector('.modal');
 const deleteModalCancelButton = document.querySelector('.modal button.cancel-delete');
 const deleteModalConfirmButton = document.querySelector('.modal button.confirm-delete');
 const deleteModalPropertyTitle = document.querySelector('.modal .modal-body .property-title');
+const baseUrl = 'http://localhost:3000/api/v1/property';
+const errorMessage = document.querySelector('.error-msg');
+const errorWrapper = document.querySelector('.error-wrapper');
+let properties;
 let searchFieldHasFocus = false;
 let currentPropertyImageIndex = 0;
 let searchField;
@@ -18,106 +22,46 @@ let propertyStatusToggler;
 let deletePropertyButton;
 let editPropertyButton;
 
-// User model
-class User {
-  constructor(userId, firstName, lastName, email, password, isAgent = false) {
-    this.userId = userId;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.password = password;
-    this.isAgent = isAgent;
-    this.createdOn = new Date();
+
+// The "currentUser" credentials
+const currentUser = {
+  userId: sessionStorage.getItem('userId'),
+  token: sessionStorage.getItem('token'),
+};
+
+
+/**
+ * Shows an error message top of the page
+ * @param {string} message
+ * @param {boolean} retainError
+ */
+const showError = (message, retainError) => {
+  errorMessage.textContent = message;
+  errorWrapper.classList.remove('no-display');
+  if (!retainError) {
+    setTimeout(() => {
+      errorWrapper.classList.add('no-display');
+    }, 10000);
   }
-}
-
-// Agent model
-class Agent extends User {
-  constructor(userId, firstName, lastName, email, password,
-    address, phone, isAgent = true) {
-    super(userId, firstName, lastName, email, password, isAgent);
-    this.address = address;
-    this.phone = phone;
-  }
-}
+};
 
 
-// Property model
-class Property {
-  constructor(propertyId, price, title, location, description, agentId, type,
-    images = [], sold = false) {
-    this.propertyId = propertyId;
-    this.price = price;
-    this.title = title;
-    this.location = location;
-    this.description = description;
-    this.agentId = agentId;
-    this.images = images;
-    this.type = type;
-    this.sold = sold;
-    this.flaggedAsFraudulentBy = [];
-    this.postedOn = new Date();
-    this.updatedOn = null;
-  }
-}
+/**
+ * Sends HTTP request to fetch all properties adverts from the server
+ * @returns {Promise} result of the request
+ */
+const fetchProperties = async () => {
+  const params = {
+    mode: 'cors',
+    headers: {
+      Authorization: `Bearer ${currentUser.token}`,
+    },
+    method: 'GET',
+  };
 
-
-// A list of users simulating existing users
-const users = [
-  new Agent(1, 'Olawumi', 'Yusuff', 'qauzeem@example.com', '123456',
-    'Lagos, Nigeria', '0800000000'),
-  new Agent(2, 'Bolaji', 'Olujide', 'bolu@example.com', '123456',
-    'Ibadan, Nigeria', '0810000000'),
-  new User(3, 'Bisi', 'Alao', 'b.alao@example.com', '123456'),
-];
-
-// The "currentUser" object simulates a logged user
-const currentUser = users[0];
-
-
-// A list of properties simulating existing posted properties
-const properties = [
-  new Property(1, '₦ 10000000', '3 bedroom apartment', 'Dopemu, Lagos',
-    'A beautiful 3 bedroom apartment in a serene and friendly neighbourhood',
-    1, 'bungalow', ['./images/propertya1.jpg', './images/propertya2.jpg',
-      './images/propertya3.jpg']),
-  new Property(2, '₦ 50000000', '5 bedroom mansion', 'Surulere, Lagos',
-    'A beautiful 5 bedroom mansion in a serene and friendly neighbourhood',
-    2, 'mansion', ['./images/propertyb1.jpeg', './images/propertyb2.jpg',
-      './images/propertyb3.jpg']),
-  new Property(3, '₦ 10000000', '3 bedroom apartment', 'Dopemu, Lagos',
-    'A beautiful 3 bedroom apartment in a serene and friendly neighbourhood',
-    1, 'bungalow', ['./images/propertya1.jpg', './images/propertya2.jpg',
-      './images/propertya3.jpg']),
-  new Property(4, '₦ 50000000', '5 bedroom mansion', 'Surulere, Lagos',
-    'A beautiful 5 bedroom mansion in a serene and friendly neighbourhood',
-    2, 'mansion', ['./images/propertyb1.jpeg', './images/propertyb2.jpg',
-      './images/propertyb3.jpg']),
-  new Property(5, '₦ 10000000', '3 bedroom apartment', 'Dopemu, Lagos',
-    'A beautiful 3 bedroom apartment in a serene and friendly neighbourhood',
-    2, 'bungalow', ['./images/propertya1.jpg', './images/propertya2.jpg',
-      './images/propertya3.jpg']),
-  new Property(6, '₦ 50000000', '5 bedroom mansion', 'Surulere, Lagos',
-    'A beautiful 5 bedroom mansion in a serene and friendly neighbourhood',
-    1, 'mansion', ['./images/propertyb1.jpeg', './images/propertyb2.jpg',
-      './images/propertyb3.jpg']),
-  new Property(7, '₦ 10000000', '3 bedroom apartment', 'Dopemu, Lagos',
-    'A beautiful 3 bedroom apartment in a serene and friendly neighbourhood',
-    2, 'bungalow', ['./images/propertya1.jpg', './images/propertya2.jpg',
-      './images/propertya3.jpg']),
-  new Property(8, '₦ 50000000', '5 bedroom mansion', 'Surulere, Lagos',
-    'A beautiful 5 bedroom mansion in a serene and friendly neighbourhood',
-    2, 'mansion', ['./images/propertyb1.jpeg', './images/propertyb2.jpg',
-      './images/propertyb3.jpg']),
-  new Property(9, '₦ 10000000', '3 bedroom apartment', 'Dopemu, Lagos',
-    'A beautiful 3 bedroom apartment in a serene and friendly neighbourhood',
-    2, 'bungalow', ['./images/propertya1.jpg', './images/propertya2.jpg',
-      './images/propertya3.jpg']),
-  new Property(10, '₦ 50000000', '5 bedroom mansion', 'Surulere, Lagos',
-    'A beautiful 5 bedroom mansion in a serene and friendly neighbourhood',
-    2, 'mansion', ['./images/propertyb1.jpeg', './images/propertyb2.jpg',
-      './images/propertyb3.jpg']),
-];
+  return fetch(`${baseUrl}`, params)
+    .then(res => res.json());
+};
 
 
 /**
@@ -261,23 +205,22 @@ const clearProperties = () => {
  */
 const renderPropertyInList = (property) => {
   const markup = property ? `
-    <a href="#detail=${property.propertyId}" class="text--black">
-        <div class="properties" data-propertyId="${property.propertyId}">
+    <a href="#detail=${property.id}" class="text--black">
+        <div class="properties" data-propertyId="${property.id}">
             <div class="img-wrapper">
-                <img src="${property.images.length ? property.images[0] : null}" alt="${property.title}">
+                <img src="${property.image_url ? property.image_url : './images/no-image.png'}" alt="${property.type}">
             </div>
             <div class="text-wrapper">
-                <h3>${property.title}</h3>
-                <h4 class="text--ellipsised">${property.price}</h4>
+                <h3>${property.type}</h3>
+                <h4 class="text--ellipsised price">${property.price}</h4>
                 <p class="text--ellipsised">
-                    ${property.description}
+                    At ${property.address}, ${property.city}, ${property.state} State
                 </p>
             </div>
         </div>
     </a>
     `
-    : '<h2 class="text--aligned-center">No property to display :(</h2>';
-
+    : '<h2 class="text--aligned-center self-centered">No property to display :(</h2>';
   propertiesWrapper.insertAdjacentHTML('afterbegin', markup);
 };
 
@@ -290,10 +233,17 @@ const renderPropertyInList = (property) => {
 const renderAllPropertyAds = () => {
   clearContentBox();
   initPropertiesWrapper();
-
-  // eslint-disable-next-line no-unused-expressions
-  properties.length ? properties
-    .forEach(property => renderPropertyInList(property)) : renderPropertyInList();
+  fetchProperties()
+    .then((body) => {
+      if (body.status === 'error') {
+        showError(body.error);
+      } else {
+        properties = body.data;
+        // eslint-disable-next-line no-unused-expressions
+        properties.length ? properties
+          .forEach(property => renderPropertyInList(property)) : renderPropertyInList();
+      }
+    });
 };
 
 
@@ -516,10 +466,9 @@ const renderPropertyDetails = (property) => {
   // Show error message if property does not exist
   if (!property) {
     contentBox.insertAdjacentHTML('afterbegin',
-      '<h3 class="text--aligned-center">:/ The requested property ad does not exist</h3>');
+      '<h3 class="text--aligned-center self-centered">:/ The requested property ad does not exist</h3>');
     return;
   }
-
   propertyImageList = property.images;
   const agent = users.find(el => el.userId === property.agentId);
   const userOwnsAd = agent.userId === currentUser.userId;
@@ -530,7 +479,6 @@ const renderPropertyDetails = (property) => {
   previousImageButton = document.querySelector('.prev-img div');
   nextImageButton.addEventListener('click', displayNextPropertyImage);
   previousImageButton.addEventListener('click', displayPreviousPropertyImage);
-
   if (userOwnsAd) {
     propertyStatusToggler = document.querySelector('div.status-toggler-wrapper input');
     propertyStatusToggler.addEventListener('click', togglePropertyStatus);
@@ -694,7 +642,7 @@ const handleHashChange = () => {
 
 // Check URL update page
 handleHashChange();
-
+fetchProperties();
 hamburgerToggler.addEventListener('click', toggleSidebarDisplay);
 deleteModalCancelButton.addEventListener('click', closeDeletePropertyModal);
 deleteModalConfirmButton.addEventListener('click', deleteProperty);

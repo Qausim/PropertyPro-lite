@@ -149,5 +149,5 @@ const handledEmptyAndShortFields = () => {
 const handleAuthFormSuccess = (userData) => {
   sessionStorage.setItem('token', userData.token);
   sessionStorage.setItem('userId', userData.id);
-  window.location.replace('./app.html');
+  window.location.replace('./properties.html');
 };
