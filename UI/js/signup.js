@@ -1,6 +1,9 @@
 /* eslint-disable no-undef */
 /**
  * Script for signup form/page specific behaviours
+ *
+ * A bunch of function and fields common to this file and login.js are declared
+ * in auth_form_utils.js
  */
 
 const firstNameField = document.querySelector('input[name="first_name"]');
@@ -29,18 +32,7 @@ const isValidPhone = phone => /^\+?[\d]+$/.test(phone.replace(' ', ''));
 
 
 /**
- * Handles successful user signup by storing user data received in sessionStorage
- * and redirecting to the main page
- * @param {object} userData
- */
-const handleSignupSuccess = (userData) => {
-  sessionStorage.setItem('token', userData.token);
-  window.location.replace('./app.html');
-};
-
-
-/**
- * Handles signup HTTP request, Calls @function handleSignupSuccess if successful or
+ * Handles signup HTTP request, Calls @function handleAuthFormSuccess if successful or
  * @function showError if otherwise
  * @param {object} entries
  */
@@ -62,7 +54,7 @@ const sendSignupRequest = (entries) => {
         showError(body.error);
         return;
       }
-      handleSignupSuccess(body.data);
+      handleAuthFormSuccess(body.data);
     })
     .catch(() => showError('An error occured!'));
 };
