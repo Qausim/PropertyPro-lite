@@ -121,6 +121,16 @@ const properties = [
 
 
 /**
+ * Logs user out of the app clearing his/her saved data and redirecting
+ * to the login page
+ */
+const logOut = () => {
+  sessionStorage.clear();
+  window.location.replace('./login.html');
+};
+
+
+/**
  * Sets highlight on the current user nav item selected
  */
 const setActiveUserOption = () => {
@@ -691,3 +701,4 @@ deleteModalConfirmButton.addEventListener('click', deleteProperty);
 window.addEventListener('resize', displaySidebarOnDesktopView);
 window.addEventListener('hashchange', handleHashChange);
 window.addEventListener('keypress', handleSearchOnEnterKeypress);
+document.querySelector('.item__log-out').addEventListener('click', logOut);
