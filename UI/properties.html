@@ -9,7 +9,9 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/universal.css">
-    <link rel="stylesheet" href="./css/app.css">
+    <link rel="stylesheet" href="./css/properties.css">
+
+    <script src="./js/intercept.js"></script>
 </head>
 <body>
 
@@ -26,7 +28,7 @@
                     <a href="#post" class="text--capitalized text--white">post an ad</a>
                 </li>
                 <li class="text--aligned-left item__log-out">
-                    <a href="./" class="text--capitalized text--white">log out</a>
+                    <a class="text--capitalized text--white">log out</a>
                 </li>
             </ol>
         </nav>
@@ -52,6 +54,10 @@
             <div class="small logo">
                 <object data="./images/home-icon.svg" type="image/svg+xml"></object>
             </div>
+        </div>
+
+        <div class="error-wrapper no-display">
+            <p class="error-msg">An error occured</p>
         </div>
 
         <main class="contents text--black">
@@ -83,6 +89,6 @@
     </div>
 
 
-    <script src="./js/app.js"></script>
+    <script src="./js/properties.js"></script>
 </body>
 </html>
